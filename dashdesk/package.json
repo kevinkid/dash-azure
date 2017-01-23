@@ -1,0 +1,15 @@
+{
+  "name": "dashdesk",
+  "version": "0.0.0",
+  "description": "dashdesk",
+  "main": "app.js",
+  "author": {
+    "name": "kevin",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "jade": "*",
+    "stylus": "*"
+  }
+}
