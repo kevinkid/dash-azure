@@ -32,6 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="helpers\authHelper.js" />
+    <Compile Include="helpers\dbHelper.js" />
+    <Compile Include="helpers\requestHelper.js" />
+    <Compile Include="helpers\socketHelper.js" />
     <Compile Include="routes\index.js" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="helpers\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />
     <Folder Include="public\images\" />

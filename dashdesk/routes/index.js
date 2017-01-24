@@ -3,9 +3,9 @@
 var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
-var authhelper = require("../helpers/authHelpers.js")
+var authhelper = require("../helpers/authHelper.js")
 var dbHelper = require("../helpers/dbHelper");
-var requrestHelper = require("../helpers/requestHelpers.js");
+var requrestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
 
