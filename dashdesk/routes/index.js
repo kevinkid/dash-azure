@@ -56,7 +56,7 @@ router.get("/callback", function (req, res) {
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
             
             // Make request 
-            requrestHelper.postDate(
+            requrestHelper.postData(
                 '/beta/subscription',
                 token.accessToken,
                 JSON.stringify(subscriptionConfiguration),
