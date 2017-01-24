@@ -4,7 +4,7 @@ var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
 var authHelper = require('../helpers/authHelper.js');
-var dbHelper = require("../helpers/dbHelper");
+//var dbHelper = require("../helpers/dbHelper");
 var requrestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
@@ -85,30 +85,32 @@ router.get("/callback", function (req, res) {
 
 // sign out route 
 // TODO: Remove this route 
-router.get("/signout/:subscriptionId", function (req, res) {
-    var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
+//router.get("/signout/:subscriptionId", function (req, res) {
+//    var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
     
-    dbHelper.getSubscription(req.params.subscriptionId, function (dbError, subscriptionData, next) {
+//    dbHelper.getSubscription(req.params.subscriptionId, function (dbError, subscriptionData, next) {
         
-        if (subscriptionData) {
-            requrestHelper.deleteData(
-                '/beta.subscriptons/' + req.params.subscriptonId,
-                function (err) {
-                    if (!err) {
-                        dbHelper.deleteSubscription(req.params.subscriptionId, null);
-                    }
-                }
-            );
-        } else if (dbError) {
-            res.status(500);
-        }
-        res.status(500);
+//        if (subscriptionData) {
+//            requrestHelper.deleteData(
+//                '/beta.subscriptons/' + req.params.subscriptonId,
+//                function (err) {
+//                    if (!err) {
+//                        dbHelper.deleteSubscription(req.params.subscriptionId, null);
+//                    }
+//                }
+//            );
+//        } else if (dbError) {
+//            res.status(500);
+//        }
+//        res.status(500);
          
-    });
-    res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=' + redirectUri);
+//    });
+//    res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=' + redirectUri);
 
+//});
 
-});
+// TODO: Remove this route 
+
 
 
 module.exports = router;

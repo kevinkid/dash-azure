@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 var io = require('../helpers/socketHelper.js');
 var requestHelper = require('../helpers/requestHelper.js');
-var dbHelper = new (require('../helpers/dbHelper'))();
+//var dbHelper = new (require('../helpers/dbHelper'))();
 var http = require('http');
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 
@@ -41,11 +41,12 @@ router.post('/', function (req, res, next) {
 
     // If all the clientStates are valid, then
     // process the notification
-    if (clientStatesValid) {
+        if (clientStatesValid) {
+            console.dir("Yey ! subscription id: " + subscriptionId);
       for (i = 0; i < req.body.value.length; i++) {
         resource = req.body.value[i].resource;
         subscriptionId = req.body.value[i].subscriptionId;
-        processNotification(subscriptionId, resource, res, next);
+        //processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
       }
       // Send a status of 'Accepted'
       status = 202;
@@ -64,25 +65,46 @@ router.post('/', function (req, res, next) {
 // Get subscription data from the database
 // Retrieve the actual mail message data from Office 365.
 // Send the message data to the socket.
+//function processNotification(subscriptionId, resource, res, next) {
+//  dbHelper.getSubscription(subscriptionId, function (dbError, subscriptionData) {
+//    if (subscriptionData) {
+//      requestHelper.getData(
+//        '/beta/' + resource, subscriptionData.accessToken,
+//        function (requestError, endpointData) {
+//          if (endpointData) {
+//            io.to(subscriptionId).emit('notification_received', endpointData);
+//          } else if (requestError) {
+//            res.status(500);
+//            next(requestError);
+//          }
+//        }
+//      );
+//    } else if (dbError) {
+//      res.status(500);
+//      next(dbError);
+//    }
+//  });
+//}
+
 function processNotification(subscriptionId, resource, res, next) {
-  dbHelper.getSubscription(subscriptionId, function (dbError, subscriptionData) {
-    if (subscriptionData) {
-      requestHelper.getData(
-        '/beta/' + resource, subscriptionData.accessToken,
-        function (requestError, endpointData) {
-          if (endpointData) {
-            io.to(subscriptionId).emit('notification_received', endpointData);
-          } else if (requestError) {
-            res.status(500);
-            next(requestError);
-          }
-        }
-      );
+    if (subscriptionId) {
+        console.dir("Yey ! subscription id: " + subscriptionId);
+
+        requestHelper.getData(
+            '/beta/' + resource, subscriptionData.accessToken,
+            function (requestError, endpointData) {
+                if (endpointData) {
+                    io.to(subscriptionId).emit('notification_received', endpointData);
+                } else if (requestError) {
+                    res.status(500);
+                    next(requestError);
+                }
+            }
+        );
     } else if (dbError) {
-      res.status(500);
-      next(dbError);
+        res.status(500);
+        next(dbError);
     }
-  });
 }
 
 module.exports = router;

@@ -12,13 +12,13 @@ var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
-var dbHelper = new (require('./helpers/dbHelper'))();
+//var dbHelper = new (require('./helpers/dbHelper'))();
 var logger = require("morgan");
 
 
 var app = express();
 
-dbHelper.createDatabase();
+//dbHelper.createDatabase();
 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
