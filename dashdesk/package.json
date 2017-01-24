@@ -14,7 +14,7 @@
     "fun :)"
   ],
   "dependencies": {
-    "express": "3.4.4",
+    "express": "^4.13.3",
     "jade": "*",
     "stylus": "*",
     "adal-node": "^0.1.16",

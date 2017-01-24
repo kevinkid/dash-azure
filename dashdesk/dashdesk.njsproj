@@ -41,6 +41,7 @@
     <Compile Include="routes\index.js" />
     <Compile Include="authHelper.js" />
     <Compile Include="constants.js" />
+    <Compile Include="routes\listen.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dashdesk.pubxml" />
