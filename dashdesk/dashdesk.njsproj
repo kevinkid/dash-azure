@@ -32,11 +32,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="emailer.js" />
     <Compile Include="helpers\authHelper.js" />
     <Compile Include="helpers\dbHelper.js" />
     <Compile Include="helpers\requestHelper.js" />
     <Compile Include="helpers\socketHelper.js" />
+    <Compile Include="requestUtil.js" />
     <Compile Include="routes\index.js" />
+    <Compile Include="authHelper.js" />
+    <Compile Include="constants.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dashdesk.pubxml" />
