@@ -75,7 +75,11 @@ app.use(function (err, req, res) {
 });
 
 
-http.createServer(app).listen(app.get('port'), function () {
+//http.createServer(app).listen(app.get('port'), function () {
+//    console.log('Express server listening on port ' + app.get('port'));
+//});
+
+app.listen(process.env.PORT, '0.0.0.0', function (err) {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
