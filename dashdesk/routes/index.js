@@ -1,6 +1,6 @@
 ﻿// Routes Definition 
 
-var express = require("eexpress");
+var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
 
@@ -17,3 +17,79 @@ exports.about = function (req, res) {
 exports.contact = function (req, res) {
     res.render('contact', { title: 'Contact', year: new Date().getFullYear(), message: 'Your contact page' });
 };
+
+
+//======================
+
+router.get('/', function (req, res) {
+   
+    if (req.query.code != null) {
+        console.dir("Not found code in query param .");
+
+    }
+    res.redirect("/index.html");
+     
+});
+
+
+router.get("/callback", function (req, res) {
+   
+    console.dir("Checking for code query param");
+     
+    console.dir("Found code in query param .");
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
