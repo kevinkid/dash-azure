@@ -9,7 +9,6 @@ var requrestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
 
-
 exports.index = function (req, res) {
     res.render('index', { title: 'Express', year: new Date().getFullYear() });
 };
@@ -111,4 +110,3 @@ router.get("/signout/:subscriptionId", function (req, res) {
 
 
 module.exports = router;
-

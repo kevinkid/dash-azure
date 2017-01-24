@@ -11,6 +11,7 @@ var subscriptionConfiguration = require('../constants').subscriptionConfiguratio
 var https = require("https");
 
 
+
 /* Redirect to start page */
 router.get('/', function (req, res) {
  

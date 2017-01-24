@@ -8,7 +8,7 @@ exports.adalConfiguration = {
 
 exports.subscriptionConfiguration = {
   changeType: 'Created',
-  notificationUrl: 'https://dash-heroku.heroku.com/listen',
+  notificationUrl: 'http://dashdesk.azurewebsites.net/listen',
   resource: 'me/mailFolders(\'Inbox\')/messages',
   clientState: 'cLIENTsTATEfORvALIDATION'
 };
@@ -20,7 +20,7 @@ exports.subscriptionConfiguration = {
 
 exports.newsubscriptionConfiguration = {
    Resource: "https://outlook.office.com/api/beta/me/folders('Inbox')/messages",
-   NotificationURL: "https://dash-heroku.heroku.com/listen",
+   NotificationURL: "http://dashdesk.azurewebsites.net/listen",
    ChangeType: "Created, Updated, Deleted",
    ClientState: "cLIENTsTATEfORvALIDATION"
 };
