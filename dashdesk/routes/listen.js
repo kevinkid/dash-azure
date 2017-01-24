@@ -10,6 +10,7 @@ var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 
+
 /* Default listen route */
 router.post('/', function (req, res, next) {
   var status;
