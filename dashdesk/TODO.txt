@@ -1,0 +1,12 @@
+﻿---
+Author: bigkevzs
+Desc: Contains desired implementation for the current project
+---
+
+
+
+1. Remember to unintall npm packages that are not necessary . 
+
+
+
+

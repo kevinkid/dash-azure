@@ -1,7 +1,10 @@
-﻿
-/*
- * GET home page.
- */
+﻿// Routes Definition 
+
+var express = require("eexpress");
+var router = express.Router();
+var authContext = require("adal-node").AuthenticationContext;
+
+
 
 exports.index = function (req, res) {
     res.render('index', { title: 'Express', year: new Date().getFullYear() });
