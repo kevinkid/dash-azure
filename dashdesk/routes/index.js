@@ -26,50 +26,54 @@ exports.contact = function (req, res) {
 //======================
 
 router.get('/', function (req, res) {
-
+    
     res.redirect("/index.html");
      
 });
 
+//  Microsoft signin route 
+router.get('/signin', function (req, res) {
+    res.redirect(authHelper.getAuthUrl());
+});
 
 router.get("/callback", function (req, res) {
-   
+    
     console.dir("Checking for code query param");
-     
+    
     console.dir("Found code in query param .");
-
+    
     var subscriptionId;
     var subscriptionExpirationDateTime;
     authhelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
-       
+        
         if (token) {
             console.dir("Got token !");
             console.dir(token);
             // token expiry date 86400000[ms]
-
+            
             subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toString(2);// ISO DateTime formate use to string method 
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
-
+            
             // Make request 
             requrestHelper.postDate(
                 '/beta/subscription',
                 token.accessToken,
                 JSON.stringify(subscriptionConfiguration),
                 function (requestError, subscriptionData) {
-                   
+                    
                     if (subscriptionData != null) {
                         
                         subscriptionId = subscriptionData.id;
                         res.redirect((
                         '/dashboard.html?subscription=' + subscriptionId +
                         '&userId=' + subscriptionData.userId));
-                    } else if(requestError) {
+                    } else if (requestError) {
                         req.status(500);
 
-                    } 
+                    }
                 });
 
-        } else if(authenticationError) {
+        } else if (authenticationError) {
             res.status(500);
         }
     });
@@ -82,9 +86,9 @@ router.get("/callback", function (req, res) {
 // TODO: Remove this route 
 router.get("/signout/:subscriptionId", function (req, res) {
     var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
-
+    
     dbHelper.getSubscription(req.params.subscriptionId, function (dbError, subscriptionData, next) {
-       
+        
         if (subscriptionData) {
             requrestHelper.deleteData(
                 '/beta.subscriptons/' + req.params.subscriptonId,
@@ -94,7 +98,7 @@ router.get("/signout/:subscriptionId", function (req, res) {
                     }
                 }
             );
-        }else if (dbError) {
+        } else if (dbError) {
             res.status(500);
         }
         res.status(500);
@@ -107,3 +111,4 @@ router.get("/signout/:subscriptionId", function (req, res) {
 
 
 module.exports = router;
+

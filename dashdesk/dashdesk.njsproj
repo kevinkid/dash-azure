@@ -37,6 +37,7 @@
     <Compile Include="helpers\dbHelper.js" />
     <Compile Include="helpers\requestHelper.js" />
     <Compile Include="helpers\socketHelper.js" />
+    <Compile Include="public\js\client.js" />
     <Compile Include="requestUtil.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="authHelper.js" />
@@ -46,6 +47,11 @@
   <ItemGroup>
     <None Include="dashdesk.pubxml" />
     <None Include="dashdesk - Web Deploy.pubxml" />
+    <Content Include="public\css\fabric.components.min.css" />
+    <Content Include="public\css\fabric.min.css" />
+    <Content Include="public\dashboard.html" />
+    <Content Include="public\images\favicon.ico" />
+    <Content Include="public\index.html" />
     <Content Include="public\javascripts\bootstrap.js" />
     <Content Include="public\javascripts\bootstrap.min.js" />
     <Content Include="public\javascripts\jquery-1.10.2.intellisense.js" />
@@ -88,6 +94,8 @@
     <Folder Include="public\fonts\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
+    <Folder Include="public\js\" />
+    <Folder Include="public\css\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
