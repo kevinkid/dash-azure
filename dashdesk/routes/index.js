@@ -37,48 +37,48 @@ router.get('/signin', function (req, res) {
     res.redirect(authHelper.getAuthUrl());
 });
 
-router.get("/callback", function (req, res) {
-    
-    console.dir("Checking for code query param");
-    
+router.get('/callback', function (req, res) {
+    console.dir("Checking for code query param .");
     console.dir("Found code in query param .");
     
     var subscriptionId;
     var subscriptionExpirationDateTime;
     authHelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
-        
         if (token) {
             console.dir("Got token !");
             console.dir(token);
-            // token expiry date 86400000[ms]
-            
-            subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toString(2);// ISO DateTime formate use to string method 
-            subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
-            
-            // Make request 
-            requrestHelper.postData(
-                '/beta/subscription',
-                token.accessToken,
-                JSON.stringify(subscriptionConfiguration),
-                function (requestError, subscriptionData) {
-                    
-                    if (subscriptionData != null) {
-                        
-                        subscriptionId = subscriptionData.id;
-                        res.redirect((
-                        '/dashboard.html?subscription=' + subscriptionId +
-                        '&userId=' + subscriptionData.userId));
-                    } else if (requestError) {
-                        req.status(500);
 
+            // Expiration date 86400000 [ms]
+                        
+            subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toISOString();//ISO time format 
+            subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
+            // Make the request to subscription service.
+            requestHelper.postData(
+                '/beta/subscriptions',
+            token.accessToken,
+            JSON.stringify(subscriptionConfiguration),
+            function (requestError, subscriptionData) {
+                    if (subscriptionData !== null) {
+                        subscriptionData.userId = token.userId;
+                        subscriptionData.accessToken = token.accessToken;
+                        // dbHelper.saveSubscription(subscriptionData, null);// @todo: Save subscription details 
+
+                        subscriptionId = subscriptionData.id;
+                        res.redirect(
+                            '/dashboard.html?subscriptionId=' + subscriptionId +
+                  '&userId=' + subscriptionData.userId
+                        );
+                    } else if (requestError) {
+                        res.status(500);
                     }
-                });
+                }
+            );
 
         } else if (authenticationError) {
             res.status(500);
         }
     });
-    
+
 });
 
 
