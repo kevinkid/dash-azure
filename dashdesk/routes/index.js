@@ -3,7 +3,7 @@
 var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
-var authhelper = require("../helpers/authHelper.js")
+var authHelper = require('../helpers/authHelper.js');
 var dbHelper = require("../helpers/dbHelper");
 var requrestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
@@ -44,7 +44,7 @@ router.get("/callback", function (req, res) {
     
     var subscriptionId;
     var subscriptionExpirationDateTime;
-    authhelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
+    authHelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
         
         if (token) {
             console.dir("Got token !");
