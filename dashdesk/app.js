@@ -4,19 +4,21 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
+//var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var bodyParser = require('body-parser');
 
 var favicon = require('serve-favicon');
-var newroutes = require("./routes/index");
+var routes = require("./routes/index");
 var listen = require("./routes/listen");
+var dbHelper = new (require('./helpers/dbHelper'))();
 var logger = require("morgan");
 
 
 var app = express();
 
+dbHelper.createDatabase();
 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
@@ -26,6 +28,7 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 // all environments
 app.set('port', process.env.PORT || 3000);
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
@@ -40,7 +43,7 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', newroutes);
+app.use('/', routes);
 app.use('/listen', listen);
 
 // capture 404 errors 
@@ -79,10 +82,9 @@ app.use(function (err, req, res) {
 //    console.log('Express server listening on port ' + app.get('port'));
 //});
 
-app.listen(process.env.PORT, '0.0.0.0', function (err) {
+var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
-
 
 
 module.exports = app;
