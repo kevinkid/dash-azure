@@ -3,7 +3,11 @@
 var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
-
+var authhelper = require("../helpers/authHelpers.js")
+var dbHelper = require("../helpers/dbHelper");
+var requrestHelper = require("../helpers/requestHelpers.js");
+var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
+var https = require("https");
 
 
 exports.index = function (req, res) {
@@ -22,11 +26,7 @@ exports.contact = function (req, res) {
 //======================
 
 router.get('/', function (req, res) {
-   
-    if (req.query.code != null) {
-        console.dir("Not found code in query param .");
 
-    }
     res.redirect("/index.html");
      
 });
@@ -38,58 +38,72 @@ router.get("/callback", function (req, res) {
      
     console.dir("Found code in query param .");
 
+    var subscriptionId;
+    var subscriptionExpirationDateTime;
+    authhelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
+       
+        if (token) {
+            console.dir("Got token !");
+            console.dir(token);
+            // token expiry date 86400000[ms]
+
+            subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toString(2);// ISO DateTime formate use to string method 
+            subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
+
+            // Make request 
+            requrestHelper.postDate(
+                '/beta/subscription',
+                token.accessToken,
+                JSON.stringify(subscriptionConfiguration),
+                function (requestError, subscriptionData) {
+                   
+                    if (subscriptionData != null) {
+                        
+                        subscriptionId = subscriptionData.id;
+                        res.redirect((
+                        '/dashboard.html?subscription=' + subscriptionId +
+                        '&userId=' + subscriptionData.userId));
+                    } else if(requestError) {
+                        req.status(500);
+
+                    } 
+                });
+
+        } else if(authenticationError) {
+            res.status(500);
+        }
+    });
+    
 });
 
 
 
+// sign out route 
+// TODO: Remove this route 
+router.get("/signout/:subscriptionId", function (req, res) {
+    var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
+
+    dbHelper.getSubscription(req.params.subscriptionId, function (dbError, subscriptionData, next) {
+       
+        if (subscriptionData) {
+            requrestHelper.deleteData(
+                '/beta.subscriptons/' + req.params.subscriptonId,
+                function (err) {
+                    if (!err) {
+                        dbHelper.deleteSubscription(req.params.subscriptionId, null);
+                    }
+                }
+            );
+        }else if (dbError) {
+            res.status(500);
+        }
+        res.status(500);
+         
+    });
+    res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=' + redirectUri);
 
 
+});
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+module.exports = router;
