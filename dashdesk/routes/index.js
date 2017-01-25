@@ -69,7 +69,9 @@ router.get('/callback', function (req, res) {
                   '&userId=' + subscriptionData.userId
                         );
                     } else if (requestError) {
+                        console.dir(requestError);
                         res.status(500);
+                        res.json(requestError);
                     }
                 }
             );
