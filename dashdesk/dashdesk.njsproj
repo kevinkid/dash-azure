@@ -32,16 +32,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
-    <Compile Include="app1.js" />
-    <Compile Include="emailer.js" />
     <Compile Include="helpers\authHelper.js" />
     <Compile Include="helpers\dbHelper.js" />
     <Compile Include="helpers\requestHelper.js" />
     <Compile Include="helpers\socketHelper.js" />
     <Compile Include="public\js\client.js" />
-    <Compile Include="requestUtil.js" />
     <Compile Include="routes\index.js" />
-    <Compile Include="authHelper.js" />
     <Compile Include="constants.js" />
     <Compile Include="routes\listen.js" />
   </ItemGroup>
@@ -51,31 +47,32 @@
     <Content Include="public\css\fabric.components.min.css" />
     <Content Include="public\css\fabric.min.css" />
     <Content Include="public\dashboard.html" />
-    <Content Include="public\images\favicon.ico" />
+    <Content Include="public\img\favicon.ico" />
     <Content Include="public\index.html" />
-    <Content Include="public\javascripts\bootstrap.js" />
-    <Content Include="public\javascripts\bootstrap.min.js" />
-    <Content Include="public\javascripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="public\javascripts\jquery-1.10.2.js" />
-    <Content Include="public\javascripts\jquery-1.10.2.min.js" />
-    <Content Include="public\javascripts\jquery.validate-vsdoc.js" />
-    <Content Include="public\javascripts\jquery.validate.js" />
-    <Content Include="public\javascripts\jquery.validate.min.js" />
-    <Content Include="public\javascripts\jquery.validate.unobtrusive.js" />
-    <Content Include="public\javascripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="public\javascripts\modernizr-2.6.2.js" />
-    <Content Include="public\javascripts\respond.js" />
-    <Content Include="public\javascripts\respond.min.js" />
-    <Content Include="public\javascripts\_references.js" />
+    <Compile Include="public\js\bootstrap.js" />
+    <Compile Include="public\js\bootstrap.min.js" />
+    <Compile Include="public\js\jquery-1.10.2.intellisense.js" />
+    <Compile Include="public\js\jquery-1.10.2.js" />
+    <Compile Include="public\js\jquery-1.10.2.min.js" />
+    <Compile Include="public\js\jquery.validate-vsdoc.js" />
+    <Compile Include="public\js\jquery.validate.js" />
+    <Compile Include="public\js\jquery.validate.min.js" />
+    <Compile Include="public\js\jquery.validate.unobtrusive.js" />
+    <Compile Include="public\js\jquery.validate.unobtrusive.min.js" />
+    <Compile Include="public\js\modernizr-2.6.2.js" />
+    <Compile Include="public\js\respond.js" />
+    <Compile Include="public\js\respond.min.js" />
     <Content Include="package.json" />
     <Content Include="public\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="public\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="public\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="public\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="public\javascripts\jquery-1.10.2.min.map" />
-    <Content Include="public\stylesheets\bootstrap.css" />
-    <Content Include="public\stylesheets\bootstrap.min.css" />
-    <Content Include="public\stylesheets\style.styl" />
+    <Content Include="public\js\jquery-1.10.2.min.map" />
+    <Content Include="public\css\bootstrap.css" />
+    <Content Include="public\css\bootstrap.min.css" />
+    <Content Include="public\css\style-new.css" />
+    <Content Include="public\css\style.css" />
+    <Content Include="public\css\style.styl" />
     <Content Include="README.md" />
     <Content Include="views\contact.jade" />
     <Content Include="views\about.jade" />
@@ -91,13 +88,12 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="helpers\" />
+    <Folder Include="Handlers\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />
-    <Folder Include="public\images\" />
-    <Folder Include="public\javascripts\" />
     <Folder Include="public\js\" />
     <Folder Include="public\css\" />
-    <Folder Include="public\stylesheets\" />
+    <Folder Include="public\img\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
   </ItemGroup>

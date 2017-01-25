@@ -1,35 +1,17 @@
 ﻿// Routes Definition 
-
 var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
 var authHelper = require('../helpers/authHelper.js');
-//var dbHelper = require("../helpers/dbHelper");
 var requestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
 
 
 
-exports.index = function (req, res) {
-    res.render('index', { title: 'Express', year: new Date().getFullYear() });
-};
-
-exports.about = function (req, res) {
-    res.render('about', { title: 'About', year: new Date().getFullYear(), message: 'Your application description page' });
-};
-
-exports.contact = function (req, res) {
-    res.render('contact', { title: 'Contact', year: new Date().getFullYear(), message: 'Your contact page' });
-};
-
-
-//======================
-
-router.get('/', function (req, res) {
-    
-    res.redirect("/index.html");
      
+router.get('/', function (req, res) {
+    res.redirect("/index.html");
 });
 
 //  Microsoft signin route 
@@ -69,6 +51,7 @@ router.get('/callback', function (req, res) {
                   '&userId=' + subscriptionData.userId
                         );
                     } else if (requestError) {
+                        // @todo: remote this bad error response only for development.
                         res.redirect("/index.html?Error="+ JSON.stringify(requestError));
                         //console.dir(requestError);
                         //res.json(requestError);
@@ -76,43 +59,37 @@ router.get('/callback', function (req, res) {
                     }
                 }
             );
-
         } else if (authenticationError) {
             res.status(500);
         }
     });
-
 });
 
 
 
-// sign out route 
-// TODO: Remove this route 
-//router.get("/signout/:subscriptionId", function (req, res) {
-//    var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
+// @todo: Use this route when signalr detects that a connection has been lost for a long time,
+// @todo: Define long time programmatically 
+router.get("/signout/:subscriptionId", function (req, res) {
+    var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
+
+    if (req.params.subscriptionId) {
+        requestHelper.deleteData(
+            '/beta.subscriptons/' + req.params.subscriptonId,
+            function (err) {
+                if (!err) {
+                    //@todo: Remove from the database 
+                    //dbHelper.deleteSubscription(req.params.subscriptionId, null);
+                    console.dir("Removing subscription from the databse .");
+                }
+            }
+        );
+    } else if (dbError) {
+        res.status(500);
+    }
+    res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=' + redirectUri);
     
-//    dbHelper.getSubscription(req.params.subscriptionId, function (dbError, subscriptionData, next) {
-        
-//        if (subscriptionData) {
-//            requestHelper.deleteData(
-//                '/beta.subscriptons/' + req.params.subscriptonId,
-//                function (err) {
-//                    if (!err) {
-//                        dbHelper.deleteSubscription(req.params.subscriptionId, null);
-//                    }
-//                }
-//            );
-//        } else if (dbError) {
-//            res.status(500);
-//        }
-//        res.status(500);
-         
-//    });
-//    res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=' + redirectUri);
+});
 
-//});
-
-// TODO: Remove this route 
 
 
 

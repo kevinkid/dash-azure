@@ -1,10 +1,4 @@
-﻿
-/**
- * Module dependencies.
- */
-
-var express = require('express');
-//var routes = require('./routes');
+﻿var express = require('express');
 var http = require('http');
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -12,13 +6,11 @@ var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
-//var dbHelper = new (require('./helpers/dbHelper'))();
 var logger = require("morgan");
 
 
 var app = express();
 
-//dbHelper.createDatabase();
 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
@@ -31,7 +23,7 @@ app.set('port', process.env.PORT || 3000);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -76,11 +68,6 @@ app.use(function (err, req, res) {
         title: "Error"
     });
 });
-
-
-//http.createServer(app).listen(app.get('port'), function () {
-//    console.log('Express server listening on port ' + app.get('port'));
-//});
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

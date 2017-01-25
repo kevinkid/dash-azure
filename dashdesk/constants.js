@@ -12,15 +12,3 @@ exports.subscriptionConfiguration = {
   resource: 'me/mailfolders(\'Inbox\')/messages',
   clientState: 'cLIENTsTATEfORvALIDATION'
 };
-
-
-
-//@source: https://blogs.msdn.microsoft.com/exchangedev/2015/10/21/outlook-rest-api-changes-to-beta-endpoint-part-iii/
-// New api version subscriptionConfiguration -request payload 
-
-exports.newsubscriptionConfiguration = {
-   NotificationURL: "https://dashdesk.azurewebsites.net/listen",
-   resource: 'me/mailfolders(\'Inbox\')/messages',
-   ChangeType: "Created, Updated, Deleted",
-   ClientState: "cLIENTsTATEfORvALIDATION"
-};

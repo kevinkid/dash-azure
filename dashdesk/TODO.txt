@@ -3,10 +3,11 @@ Author: bigkevzs
 Desc: Contains desired implementation for the current project
 ---
 
-
-
-1. Remember to unintall npm packages that are not necessary . 
-
+1. Clean your code 
+	a.Manage notification subscriptions by changing the database used on the server.
+	b. Write your own code the way you understand and the way its going to be easy for you
+		to maintain the code .  
+2. Embed signalr and make sure that you are getting notifications from outlook webhook endpoint .
 
 
 

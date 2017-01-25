@@ -1,0 +1,86 @@
+{
+  "_args": [
+    [
+      "signalrjs@^0.2.2",
+      "C:\\Users\\kevin\\Documents\\GitHub\\office365authentication-nodejs-sample"
+    ]
+  ],
+  
+  "_from": "signalrjs@>=0.2.2 <0.3.0",
+  "_id": "signalrjs@0.2.2",
+  "_inCache": true,
+  "_location": "/signalrjs",
+  "_npmUser": {
+    "email": "tjchaplin@hotmail.com",
+    "name": "tjchaplin"
+  },
+  "_npmVersion": "1.4.28",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "signalrjs",
+    "raw": "signalrjs@^0.2.2",
+    "rawSpec": "^0.2.2",
+    "scope": null,
+    "spec": ">=0.2.2 <0.3.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/signalrjs/-/signalrjs-0.2.2.tgz",
+  "_shasum": "17aab04fec52838b49bbf9a890e7be7309d1c76c",
+  "_shrinkwrap": null,
+  "_spec": "signalrjs@^0.2.2",
+  "_where": "C:\\Users\\kevin\\Documents\\GitHub\\office365authentication-nodejs-sample",
+  "author": {
+    "name": "Tim Chaplin"
+  },
+  "bugs": {
+    "url": "https://github.com/tjchaplin/signalRJS/issues"
+  },
+  "dependencies": {
+    "body-parser": "^1.12.0",
+    "connect": "^3.3.4",
+    "node-uuid": "^1.4.2"
+  },
+  "description": "===",
+  "devDependencies": {
+    "express": "^4.11.2",
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.2",
+    "gulp-mocha": "^2.0.0",
+    "gulp-util": "^3.0.3",
+    "sinon": "~1.12.2"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dist": {
+    "shasum": "17aab04fec52838b49bbf9a890e7be7309d1c76c",
+    "tarball": "https://registry.npmjs.org/signalrjs/-/signalrjs-0.2.2.tgz"
+  },
+  "gitHead": "ea8a1c6e61266c56d11f0c8abb19f80b108f7841",
+  "homepage": "https://github.com/tjchaplin/signalRJS",
+  "installable": true,
+  "keywords": [
+    "signalr"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "tjchaplin",
+      "email": "tjchaplin@hotmail.com"
+    }
+  ],
+  "name": "signalrjs",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tjchaplin/signalRJS.git"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "version": "0.2.2"
+}
