@@ -31,7 +31,7 @@ router.get('/callback', function (req, res) {
             console.dir(token);
 
             // Expiration date 86400000 [ms]
-                        
+
             subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toISOString();//ISO time format 
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
             // Make the request to subscription service.
@@ -43,8 +43,7 @@ router.get('/callback', function (req, res) {
                     if (subscriptionData !== null) {
                         subscriptionData.userId = token.userId;
                         subscriptionData.accessToken = token.accessToken;
-                        // dbHelper.saveSubscription(subscriptionData, null);// @todo: Save subscription details 
-
+                        //@todo: store subsciption details 
                         subscriptionId = subscriptionData.id;
                         res.redirect(
                             '/dashboard.html?subscriptionId=' + subscriptionId +
