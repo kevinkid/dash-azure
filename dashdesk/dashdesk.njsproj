@@ -32,6 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="Handlers\SocketHandler\gulpfile.js" />
+    <Compile Include="Handlers\SocketHandler\index.js" />
     <Compile Include="helpers\authHelper.js" />
     <Compile Include="helpers\dbHelper.js" />
     <Compile Include="helpers\requestHelper.js" />
@@ -44,6 +46,12 @@
   <ItemGroup>
     <None Include="dashdesk.pubxml" />
     <None Include="dashdesk - Web Deploy.pubxml" />
+    <Content Include="Handlers\SocketHandler\.jshintrc" />
+    <Content Include="Handlers\SocketHandler\.npmignore" />
+    <Content Include="Handlers\SocketHandler\.travis.yml" />
+    <Content Include="Handlers\SocketHandler\LICENSE" />
+    <Content Include="Handlers\SocketHandler\package.json" />
+    <Content Include="Handlers\SocketHandler\README.md" />
     <Content Include="public\css\fabric.components.min.css" />
     <Content Include="public\css\fabric.min.css" />
     <Content Include="public\dashboard.html" />
@@ -87,8 +95,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="Handlers\SocketHandler\docs\" />
+    <Folder Include="Handlers\SocketHandler\docs\examples\" />
+    <Folder Include="Handlers\SocketHandler\lib\" />
+    <Folder Include="Handlers\SocketHandler\lib\common\" />
+    <Folder Include="Handlers\SocketHandler\tests\" />
     <Folder Include="helpers\" />
     <Folder Include="Handlers\" />
+    <Folder Include="Handlers\SocketHandler\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />
     <Folder Include="public\js\" />
