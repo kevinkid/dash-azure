@@ -7,7 +7,6 @@ var fs = require("fs");
 var router = express.Router();
 var io = require('../helpers/socketHelper.js');
 var requestHelper = require('../helpers/requestHelper.js');
-//var dbHelper = new (require('../helpers/dbHelper'))();
 var http = require('http');
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 
@@ -44,15 +43,36 @@ router.post('/', function (req, res, next) {
     // If all the clientStates are valid, then
     // process the notification
         if (clientStatesValid) {
+            //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+            fs.writeFile('../logs/log_file.log', 'client valid notification from Microsoft endpoint validation .',
+                    {
+                encoding: "utf8",
+                mode: "0o666",
+                flag: "w"
+            }, function () {
+                console.dir("App loging");
+            });
+
             console.dir("Yey ! subscription id: " + subscriptionId);
       for (i = 0; i < req.body.value.length; i++) {
         resource = req.body.value[i].resource;
         subscriptionId = req.body.value[i].subscriptionId;
-        //processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
+        processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
+
       }
       // Send a status of 'Accepted'
       status = 202;
-    } else {
+        } else {
+            
+            //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+            fs.writeFile('../logs/log_file.log', 'client state not valid notification from Microsoft endpoint webhook',
+                    {
+                encoding: "utf8",
+                mode: "0o666",
+                flag: "w"
+            }, function () {
+                console.dir("App loging");
+            });
       // Since the clientState field doesn't have the expected value,
       // this request might NOT come from Microsoft Graph.
       // However, you should still return the same status that you'd
