@@ -107,6 +107,7 @@
     <Folder Include="helpers\" />
     <Folder Include="Handlers\" />
     <Folder Include="Handlers\SocketHandler\" />
+    <Folder Include="logs\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />
     <Folder Include="public\js\" />

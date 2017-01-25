@@ -3,6 +3,7 @@
  * See LICENSE in the project root for license information.
  */
 var express = require('express');
+var fs = require("fs");
 var router = express.Router();
 var io = require('../helpers/socketHelper.js');
 var requestHelper = require('../helpers/requestHelper.js');
@@ -90,13 +91,34 @@ router.post('/', function (req, res, next) {
 function processNotification(subscriptionId, resource, res, next) {
     if (subscriptionId) {
         console.dir("Yey ! subscription id: " + subscriptionId);
-
         requestHelper.getData(
             '/beta/' + resource, subscriptionData.accessToken,
             function (requestError, endpointData) {
                 if (endpointData) {
+                    
+                    //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+                    fs.writeFileSync('../logs/log_file.log', endpointData,
+                    {
+                       encoding: "utf8",
+                       mode: "0o666",
+                       flag: "w"
+                    }, function () {
+                        console.dir("App loging"); 
+                    });
+
+                    //@todo: replace with signalr socket handler implementation logic 
                     io.to(subscriptionId).emit('notification_received', endpointData);
                 } else if (requestError) {
+                    
+                    //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+                    fs.writeFileSync('../logs/log_file.log', requestError,
+                    {
+                        encoding: "utf8",
+                        mode: "0o666",
+                        flag: "w"
+                    }, function () {
+                        console.dir("App loging");
+                    });
                     res.status(500);
                     next(requestError);
                 }
