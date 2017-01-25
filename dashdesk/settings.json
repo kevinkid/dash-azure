@@ -1,4 +1,29 @@
 ﻿{
+  "author": "@bigkevzs",
+  "Production": {
+    "server": {
+      "host": "https://dashdesk.azurewebsites.net",
+      "port": "3422"
+    },
+    "database": {
+      "host": "mongodb://user1:user1@ds059145.mongolab.com:59145/yofitdb",
+      "port": "27017",
+      "username": "null",
+      "password": "null"
+    }
+  },
+  "Developments": {
+    "server": {
+      "host": "http://localhost:666",
+      "port": "666"
+    },
+    "database": {
+      "host": "mongodb://localhost:27017",
+      "port": "27017",
+      "username": "null",
+      "password": "null"
+    }
+  },
   "subscriptionConfiguration": {
     "ChaneType": "Created, Updated, Deleted",
     "notificationUrl": "https://dashdesk.azurewebsites.net/listen",
@@ -9,6 +34,6 @@
     "authority": "https://login.microsoftonline.com/common",
     "clientID": "d2d6267b-a005-4146-b79a-a754e5e0def3",
     "clientSecret": "wLPDOaGMOjWtGu9iUzsWsMcOLrXPwNG9uOdswFFQoj0=",
-    "redirectUri":"https: //dashdesk.azurewebsites.net/callback"
+    "redirectUri": "https: //dashdesk.azurewebsites.net/callback"
   }
 }
