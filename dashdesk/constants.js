@@ -2,13 +2,13 @@ exports.adalConfiguration = {
   authority: 'https://login.microsoftonline.com/common',
   clientID: 'd2d6267b-a005-4146-b79a-a754e5e0def3',
   clientSecret: 'wLPDOaGMOjWtGu9iUzsWsMcOLrXPwNG9uOdswFFQoj0=',
-  redirectUri: 'http://dashdesk.azurewebsites.net/callback'
+  redirectUri: 'https://dashdesk.azurewebsites.net/callback'
 };
 
 
 exports.subscriptionConfiguration = {
   changeType: 'Created',
-  notificationUrl: 'http://dashdesk.azurewebsites.net/listen',
+  notificationUrl: 'https://dashdesk.azurewebsites.net/listen',
   resource: 'me/mailFolders(\'Inbox\')/messages',
   clientState: 'cLIENTsTATEfORvALIDATION'
 };
@@ -20,7 +20,7 @@ exports.subscriptionConfiguration = {
 
 exports.newsubscriptionConfiguration = {
    Resource: "https://outlook.office.com/api/beta/me/folders('Inbox')/messages",
-   NotificationURL: "http://dashdesk.azurewebsites.net/listen",
+   NotificationURL: "https://dashdesk.azurewebsites.net/listen",
    ChangeType: "Created, Updated, Deleted",
    ClientState: "cLIENTsTATEfORvALIDATION"
 };
