@@ -7,9 +7,9 @@ exports.adalConfiguration = {
 
 
 exports.subscriptionConfiguration = {
-  changeType: 'Created',
+  ChangeType: "Created, Updated, Deleted",
   notificationUrl: 'https://dashdesk.azurewebsites.net/listen',
-  resource: 'me/mailFolders(\'Inbox\')/messages',
+  resource: 'me/mailfolders(\'Inbox\')/messages',
   clientState: 'cLIENTsTATEfORvALIDATION'
 };
 
@@ -19,8 +19,8 @@ exports.subscriptionConfiguration = {
 // New api version subscriptionConfiguration -request payload 
 
 exports.newsubscriptionConfiguration = {
-   Resource: "https://outlook.office.com/api/beta/me/folders('Inbox')/messages",
    NotificationURL: "https://dashdesk.azurewebsites.net/listen",
+   resource: 'me/mailfolders(\'Inbox\')/messages',
    ChangeType: "Created, Updated, Deleted",
    ClientState: "cLIENTsTATEfORvALIDATION"
 };
