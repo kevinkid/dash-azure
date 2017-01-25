@@ -97,7 +97,7 @@ function processNotification(subscriptionId, resource, res, next) {
                 if (endpointData) {
                     
                     //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-                    fs.writeFileSync('../logs/log_file.log', endpointData,
+                    fs.writeFile('../logs/log_file.log', endpointData,
                     {
                        encoding: "utf8",
                        mode: "0o666",
@@ -111,7 +111,7 @@ function processNotification(subscriptionId, resource, res, next) {
                 } else if (requestError) {
                     
                     //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-                    fs.writeFileSync('../logs/log_file.log', requestError,
+                    fs.writeFile('../logs/log_file.log', requestError,
                     {
                         encoding: "utf8",
                         mode: "0o666",
