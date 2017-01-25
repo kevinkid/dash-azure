@@ -32,6 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="Handlers\AuthHandler.js" />
+    <Compile Include="Handlers\dbHandler.js" />
+    <Compile Include="Handlers\httpHelper.js" />
     <Compile Include="Handlers\SocketHandler\gulpfile.js" />
     <Compile Include="Handlers\SocketHandler\index.js" />
     <Compile Include="helpers\authHelper.js" />
@@ -52,6 +55,7 @@
     <Content Include="Handlers\SocketHandler\LICENSE" />
     <Content Include="Handlers\SocketHandler\package.json" />
     <Content Include="Handlers\SocketHandler\README.md" />
+    <Content Include="settings.json" />
     <Content Include="public\css\fabric.components.min.css" />
     <Content Include="public\css\fabric.min.css" />
     <Content Include="public\dashboard.html" />

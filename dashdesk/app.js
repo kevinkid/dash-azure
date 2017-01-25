@@ -1,13 +1,15 @@
 ﻿var express = require('express');
 var app = express();
 var http = require('http');
+var fs = require("fs");
 var path = require('path');
+var configurations = require("./settings.json");
+var config = JSON.parse(fs.readFileSync(configurations, 'UTF-8'));
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
-
 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
@@ -22,6 +24,8 @@ app.use(function (req, res, next) {
     res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
     next();
 });
+
+
 
 // Port config 
 app.set('port', process.env.PORT || 3000);
