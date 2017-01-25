@@ -3,8 +3,7 @@ var app = express();
 var http = require('http');
 var fs = require("fs");
 var path = require('path');
-var configurations = require("./settings.json");
-var config = JSON.parse(fs.readFileSync(configurations, 'UTF-8'));
+
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
@@ -25,6 +24,11 @@ app.use(function (req, res, next) {
     next();
 });
 
+
+
+var config = fs.readFileSync('./settings.json', 'UTF-8');
+console.dir("Config file:");
+console.dir(config);
 
 
 // Port config 
