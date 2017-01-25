@@ -5,7 +5,7 @@ var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
 var authHelper = require('../helpers/authHelper.js');
 //var dbHelper = require("../helpers/dbHelper");
-var requrestHelper = require("../helpers/requestHelper.js");
+var requestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
 
@@ -54,7 +54,7 @@ router.get('/callback', function (req, res) {
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
             // Make the request to subscription service.
             requestHelper.postData(
-                '/beta/subscriptions',
+            '/beta/subscriptions',
             token.accessToken,
             JSON.stringify(subscriptionConfiguration),
             function (requestError, subscriptionData) {
@@ -69,9 +69,10 @@ router.get('/callback', function (req, res) {
                   '&userId=' + subscriptionData.userId
                         );
                     } else if (requestError) {
-                        console.dir(requestError);
-                        res.status(500);
-                        res.json(requestError);
+                        res.redirect("/index.html?Error="+ requestError);
+                        //console.dir(requestError);
+                        //res.json(requestError);
+                        //res.status(500);
                     }
                 }
             );
@@ -93,7 +94,7 @@ router.get('/callback', function (req, res) {
 //    dbHelper.getSubscription(req.params.subscriptionId, function (dbError, subscriptionData, next) {
         
 //        if (subscriptionData) {
-//            requrestHelper.deleteData(
+//            requestHelper.deleteData(
 //                '/beta.subscriptons/' + req.params.subscriptonId,
 //                function (err) {
 //                    if (!err) {
