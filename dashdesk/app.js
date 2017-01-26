@@ -10,10 +10,14 @@ var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
 //var signalr = require("signalrjs");
-var signalr = require("./Handlers/SocketHandler/lib/signalRJS.js");
+var signalr = require("signalrjs");
 var signalR = signalr();
 
 
+// Port config 
+app.set('port', process.env.PORT || 3000);
+
+// Environment config 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env === 'development';
@@ -29,12 +33,12 @@ app.use(function (req, res, next) {
 });
 
 
-// SignalR config 
-signalR.serverProperties.ProtocalVersion = 1.4; // @note: version should corespond with the client singalr protocal version .
+//SignalR config
+signalR.serverProperties.ProtocolVersion = 1.3;// @todo: make sure this configuration works 
+console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
+app.use(signalR.createListener());// @note: Always make sure you create a listener attached to the server .
 
 
-// Port config 
-app.set('port', process.env.PORT || 3000);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -72,13 +76,16 @@ if (app.get("env") === "development") {
     });
 }
 
+
+// Hub connecton 
 signalR.hub('MyHub', {
-    Send: function (name, message) {
-        //@note: This method shoudl corespond with the client method calls 
-        this.Clients.all.invoke('AddMessage').withArgs([name, message]);
-        console.dir("Message recieved :" + message);
+    Send : function (name, message) {
+        // @note: This type of 
+        this.clients.all.invoke('AddMessage').withArgs([name, message]);
+        console.log('send:' + message);
     }
 });
+
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
