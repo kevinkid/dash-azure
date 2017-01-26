@@ -35,6 +35,7 @@
     <Compile Include="Handlers\AuthHandler.js" />
     <Compile Include="Handlers\dbHandler.js" />
     <Compile Include="Handlers\httpHelper.js" />
+    <Compile Include="Handlers\JavaScript.js" />
     <Compile Include="Handlers\SocketHandler\docs\examples\chat\signalRJSServer.js" />
     <Compile Include="Handlers\SocketHandler\docs\examples\passportChat\signalRJSServer.js" />
     <Compile Include="Handlers\SocketHandler\docs\examples\privateChat\signalRJSServer.js" />

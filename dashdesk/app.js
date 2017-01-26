@@ -9,7 +9,6 @@ var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
-//var signalr = require("signalrjs");
 var signalr = require("signalrjs");
 var signalR = signalr();
 
@@ -34,9 +33,9 @@ app.use(function (req, res, next) {
 
 
 //SignalR config
-signalR.serverProperties.ProtocolVersion = 1.3;// @todo: make sure this configuration works 
+signalR.serverProperties.ProtocolVersion = 1.3;
 console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
-app.use(signalR.createListener());// @note: Always make sure you create a listener attached to the server .
+app.use(signalR.createListener());
 
 
 
