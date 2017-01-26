@@ -44,59 +44,61 @@ router.post('/', function (req, res, next) {
         }, function () {
             console.dir("App loging");
         });
+
+        status = 202;
         
         // First, validate all the clientState values in array
-        for (i = 0; i < req.body.value.length; i++) {
-            if (req.body.value[i].clientState !== clientStateValueExpected) {
-                // If just one clientState is invalid, we discard the whole batch
-                clientStatesValid = false;
-                break;
-            } else {
-                clientStatesValid = true;
-            }
-        }
+        //for (i = 0; i < req.body.value.length; i++) {
+        //    if (req.body.value[i].clientState !== clientStateValueExpected) {
+        //        // If just one clientState is invalid, we discard the whole batch
+        //        clientStatesValid = false;
+        //        break;
+        //    } else {
+        //        clientStatesValid = true;
+        //    }
+        //}
         
-        // If all the clientStates are valid, then
-        // process the notification
-        if (clientStatesValid) {
-            //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+        //// If all the clientStates are valid, then
+        //// process the notification
+        //if (clientStatesValid) {
+        //    //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
             
-            fs.writeFile('../logs/log.txt', 'client valid notification from Microsoft endpoint validation .',
-                    {
-                encoding: "utf8",
-                mode: "0o666",
-                flag: "w"
-            }, function () {
-                console.dir("App loging");
-            });
+        //    fs.writeFile('../logs/log.txt', 'client valid notification from Microsoft endpoint validation .',
+        //            {
+        //        encoding: "utf8",
+        //        mode: "0o666",
+        //        flag: "w"
+        //    }, function () {
+        //        console.dir("App loging");
+        //    });
             
-            console.dir("Yey ! subscription id: " + subscriptionId);
-            for (i = 0; i < req.body.value.length; i++) {
-                resource = req.body.value[i].resource;
-                subscriptionId = req.body.value[i].subscriptionId;
-                processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
+        //    console.dir("Yey ! subscription id: " + subscriptionId);
+        //    for (i = 0; i < req.body.value.length; i++) {
+        //        resource = req.body.value[i].resource;
+        //        subscriptionId = req.body.value[i].subscriptionId;
+        //        processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
 
-            }
-            // Send a status of 'Accepted'
-            status = 202;
-        } else {
+        //    }
+        //    // Send a status of 'Accepted'
+        //    status = 202;
+        //} else {
             
-            //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-            fs.writeFile('../logs/log.txt', 'client state not valid notification from Microsoft endpoint webhook',
-                    {
-                encoding: "utf8",
-                mode: "0o666",
-                flag: "w"
-            }, function () {
-                console.dir("App loging");
-            });
-            // Since the clientState field doesn't have the expected value,
-            // this request might NOT come from Microsoft Graph.
-            // However, you should still return the same status that you'd
-            // return to Microsoft Graph to not alert possible impostors
-            // that you have discovered them.
-            status = 202;
-        }
+        //    //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+        //    fs.writeFile('../logs/log.txt', 'client state not valid notification from Microsoft endpoint webhook',
+        //            {
+        //        encoding: "utf8",
+        //        mode: "0o666",
+        //        flag: "w"
+        //    }, function () {
+        //        console.dir("App loging");
+        //    });
+        //    // Since the clientState field doesn't have the expected value,
+        //    // this request might NOT come from Microsoft Graph.
+        //    // However, you should still return the same status that you'd
+        //    // return to Microsoft Graph to not alert possible impostors
+        //    // that you have discovered them.
+        //    status = 202;
+        //}
     }
     res.status(status).end(http.STATUS_CODES[status]);
 });
