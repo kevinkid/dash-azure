@@ -10,6 +10,11 @@ var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 
+// @note: make sure that this is called from base:/listen/test  or base:/test
+router.get('/test', function (req, res) {
+    res.json("Yeah ! you go it . ");
+});
+
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
@@ -44,7 +49,7 @@ router.post('/', function (req, res, next) {
     // process the notification
         if (clientStatesValid) {
             //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-            fs.writeFile('../logs/log_file.log', 'client valid notification from Microsoft endpoint validation .',
+            fs.writeFile('../logs/log.txt', 'client valid notification from Microsoft endpoint validation .',
                     {
                 encoding: "utf8",
                 mode: "0o666",
@@ -65,7 +70,7 @@ router.post('/', function (req, res, next) {
         } else {
             
             //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-            fs.writeFile('../logs/log_file.log', 'client state not valid notification from Microsoft endpoint webhook',
+            fs.writeFile('../logs/log.txt', 'client state not valid notification from Microsoft endpoint webhook',
                     {
                 encoding: "utf8",
                 mode: "0o666",
@@ -117,7 +122,7 @@ function processNotification(subscriptionId, resource, res, next) {
                 if (endpointData) {
                     
                     //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-                    fs.writeFile('../logs/log_file.log', endpointData,
+                    fs.writeFile('../logs/log.txt', endpointData,
                     {
                        encoding: "utf8",
                        mode: "0o666",
@@ -131,7 +136,7 @@ function processNotification(subscriptionId, resource, res, next) {
                 } else if (requestError) {
                     
                     //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-                    fs.writeFile('../logs/log_file.log', requestError,
+                    fs.writeFile('../logs/log.txt', requestError,
                     {
                         encoding: "utf8",
                         mode: "0o666",

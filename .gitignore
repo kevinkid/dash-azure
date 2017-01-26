@@ -10,7 +10,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-npm-debug
+npm-debug*
+test/*
+test/
 
 # Build results
 [Dd]ebug/

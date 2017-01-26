@@ -49,6 +49,7 @@
   <ItemGroup>
     <None Include="dashdesk.pubxml" />
     <None Include="dashdesk - Web Deploy.pubxml" />
+    <Content Include="logs\logs.txt" />
     <Content Include="settings.json" />
     <Content Include="public\css\fabric.components.min.css" />
     <Content Include="public\css\fabric.min.css" />

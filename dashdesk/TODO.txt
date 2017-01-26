@@ -3,6 +3,14 @@ Author: bigkevzs
 Desc: Contains desired implementation for the current project
 ---
 
+
+* Debug signalr socket connection, i think this error happend sometimes .  
+
+Thu Jan 26 2017 07:52:59 GMT+0000 (Coordinated Universal Time): Application has thrown an uncaught exception and is terminated:
+TypeError: Cannot read property 'type' of undefined
+    at null._onTimeout (D:\home\site\wwwroot\node_modules\signalrjs\lib\signalRJS.js:91:46)
+    at Timer.listOnTimeout (timers.js:110:15)
+
 1. Clean your code 
 	a.Manage notification subscriptions by changing the database used on the server.
 	b. Write your own code the way you understand and the way its going to be easy for you
