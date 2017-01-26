@@ -3,12 +3,15 @@ var app = express();
 var http = require('http');
 var fs = require("fs");
 var path = require('path');
-
+var config = fs.readFileSync('./settings.json', 'UTF-8');// @todo: Debug json parsing and use it for storing credentails 
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
+var signalr = require("signalrjs");
+var signalR = signalr();
+
 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
@@ -25,10 +28,8 @@ app.use(function (req, res, next) {
 });
 
 
-
-var config = fs.readFileSync('./settings.json', 'UTF-8');
-console.dir("Config file:");
-console.dir(config);
+// SignalR config 
+signalR.serverProperties.ProtocalVersion = 1.3; // @note: version should corespond with the client singalr protocal version .
 
 
 // Port config 
@@ -70,6 +71,13 @@ if (app.get("env") === "development" ) {
     });
 }
 
+singalR.hub('MyHub', {
+    Send: function (name, message) {
+        //@note: This method shoudl corespond with the client method calls 
+        this.Clients.all.invoke('AddMessage').withArgs([name, message]);
+        console.dir("Message recieved :" + message);
+    }
+});
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
