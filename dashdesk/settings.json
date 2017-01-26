@@ -6,10 +6,10 @@
       "port": "3422"
     },
     "database": {
-      "host": "mongodb://dash2682:dash2682@ds059145.mongolab.com:59145/yofitdb",
+      "host": "mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash",
       "port": "27017",
-      "username": "null",
-      "password": "null"
+      "username": "nothing",
+      "password": "nothing"
     }
   },
   "development": {
@@ -20,8 +20,8 @@
     "database": {
       "host": "mongodb://localhost:27017/dash",
       "port": "27017",
-      "username": "null",
-      "password": "null"
+      "username": "nothing",
+      "password": "nothing"
     }
   },
   "subscriptionConfiguration": {
@@ -34,6 +34,6 @@
     "authority": "https://login.microsoftonline.com/common",
     "clientID": "d2d6267b-a005-4146-b79a-a754e5e0def3",
     "clientSecret": "wLPDOaGMOjWtGu9iUzsWsMcOLrXPwNG9uOdswFFQoj0=",
-    "redirectUri": "https: //dashdesk.azurewebsites.net/callback"
+    "redirectUri": "https://dashdesk.azurewebsites.net/callback"
   }
 }

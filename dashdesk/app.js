@@ -11,12 +11,8 @@ var listen = require("./routes/listen");
 var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
-var settings = fs.readFileSync('./settings.json', 'UTF-8');// @todo: Debug json parsing and use it for storing credentails 
-settings = JSON.parse(settings);
+//var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
-
-// Db config 
-mongoose.connect(settings.NODE_ENV[process.env].database.host);
 
 // Port config 
 app.set('port', process.env.PORT || 3000);
@@ -25,6 +21,13 @@ app.set('port', process.env.PORT || 3000);
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env === 'development';
+
+
+// Db config 
+//mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
+mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
+//mongoose.connect("mongodb://localhost:27017/dash");// local 
+require("./Handlers/dbHandler.js")(mongoose);
 
 // Express cors config 
 app.use(function (req, res, next) {
@@ -39,8 +42,8 @@ app.use(function (req, res, next) {
 
 //SignalR config
 signalR.serverProperties.ProtocolVersion = 1.3;
-console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
 app.use(signalR.createListener());
+console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
 
 
 

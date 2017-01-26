@@ -35,6 +35,7 @@
     <Compile Include="Handlers\AuthHandler.js" />
     <Compile Include="Handlers\dbHandler.js" />
     <Compile Include="Handlers\httpHelper.js" />
+    <Compile Include="Handlers\SessionKeygen.js" />
     <Compile Include="Handlers\SocketHandler.js" />
     <Compile Include="helpers\authHelper.js" />
     <Compile Include="helpers\dbHelper.js" />
