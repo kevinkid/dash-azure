@@ -30,31 +30,20 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 //require("./Handlers/dbHandler.js")(mongoose);
 
 // Express cors config 
-app.use(function (req, res, next) {
-    req.header("Access-Control-Allow-Headers", "Content-Type");
-    res.header("Access-Control-Allow-Origin", "https://dashdesk.azurewebsites.net");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    res.header("Access-Control-Allow-Credentials", "false");
-    res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
-    next();
-});
+//app.use(function (req, res, next) {
+//    req.header("Access-Control-Allow-Headers", "Content-Type");
+//    res.header("Access-Control-Allow-Origin", "https://dashdesk.azurewebsites.net");
+//    res.header("Access-Control-Allow-Headers", "Content-Type");
+//    res.header("Access-Control-Allow-Credentials", "false");
+//    res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
+//    next();
+//});
 
 
 //SignalR config
 signalR.serverProperties.ProtocolVersion = 1.3;
 app.use(signalR.createListener());
 console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
-
-
-
-fs.writeFile('./logs/log.txt', 'Recieving notification data from graph outlook webhook api .',
-                {
-    encoding: "utf8",
-    mode: "0o666",
-    flag: "w"
-}, function () {
-    console.dir("App loging");
-});
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -94,7 +83,7 @@ if (app.get("env") === "development") {
 }
 
 
-// Hub connecton 
+// Client - Server hub connection  
 signalR.hub('MyHub', {
     Send : function (name, message) {
         // @note: This type of 
@@ -108,5 +97,4 @@ var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-module.exports = signalR;
 module.exports = app;
