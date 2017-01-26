@@ -10,7 +10,7 @@ var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
 //var signalr = require("signalrjs");
-var singlar = require("../Handlers/SocketHandler-signalr/lib/signalRJS.js");
+var singlar = require("./Handlers/SocketHandler-signalr/lib/signalRJS.js");
 var signalR = signalr();
 
 
