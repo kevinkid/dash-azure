@@ -1,24 +1,24 @@
 ﻿{
   "author": "@bigkevzs",
-  "Production": {
+  "production": {
     "server": {
       "host": "https://dashdesk.azurewebsites.net",
       "port": "3422"
     },
     "database": {
-      "host": "mongodb://user1:user1@ds059145.mongolab.com:59145/yofitdb",
+      "host": "mongodb://dash2682:dash2682@ds059145.mongolab.com:59145/yofitdb",
       "port": "27017",
       "username": "null",
       "password": "null"
     }
   },
-  "Developments": {
+  "development": {
     "server": {
       "host": "http://localhost:666",
       "port": "666"
     },
     "database": {
-      "host": "mongodb://localhost:27017",
+      "host": "mongodb://localhost:27017/dash",
       "port": "27017",
       "username": "null",
       "password": "null"

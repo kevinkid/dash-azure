@@ -3,7 +3,7 @@ var app = express();
 var http = require('http');
 var fs = require("fs");
 var path = require('path');
-var config = fs.readFileSync('./settings.json', 'UTF-8');// @todo: Debug json parsing and use it for storing credentails 
+var mongoose = require("mongoose");
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
@@ -11,7 +11,12 @@ var listen = require("./routes/listen");
 var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
+var settings = fs.readFileSync('./settings.json', 'UTF-8');// @todo: Debug json parsing and use it for storing credentails 
+settings = JSON.parse(settings);
 
+
+// Db config 
+mongoose.connect(settings.NODE_ENV[process.env].database.host);
 
 // Port config 
 app.set('port', process.env.PORT || 3000);
