@@ -23,7 +23,7 @@ var SignalRJS = function(){
 		"DisconnectTimeout":30.0,
 		"ConnectionTimeout":110.0,
 		"TryWebSockets":false,
-		"ProtocolVersion":"1.5", // Works fine but chang to 1.4 to match Microsoft.AspNet.SignalR.Client [Latest Version]
+		"ProtocolVersion":"1.3", // Works fine but chang to 1.4 to match Microsoft.AspNet.SignalR.Client [Latest Version]
 		"TransportConnectTimeout":5.0,
 		"LongPollDelay":0.0,
 		"HeartBeatInterval" : 15000

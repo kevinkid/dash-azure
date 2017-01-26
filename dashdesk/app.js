@@ -10,7 +10,7 @@ var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
 //var signalr = require("signalrjs");
-var singlar = require("./Handlers/SocketHandler-signalr/lib/signalRJS.js");
+var signalr = require("./Handlers/SocketHandler/lib/signalRJS.js");
 var signalR = signalr();
 
 
@@ -30,11 +30,11 @@ app.use(function (req, res, next) {
 
 
 // SignalR config 
-signalR.serverProperties.ProtocalVersion = 1.3; // @note: version should corespond with the client singalr protocal version .
+signalR.serverProperties.ProtocalVersion = 1.4; // @note: version should corespond with the client singalr protocal version .
 
 
 // Port config 
-//app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3000);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -62,13 +62,13 @@ app.use(function (req, res, next) {
 
 
 // Error Handling  
-if (app.get("env") === "development" ) {
+if (app.get("env") === "development") {
     app.use(function (err, req, res) {
         res.render("error", {
             message: err.message,
             error: err,
-            title:  "Error"
-        }); 
+            title: "Error"
+        });
     });
 }
 
