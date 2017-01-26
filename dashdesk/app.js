@@ -9,7 +9,8 @@ var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
-var signalr = require("signalrjs");
+//var signalr = require("signalrjs");
+var singlar = require("../Handlers/SocketHandler-signalr/lib/signalRJS.js");
 var signalR = signalr();
 
 
@@ -33,7 +34,7 @@ signalR.serverProperties.ProtocalVersion = 1.3; // @note: version should corespo
 
 
 // Port config 
-app.set('port', process.env.PORT || 3000);
+//app.set('port', process.env.PORT || 3000);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -71,7 +72,7 @@ if (app.get("env") === "development" ) {
     });
 }
 
-singalR.hub('MyHub', {
+signalR.hub('MyHub', {
     Send: function (name, message) {
         //@note: This method shoudl corespond with the client method calls 
         this.Clients.all.invoke('AddMessage').withArgs([name, message]);
