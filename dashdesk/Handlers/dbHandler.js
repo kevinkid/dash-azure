@@ -31,7 +31,8 @@ module.exports = function (mongoose) {
         email: "anotheruser:yahoo.com",
         subscriptionId: "asdfasdfasdfa-sdjfa-sdd8f"
     });
-
+    
+    // New subscription 
     newsub.save(function (error) {
         if (!error) {
             console.log("No error writing database .");
@@ -39,7 +40,8 @@ module.exports = function (mongoose) {
             console.log("Error writing database .");
         }
     });
-
+    
+    // Query subscription details 
     subscription.find({ "email": "john:yahoo.com" }, function (error, subscriptionList) {
         if (!error) {
             console.dir("Hurray ! data: "+ subscriptionList);
@@ -47,5 +49,25 @@ module.exports = function (mongoose) {
             console.dir("Error quering database. ");
         }
     });
+    
+    // Updating subscription details .
+    subscription.findOne({ "user": "username" }, function (err, subscriptionDetails) {
+        if (!err) {
+            console.dir("User found, updating subscription details details ");
+            subscriptionDetails.key = "New value";
+            subscriptionDetails.save(function (error) {
+                if (!error) {
+                    console.dir("Subscription details updated .");
+                } else {
+                    console.dir("Subscription details updating failed "+error);
+                }
+            });
+       
+        } else {
+            console.dir("Error record not found , creating one ...");
+        }
+    });
+
+
          
 }

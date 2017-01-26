@@ -8,6 +8,7 @@ var router = express.Router();
 var io = require('../helpers/socketHelper.js');
 var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
+var signalR = require("../app.js").signalR;
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 
 // @note: make sure that this is called from base:/listen/test  or base:/test
@@ -33,6 +34,16 @@ router.post('/', function (req, res, next) {
     status = 200;
   } else {
     clientStatesValid = false;
+        
+                
+    fs.writeFile('../logs/log.txt', 'Recieving notification data from graph outlook webhook api .',
+                {
+        encoding: "utf8",
+        mode: "0o666",
+        flag: "w"
+    }, function () {
+        console.dir("App loging");
+    });    
 
     // First, validate all the clientState values in array
     for (i = 0; i < req.body.value.length; i++) {
@@ -49,6 +60,7 @@ router.post('/', function (req, res, next) {
     // process the notification
         if (clientStatesValid) {
             //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+
             fs.writeFile('../logs/log.txt', 'client valid notification from Microsoft endpoint validation .',
                     {
                 encoding: "utf8",

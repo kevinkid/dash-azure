@@ -47,6 +47,16 @@ console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
 
 
 
+fs.writeFile('./logs/log.txt', 'Recieving notification data from graph outlook webhook api .',
+                {
+    encoding: "utf8",
+    mode: "0o666",
+    flag: "w"
+}, function () {
+    console.dir("App loging");
+});
+
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
@@ -98,5 +108,5 @@ var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-
+module.exports = signalR;
 module.exports = app;
