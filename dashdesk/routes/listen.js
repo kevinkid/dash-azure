@@ -10,10 +10,11 @@ var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
 var signalR = require("../app.js").signalR;
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
+    
 
-
+// @todo: remove me 
 router.post('/test', function (req, res) {
-    fs.writeFile('../logs/log.txt', 'Post request log @[' + (new Date(Date.now() + 86400000).toISOString()) + ']',
+    fs.writeFile('../logs/log.txt', "Post request log @["+ (new Date(Date.now() + 86400000).toISOString()) +"]",
         {
         encoding: "utf8",
         mode: "0o666",
@@ -21,9 +22,7 @@ router.post('/test', function (req, res) {
     }, function () {
         console.dir("App loging");
     });    
-    
     res.json("Huray ! , you go it .");
-
 });
 
 /* Default listen route */
@@ -41,11 +40,28 @@ router.post('/', function (req, res, next) {
         res.send(req.query.validationToken);
         // Send a status of 'Ok'
         status = 200;
+
+        res.status(status);
+        res.send(req.query.validationToken);
+
+
     } else {
         clientStatesValid = false;
         
+        fs.writeFile('../logs/log.txt', "Post request log @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
+        {
+            encoding: "utf8",
+            mode: "0o666",
+            flag: "w"
+        }, function () {
+            console.dir("App loging");
+        });    
         
-        fs.writeFile('../logs/log.txt', 'Recieving notification [outlook webhook]',
+        
+        // @note: after you respond the reset rest of the code is not going to be executed . 
+        // log notification requests 
+        
+        fs.writeFile('../logs/log.txt', "Notification recieved @[" + (new Date(Date.now() + 86400000).toISOString()) + "] value: " + JSON.stringify(req.body.value),
         {
             encoding: "utf8",
             mode: "0o666",
@@ -53,9 +69,14 @@ router.post('/', function (req, res, next) {
         }, function () {
             console.dir("App loging");
         });
+        
 
         status = 202;
+        res.status(status);
         
+             
+        
+
         // First, validate all the clientState values in array
         //for (i = 0; i < req.body.value.length; i++) {
         //    if (req.body.value[i].clientState !== clientStateValueExpected) {
