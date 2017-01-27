@@ -27,6 +27,14 @@ router.post('/test', function (req, res) {
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
+    fs.writeFile('../logs/log.txt', "Post request recieved  @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
+        {
+        encoding: "utf8",
+        mode: "0o666",
+        flag: "w"
+    }, function () {
+        console.dir("App loging");
+    });
     var status;
     var clientStatesValid;
     var i;
@@ -37,6 +45,18 @@ router.post('/', function (req, res, next) {
     // that this is a valid endpoint.
     // Just send the validationToken back.
     if (req.query && req.query.validationToken) {
+        
+        
+        fs.writeFile('../logs/log.txt', "webook subscription Validation handshake @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
+        {
+            encoding: "utf8",
+            mode: "0o666",
+            flag: "w"
+        }, function () {
+            console.dir("App loging");
+        });
+        
+
         res.send(req.query.validationToken);
         // Send a status of 'Ok'
         status = 200;
