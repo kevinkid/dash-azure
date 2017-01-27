@@ -1,1 +1,0 @@
-﻿// @desc: creates a key for each client session 

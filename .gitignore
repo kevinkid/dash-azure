@@ -10,6 +10,10 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+*.njsproj
+dashdesk.njsproj
+*njsproj
+
 npm-debug*
 test/*
 test/

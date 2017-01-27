@@ -11,11 +11,20 @@ var http = require('http');
 var signalR = require("../app.js").signalR;
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 
-// @note: make sure that this is called from base:/listen/test  or base:/test
-router.get('/test', function (req, res) {
-    res.json("Yeah ! you go it . ");
-});
 
+router.post('/test', function (req, res) {
+    fs.writeFile('../logs/log.txt', 'Post request log @[' + (new Date(Date.now() + 86400000).toISOString()) + ']',
+        {
+        encoding: "utf8",
+        mode: "0o666",
+        flag: "w"
+    }, function () {
+        console.dir("App loging");
+    });    
+    
+    res.json("Huray ! , you go it .");
+
+});
 
 /* Default listen route */
 router.post('/', function (req, res, next) {

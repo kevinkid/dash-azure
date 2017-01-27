@@ -29,7 +29,7 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 //mongoose.connect("mongodb://localhost:27017/dash");// local 
 //require("./Handlers/dbHandler.js")(mongoose);
 
-// Express cors config 
+// Cors config @todo: uncomment me 
 //app.use(function (req, res, next) {
 //    req.header("Access-Control-Allow-Headers", "Content-Type");
 //    res.header("Access-Control-Allow-Origin", "https://dashdesk.azurewebsites.net");
@@ -63,6 +63,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/listen', listen);
 
+// socket handling
+//require("./Handlers/SocketHandler.js")(app, signalR);
+
 // Capture 404 errors 
 app.use(function (req, res, next) {
     var error = new error('Not Found ');
@@ -92,18 +95,18 @@ signalR.hub('MyHub', {
     }
 });
 
-fs.writeFile('./logs/log.txt', 'Starting ['+(new Date(Date.now() + 86400000).toISOString()),
-        {
-    encoding: "utf8",
-    mode: "0o666",
-    flag: "w"
-}, function () {
-    console.dir("App loging");
-});
-
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
+    fs.writeFile('./logs/log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',
+        {
+        encoding: "utf8",
+        mode: "0o666",
+        flag: "w"
+    }, function () {
+        console.dir("App loging");
+    });
+
 });
 
 module.exports = app;

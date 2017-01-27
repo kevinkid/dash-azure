@@ -35,7 +35,7 @@
     <Compile Include="Handlers\AuthHandler.js" />
     <Compile Include="Handlers\dbHandler.js" />
     <Compile Include="Handlers\httpHelper.js" />
-    <Compile Include="Handlers\SessionKeygen.js" />
+    <Compile Include="Handlers\Keygen.js" />
     <Compile Include="Handlers\SocketHandler.js" />
     <Compile Include="helpers\authHelper.js" />
     <Compile Include="helpers\dbHelper.js" />
@@ -49,7 +49,6 @@
   <ItemGroup>
     <None Include="dashdesk.pubxml" />
     <None Include="dashdesk - Web Deploy.pubxml" />
-    <Content Include="logs\logs.txt" />
     <Content Include="settings.json" />
     <Content Include="public\css\fabric.components.min.css" />
     <Content Include="public\css\fabric.min.css" />
@@ -146,4 +145,9 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <!-- @[Analysis ignored Directories to make visual studio faster] -->
+    <AnalysisIgnoredDirectories>bower_components;dir_not_included</AnalysisIgnoredDirectories>
+    <AnalysisIgnoredDirectories>node_modules</AnalysisIgnoredDirectories>
+  </PropertyGroup>
 </Project>
