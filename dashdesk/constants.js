@@ -6,9 +6,13 @@ exports.adalConfiguration = {
 };
 
 
+
+
+
 exports.subscriptionConfiguration = {
   changeType: "Created, Updated, Deleted",
   notificationUrl: 'https://dashdesk.azurewebsites.net/listen',
-  resource: 'me/mailfolders(\'Inbox\')/messages', //('Inbox','Sent Items')
+  resource: "/me/folders('Inbox')/messages", //('Inbox','Sent Items')
   clientState: 'cLIENTsTATEfORvALIDATION'
 };
+

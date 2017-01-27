@@ -8,6 +8,8 @@ var adalConfiguration = require('../constants.js').adalConfiguration;
 var resource = 'https://graph.microsoft.com/';
 var premissions = "mail.read";
 
+
+
 // No permissions
 //https://login.microsoftonline.com/common/oauth2/authorize?client_id=d2d6267b-a005-4146-b79a-a754e5e0def3&response_type=code&redirect_uri=https://dashdesk.azurewebsites.net/callback
 // Permission
@@ -26,6 +28,8 @@ function getAuthUrl() {
     //'resource=openid%20User.Read%20User.ReadWrite%20User.ReadBasic.All%20Mail.ReadWrite%20Mail.ReadWrite.Shared%20Mail.Send%20Mail.Send.Shared%20Calendars.ReadWrite%20Calendars.ReadWrite.Shared%20Contacts.ReadWrite%20Contacts.ReadWrite.Shared%20MailboxSettings.ReadWrite%20Files.ReadWrite%20Files.ReadWrite.All%20Files.ReadWrite.Selected%20Files.ReadWrite.AppFolder%20Notes.ReadWrite%20Notes.ReadWrite.All%20Notes.ReadWrite.CreatedByApp%20Notes.Create%20Tasks.ReadWrite%20Tasks.ReadWrite.Shared%20Sites.ReadWrite.All'+
     '&redirect_uri=' + adalConfiguration.redirectUri;
 }
+
+
 
 /**
  * Gets a token for a given resource.
@@ -50,6 +54,8 @@ function getTokenFromCode(code, callback) {
     }
   );
 }
+
+
 
 exports.getAuthUrl = getAuthUrl;
 exports.getTokenFromCode = getTokenFromCode;

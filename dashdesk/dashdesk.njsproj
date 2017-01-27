@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="bin\RemoteDebug.js" />
     <Compile Include="Handlers\AuthHandler.js" />
     <Compile Include="Handlers\dbHandler.js" />
     <Compile Include="Handlers\httpHelper.js" />

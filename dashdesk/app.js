@@ -63,6 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/listen', listen);
 
+
 // socket handling
 //require("./Handlers/SocketHandler.js")(app, signalR);
 
@@ -108,5 +109,10 @@ var server = app.listen(app.get('port'), function () {
     });
 
 });
+
+
+// remote debuging - node.cmd backup
+//node.exe %1 %2 %3
+
 
 module.exports = app;
