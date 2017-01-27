@@ -92,6 +92,15 @@ signalR.hub('MyHub', {
     }
 });
 
+fs.writeFile('./logs/log.txt', 'Starting ['+(new Date(Date.now() + 86400000).toISOString()),
+        {
+    encoding: "utf8",
+    mode: "0o666",
+    flag: "w"
+}, function () {
+    console.dir("App loging");
+});
+
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
