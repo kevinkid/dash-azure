@@ -7,7 +7,7 @@ exports.adalConfiguration = {
 
 
 exports.subscriptionConfiguration = {
-    changeType: 'Created',
+    changeType: "Created, Updated, Deleted",
     notificationUrl: 'https://dashdesk.azurewebsites.net/listen',
     resource: 'me/mailFolders(\'Inbox\')/messages',
     clientState: 'cLIENTsTATEfORvALIDATION'
@@ -25,4 +25,15 @@ exports.subscriptionConfiguration = {
 /*
  * clientID: 'd2d6267b-a005-4146-b79a-a754e5e0def3',
  * clientSecret: 'wLPDOaGMOjWtGu9iUzsWsMcOLrXPwNG9uOdswFFQoj0=',
+ */
+
+/*
+ * @note: change to v1.0 then use subscriptionConfiguration below .
+ *   {
+   NotificationURL: "https://webhook.azurewebsites.net/api/send/rest_notify",
+   ChangeType: "Created, Updated, Deleted",
+   Resource: "https://outlook.office.com/api/beta/me/folders('Inbox')/messages",
+   ClientState: "Client information"
+   SubscriptionExpirationDateTime: "2015-10-24T18:40:00.0Z",
+ } 
  */
