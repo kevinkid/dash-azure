@@ -26,8 +26,8 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 // Db config 
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
-//mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
-mongoose.connect("mongodb://localhost:27017/dash");// local 
+mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
+//mongoose.connect("mongodb://localhost:27017/dash");// local 
 //require("./Handlers/dbHandler.js")(mongoose);
 
 // Cors config @todo: uncomment me 

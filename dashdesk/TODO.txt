@@ -18,4 +18,3 @@ TypeError: Cannot read property 'type' of undefined
 2. Embed signalr and make sure that you are getting notifications from outlook webhook endpoint .
 
 
-

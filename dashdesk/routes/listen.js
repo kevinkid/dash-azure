@@ -48,7 +48,6 @@ router.post('/', function (req, res, next) {
     // Just send the validationToken back.
     if (req.query.validationToken) {
         
-        
         fs.writeFile('./log.txt', "webook subscription Validation handshake @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
         {
             encoding: "utf8",
@@ -58,16 +57,16 @@ router.post('/', function (req, res, next) {
             console.dir("App loging");
         });
         
-        
         res.send(req.query.validationToken);
         res.status(200);
         
 
     } else {
         
+        res.send(req.body);
+
         // store notification to the database instead .
         require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeNotification");
-
         res.status(202);
         
         // @note: anthing after this will not be executed .
