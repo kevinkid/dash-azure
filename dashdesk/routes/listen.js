@@ -13,30 +13,9 @@ var clientStateValueExpected = require('../constants').subscriptionConfiguration
 var mongoose = require("mongoose");
 
 
-
-// @todo: remove me 
-router.post('/test', function (req, res) {
-    fs.writeFile('./log.txt', "Post request log @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
-        {
-        encoding: "utf8",
-        mode: "0o666",
-        flag: "w"
-    }, function () {
-        console.dir("App loging");
-    });
-    res.json("Huray ! , you go it .");
-});
-
 /* Default listen route */
 router.post('/', function (req, res, next) {
-    fs.writeFile('./log.txt', "Post request recieved  @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
-        {
-        encoding: "utf8",
-        mode: "0o666",
-        flag: "w"
-    }, function () {
-        console.dir("App loging");
-    });
+  
     var status;
     var clientStatesValid;
     var i;

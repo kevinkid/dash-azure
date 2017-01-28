@@ -26,7 +26,7 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 // Db config 
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
-mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
+ mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
 //mongoose.connect("mongodb://localhost:27017/dash");// local 
 //require("./Handlers/dbHandler.js")(mongoose);
 
@@ -39,6 +39,8 @@ mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// 
 //    res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
 //    next();
 //});
+
+
 
 
 //SignalR config

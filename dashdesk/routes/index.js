@@ -20,15 +20,6 @@ router.get('/signin', function (req, res) {
 });
 
 
-router.post('/', function (req, res) {
-   
-    if (req.query.validationToken) {
-        
-    } else {
-    
-    }
-         
-});
 
 router.get('/callback', function (req, res) {
     console.dir("Checking for code query param .");

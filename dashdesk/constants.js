@@ -7,11 +7,12 @@ exports.adalConfiguration = {
 
 
 exports.subscriptionConfiguration = {
-    changeType: "Created",
-    notificationUrl: 'https://dashdesk.azurewebsites.net/listen',
+    changeType: "Created, Updated, Deleted",
+    notificationUrl: 'https://dashlisten.usefinch.eu/listen',
     resource: 'me/mailFolders(\'Inbox\')/messages',
     clientState: 'cLIENTsTATEfORvALIDATION'
 };
+
 
 
 // credentails source: [http://dev.office.com/devprogram ]
@@ -28,7 +29,7 @@ exports.subscriptionConfiguration = {
  */
 
 /*
- * @note: change to v1.0 then use subscriptionConfiguration below .
+ * @note: change to v2.0 then use subscriptionConfiguration below .
  *   {
    NotificationURL: "https://webhook.azurewebsites.net/api/send/rest_notify",
    ChangeType: "Created, Updated, Deleted",

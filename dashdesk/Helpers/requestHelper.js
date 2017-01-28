@@ -74,6 +74,8 @@ console.dir(date);
   });
 }
 
+
+
 /**
  * Generates a GET request (of Content-type ```application/json```)
  * @param {string} path the path, relative to the host, to which this request will be sent
@@ -114,6 +116,9 @@ function getData(path, token, callback) {
     callback(error, null);
   });
 }
+
+
+
 
 /**
  * Generates a DELETE request
