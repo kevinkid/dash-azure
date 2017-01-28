@@ -7,7 +7,7 @@ var ClientSchema = new Schema({
     sessionKey: String
 });
 
-var client = mongoose.model("clients", notificationSchema);
+var client = mongoose.model("clients", ClientSchema);
 
 module.exports = client;
 

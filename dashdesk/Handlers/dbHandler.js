@@ -34,17 +34,17 @@ module.exports = {
         });
 
     },
-    UpdateClient : function(mongoose,key, value, client){
+    UpdateClient : function(mongoose,key, value, client, callback){
 
         client.findOne({ "user": "username" }, function (err, clientList) {
         if (!err) {
             clientList.save(function (error) {
                 if (!error) {
-                    return true;
                     console.dir("Subscription details updated .");
+                    callback(clientList);
                 } else {
-                    return false;
                     console.dir("Subscription details updating failed "+error);
+                    callback(null);
                 }
             });
         
@@ -55,28 +55,30 @@ module.exports = {
 
     },
     UnregisterClient : function(mongoose, data, client){},
-    GetSubscription : function (mongoose, data, subscription){
+    GetSubscription : function (mongoose, data, subscription, callback){
 
         subscription.find({ "email": "john:yahoo.com" }, function (error, subscriptionDet) {
         if (!error) {
-            return subscriptionDet;
             console.dir("Hurray ! data: "+ subscriptionDet);
+            callback(subscriptionDet);
         } else {
-            return false;
             console.dir("Error quering database. ");
+            callback(null);
         }
         });
 
     },
-    UpdateSubscription : function(mongoose, data, subscription){
+    UpdateSubscription : function(mongoose, data, subscription, callback){
 
         subscription.findOne({ "user": "username" }, function (err, subscriptionDetails) {
         if (!err) {
             subscriptionDetails.save(function (error) {
                 if (!error) {
                     console.dir("Subscription details updated .");
+                    callback(subscriptionDetails);
                 } else {
                     console.dir("Subscription details updating failed "+error);
+                    callback(null);
                 }
             });
         
