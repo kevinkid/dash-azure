@@ -1,50 +1,109 @@
-﻿// @desc: Handling different client states  logic implementation 
-// @note: Lots of moving parts, just store the subscription instance.
-// @todo: export an object of database executions instead 
-module.exports = function (mongoose, userData, type) {
-    
-    var notification = require("./db.js");
+﻿//: @Desc: Database operation logic .
 
-    var newNotification = new notification({
-        subscription: [userData]
-    });
-    
-    // New subscription 
-    newNotification.save(function (error) {
+module.exports = {
+
+    FindClient : function (mongoose, data, client, callback){
+
+        //@todo: what would be the perfect unique identifier for a client ?
+        client.find({ "email": "john:yahoo.com" }, function (error, clientDet) {
         if (!error) {
-            console.log("No error writing database .");
+            //@todo: process the clientDet
+            callback(clientDet);
+            return clientDet;
+            console.dir("Hurray ! data: "+ clientDet);
         } else {
-            console.log("Error writing database .");
+            console.dir("Error quering database. ");
         }
-    });
-    
-    // @todo: we just need to store .
-    //// Query subscription details 
-    //subscription.find({ "email": "john:yahoo.com" }, function (error, subscriptionList) {
-    //    if (!error) {
-    //        console.dir("Hurray ! data: "+ subscriptionList);
-    //    } else {
-    //        console.dir("Error quering database. ");
-    //    }
-    //});
-    
+        });
 
-    // Updating subscription details .
-    //subscription.findOne({ "user": "username" }, function (err, subscriptionDetails) {
-    //    if (!err) {
-    //        subscriptionDetails.save(function (error) {
-    //            if (!error) {
-    //                console.dir("Subscription details updated .");
-    //            } else {
-    //                console.dir("Subscription details updating failed "+error);
-    //            }
-    //        });
-       
-    //    } else {
-    //        console.dir("Error record not found , creating one ...");
-    //    }
-    //});
+    },
+    RegisterClient : function(mongoose, data, client){
 
+        var newClient = new client({
+            subscription: [data]
+        });
+        
+        newClient.save(function (error) {
+            if (!error) {
+                return true;
+                console.log("No error writing database .");
+            } else {
+                return false;
+                console.log("Error writing database .");
+            }
+        });
 
-         
-}
+    },
+    UpdateClient : function(mongoose,key, value, client){
+
+        client.findOne({ "user": "username" }, function (err, clientList) {
+        if (!err) {
+            clientList.save(function (error) {
+                if (!error) {
+                    return true;
+                    console.dir("Subscription details updated .");
+                } else {
+                    return false;
+                    console.dir("Subscription details updating failed "+error);
+                }
+            });
+        
+        } else {
+            console.dir("Error record not found , creating one ...");
+        }
+        });
+
+    },
+    UnregisterClient : function(mongoose, data, client){},
+    GetSubscription : function (mongoose, data, subscription){
+
+        subscription.find({ "email": "john:yahoo.com" }, function (error, subscriptionDet) {
+        if (!error) {
+            return subscriptionDet;
+            console.dir("Hurray ! data: "+ subscriptionDet);
+        } else {
+            return false;
+            console.dir("Error quering database. ");
+        }
+        });
+
+    },
+    UpdateSubscription : function(mongoose, data, subscription){
+
+        subscription.findOne({ "user": "username" }, function (err, subscriptionDetails) {
+        if (!err) {
+            subscriptionDetails.save(function (error) {
+                if (!error) {
+                    console.dir("Subscription details updated .");
+                } else {
+                    console.dir("Subscription details updating failed "+error);
+                }
+            });
+        
+        } else {
+            console.dir("Error record not found , creating one ...");
+        }
+        });
+
+    },
+    StoreSubscription  : function(mongoose, data, subscription){
+
+        var newSubscription = new subscription({
+            subscription: [data]
+        });
+        
+        newSubscription.save(function (error) {
+            if (!error) {
+                return true;
+                console.log("No error writing database .");
+            } else {
+                return false;
+                //@todo: implement log for retries .
+                console.log("Error writing database .");
+            }
+        });
+
+    },
+    Unsubscribe : function(mongoose, data){}
+};
+

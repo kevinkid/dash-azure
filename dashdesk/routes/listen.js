@@ -11,6 +11,9 @@ var http = require('http');
 var signalR = require("../app.js").signalR;
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 var mongoose = require("mongoose");
+var notification = require("../Handlers/client.js");
+var subscription = require("../Handlers/subscription.js");
+var db = require("../Handlers/dbHandler.js");
 
 
 /* Default listen route */
@@ -21,59 +24,20 @@ router.post('/', function (req, res, next) {
     var i;
     var resource;
     var subscriptionId;
-    // If there's a validationToken parameter in the query string,
-    // then this is the request that Office 365 sends to check
-    // that this is a valid endpoint.
-    // Just send the validationToken back.
+
     if (req.query.validationToken) {
-        
-        fs.writeFile('./log.txt', "webook subscription Validation handshake @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
-        {
-            encoding: "utf8",
-            mode: "0o666",
-            flag: "w"
-        }, function () {
-            console.dir("App loging");
-        });
-        
+
         res.send(req.query.validationToken);
         res.status(200);
         
-
     } else {
         
 
-        // store notification to the database instead .
-        require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeNotification");
+        // @note: anthing after res will not be executed .
         res.status(202);
         
-        // @note: anthing after this will not be executed .
         clientStatesValid = false;
-        
-        fs.writeFile('./log.txt', "Post request log @[" + (new Date(Date.now() + 86400000).toISOString()) + "]",
-        {
-            encoding: "utf8",
-            mode: "0o666",
-            flag: "w"
-        }, function () {
-            console.dir("App loging");
-        });
-        
-        
-        // @note: after you respond the reset rest of the code is not going to be executed . 
-        // log notification requests 
-        
-        fs.writeFile('./log.txt', "Notification recieved @[" + (new Date(Date.now() + 86400000).toISOString()) + "] value: " + JSON.stringify(req.body.value),
-        {
-            encoding: "utf8",
-            mode: "0o666",
-            flag: "w"
-        }, function () {
-            console.dir("App loging");
-        });
-        
-        
-        
+
         //First, validate all the clientState values in array
         for (i = 0; i < req.body.value.length; i++) {
             if (req.body.value[i].clientState !== clientStateValueExpected) {
@@ -85,38 +49,14 @@ router.post('/', function (req, res, next) {
             }
         }
         
-        // If all the clientStates are valid, then
-        // process the notification
+        // validate all notifications 
         if (clientStatesValid) {
-            //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-            
-            fs.writeFile('./log.txt', 'client valid notification from Microsoft endpoint validation .',
-                    {
-                encoding: "utf8",
-                mode: "0o666",
-                flag: "w"
-            }, function () {
-                console.dir("App loging");
-            });
-            
-            // more query about the notificaton 
-        //    requestHelper.getData(
-        //        '/beta/' + resource, subscriptionData.accessToken,
-        //function (requestError, endpointData) {
-        //            if (endpointData) {
-        //                io.to(subscriptionId).emit('notification_received', endpointData);
-        //            } else if (requestError) {
-        //                res.status(500);
-        //                next(requestError);
-        //            }
-        //        }
-        //    );
-            
-            //for (i = 0; i < req.body.value.length; i++) {
-            //    resource = req.body.value[i].resource;
-            //    subscriptionId = req.body.value[i].subscriptionId;
-            //    processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
-            //}
+            // process all the notifications           
+            for (i = 0; i < req.body.value.length; i++) {
+               resource = req.body.value[i].resource;
+               subscriptionId = req.body.value[i].subscriptionId;
+               processNotification(subscriptionId, resource, res, next);//todo: uncomment me 
+            }
             
             // Send a status of 'Accepted'
             status = 202;
@@ -145,69 +85,69 @@ router.post('/', function (req, res, next) {
 // Get subscription data from the database
 // Retrieve the actual mail message data from Office 365.
 // Send the message data to the socket.
-//function processNotification(subscriptionId, resource, res, next) {
-//  dbHelper.getSubscription(subscriptionId, function (dbError, subscriptionData) {
-//    if (subscriptionData) {
-//      requestHelper.getData(
-//        '/beta/' + resource, subscriptionData.accessToken,
-//        function (requestError, endpointData) {
-//          if (endpointData) {
-//            io.to(subscriptionId).emit('notification_received', endpointData);
-//          } else if (requestError) {
-//            res.status(500);
-//            next(requestError);
-//          }
-//        }
-//      );
-//    } else if (dbError) {
-//      res.status(500);
-//      next(dbError);
-//    }
-//  });
-//}
+function processNotification(subscriptionId, resource, res, next) {
+ dbHelper.getSubscription(subscriptionId, function (dbError, subscriptionData) {
+   if (subscriptionData) {
+     requestHelper.getData(
+       '/beta/' + resource, subscriptionData.accessToken,
+       function (requestError, endpointData) {
+         if (endpointData) {
+           io.to(subscriptionId).emit('notification_received', endpointData);
+         } else if (requestError) {
+           res.status(500);
+           next(requestError);
+         }
+       }
+     );
+   } else if (dbError) {
+     res.status(500);
+     next(dbError);
+   }
+ });
+}
 
 
 // [mine]
-//function processNotification(subscriptionId, resource, res, next) {
-//    if (subscriptionId) {
-//        console.dir("Yey ! subscription id: " + subscriptionId);
-//        requestHelper.getData(
-//            '/beta/' + resource, subscriptionData.accessToken,
-//            function (requestError, endpointData) {
-//                if (endpointData) {
+function processNotification(subscriptionId, resource, res, next) {
+    db.FindClient(mongoose, subscriptionId,client, )
+   if (subscriptionId) {
+       console.dir("Yey ! subscription id: " + subscriptionId);
+       requestHelper.getData(
+           '/beta/' + resource, subscriptionData.accessToken,
+           function (requestError, endpointData) {
+               if (endpointData) {
 
-//                    //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-//                    fs.writeFile('./log.txt', endpointData,
-//                    {
-//                        encoding: "utf8",
-//                        mode: "0o666",
-//                        flag: "w"
-//                    }, function () {
-//                        console.dir("App loging");
-//                    });
+                   //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+                   fs.writeFile('./log.txt', endpointData,
+                   {
+                       encoding: "utf8",
+                       mode: "0o666",
+                       flag: "w"
+                   }, function () {
+                       console.dir("App loging");
+                   });
 
-//                    //@todo: replace with signalr socket handler implementation logic 
-//                    io.to(subscriptionId).emit('notification_received', endpointData);
-//                } else if (requestError) {
+                   //@todo: replace with signalr socket handler implementation logic 
+                   io.to(subscriptionId).emit('notification_received', endpointData);
+               } else if (requestError) {
 
-//                    //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
-//                    fs.writeFile('./log.txt', requestError,
-//                    {
-//                        encoding: "utf8",
-//                        mode: "0o666",
-//                        flag: "w"
-//                    }, function () {
-//                        console.dir("App loging");
-//                    });
-//                    res.status(500);
-//                    next(requestError);
-//                }
-//            }
-//        );
-//    } else if (dbError) {
-//        res.status(500);
-//        next(dbError);
-//    }
-//}
+                   //@todo: Write data to file for debuging, i couldn't get remote debuging for visual studio to work .
+                   fs.writeFile('./log.txt', requestError,
+                   {
+                       encoding: "utf8",
+                       mode: "0o666",
+                       flag: "w"
+                   }, function () {
+                       console.dir("App loging");
+                   });
+                   res.status(500);
+                   next(requestError);
+               }
+           }
+       );
+   } else if (dbError) {
+       res.status(500);
+   }
+}
 
 module.exports = router;

@@ -6,7 +6,9 @@ var authHelper = require('../helpers/authHelper.js');
 var requestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
-
+var subscription = require("../Handlers/subscription.js");
+var db = require("../Handlers/dbHandler.js");
+var mongoose = require("mongoose");
 
 
 
@@ -29,25 +31,24 @@ router.get('/callback', function (req, res) {
     var subscriptionExpirationDateTime;
     authHelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
         if (token) {
-            console.dir("Got token !");
-            console.dir(token);
-            
-            // Expiration date 86400000 [ms]
-            
+
+            // Expiration date 86400000 [ms] -eq 24hr 
             subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toISOString();//ISO time format 
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
-            // Make the request to subscription service.
+            
             requestHelper.postData(
                 '/v1.0/subscriptions',
             token.accessToken,
             JSON.stringify(subscriptionConfiguration),
             function (requestError, subscriptionData) {
                     if (subscriptionData !== null) {
+
                         subscriptionData.userId = token.userId;
                         subscriptionData.accessToken = token.accessToken;
-                                                                           
-                        // store subscription data 
-                         //require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeUser");
+            
+                        // Dotn know if it will work but let us store bother the client and the subscription 
+                        db.StoreSubscription(mongoose,subscriptionData,subscription);
+                        db.RegisterClient(mongoose,{subscriptionId: req.body.subscriptionId,notifications : [notifications]});
 
                         subscriptionId = subscriptionData.id;
                         res.redirect(
@@ -55,11 +56,9 @@ router.get('/callback', function (req, res) {
                   '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
                         );
                     } else if (requestError) {
+
                         // @todo: remote this bad error response only for development.
                         res.redirect("/index.html?Error=" + JSON.stringify(requestError));
-                        //console.dir(requestError);
-                        //res.json(requestError);
-                        //res.status(500);
                     }
                 }
             );
