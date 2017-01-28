@@ -11,6 +11,7 @@ var listen = require("./routes/listen");
 var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
+
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 
@@ -26,7 +27,7 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 // Db config 
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
 //mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
-//mongoose.connect("mongodb://localhost:27017/dash");// local 
+mongoose.connect("mongodb://localhost:27017/dash");// local 
 //require("./Handlers/dbHandler.js")(mongoose);
 
 // Cors config @todo: uncomment me 
@@ -88,18 +89,20 @@ if (app.get("env") === "development") {
 
 
 // Client - Server hub connection  
-signalR.hub('MyHub', {
+var hub = signalR.hub('MyHub', {
     Send : function (name, message) {
         // @note: This type of 
+        console.log(this);
         this.clients.all.invoke('AddMessage').withArgs([name, message]);
         console.log('send:' + message);
     }
 });
 
 
+
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
-    fs.writeFile('./logs/log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',
+    fs.writeFile('./log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',
         {
         encoding: "utf8",
         mode: "0o666",
@@ -107,12 +110,12 @@ var server = app.listen(app.get('port'), function () {
     }, function () {
         console.dir("App loging");
     });
-
+    console.dir(hub);
+    //@todo: Find a way to communicate to the clients without broadcasting , well signalr does that for us but we need to be more specific .
 });
 
 
 // remote debuging - node.cmd backup
 //node.exe %1 %2 %3
-
 
 module.exports = app;

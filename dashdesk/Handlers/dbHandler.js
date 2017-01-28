@@ -1,7 +1,7 @@
 ﻿// @desc: Handling different client states  logic implementation 
 // @note: Lots of moving parts, just store the subscription instance.
 // @todo: export an object of database executions instead 
-module.exports = function (mongoose) {
+module.exports = function (mongoose,userData,type) {
      
     var Schema = mongoose.Schema;
     
@@ -19,8 +19,7 @@ module.exports = function (mongoose) {
     //});
     
     var subscriptionSchema = new Schema({
-        email: String,
-        subscriptionId : String
+        subscription : []
     });
     
     console.dir('Mongoose'+mongoose);
@@ -28,8 +27,7 @@ module.exports = function (mongoose) {
     var subscription = mongoose.model("subscriptions", subscriptionSchema);
 
     var newsub = new subscription({
-        email: "anotheruser:yahoo.com",
-        subscriptionId: "asdfasdfasdfa-sdjfa-sdd8f"
+        subscription: [userData]
     });
     
     // New subscription 
@@ -50,23 +48,22 @@ module.exports = function (mongoose) {
         }
     });
     
+
     // Updating subscription details .
-    subscription.findOne({ "user": "username" }, function (err, subscriptionDetails) {
-        if (!err) {
-            console.dir("User found, updating subscription details details ");
-            subscriptionDetails.key = "New value";
-            subscriptionDetails.save(function (error) {
-                if (!error) {
-                    console.dir("Subscription details updated .");
-                } else {
-                    console.dir("Subscription details updating failed "+error);
-                }
-            });
+    // subscription.findOne({ "user": "username" }, function (err, subscriptionDetails) {
+    //     if (!err) {
+    //         subscriptionDetails.save(function (error) {
+    //             if (!error) {
+    //                 console.dir("Subscription details updated .");
+    //             } else {
+    //                 console.dir("Subscription details updating failed "+error);
+    //             }
+    //         });
        
-        } else {
-            console.dir("Error record not found , creating one ...");
-        }
-    });
+    //     } else {
+    //         console.dir("Error record not found , creating one ...");
+    //     }
+    // });
 
 
          

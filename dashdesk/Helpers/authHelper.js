@@ -24,7 +24,6 @@ function getAuthUrl() {
   return adalConfiguration.authority + '/oauth2/authorize'+
     '?client_id=' + adalConfiguration.clientID +
     '&response_type=code' +
-    '&scope=openid%20User.Read%20User.ReadWrite%20User.ReadBasic.All%20Mail.ReadWrite%20Mail.ReadWrite.Shared%20Mail.Send%20Mail.Send.Shared%20Calendars.ReadWrite%20Calendars.ReadWrite.Shared%20Contacts.ReadWrite%20Contacts.ReadWrite.Shared%20MailboxSettings.ReadWrite%20Files.ReadWrite%20Files.ReadWrite.All%20Files.ReadWrite.Selected%20Files.ReadWrite.AppFolder%20Notes.ReadWrite%20Notes.ReadWrite.All%20Notes.ReadWrite.CreatedByApp%20Notes.Create%20Tasks.ReadWrite%20Tasks.ReadWrite.Shared%20Sites.ReadWrite.All' +
     //'resource=openid%20User.Read%20User.ReadWrite%20User.ReadBasic.All%20Mail.ReadWrite%20Mail.ReadWrite.Shared%20Mail.Send%20Mail.Send.Shared%20Calendars.ReadWrite%20Calendars.ReadWrite.Shared%20Contacts.ReadWrite%20Contacts.ReadWrite.Shared%20MailboxSettings.ReadWrite%20Files.ReadWrite%20Files.ReadWrite.All%20Files.ReadWrite.Selected%20Files.ReadWrite.AppFolder%20Notes.ReadWrite%20Notes.ReadWrite.All%20Notes.ReadWrite.CreatedByApp%20Notes.Create%20Tasks.ReadWrite%20Tasks.ReadWrite.Shared%20Sites.ReadWrite.All'+
     '&redirect_uri=' + adalConfiguration.redirectUri;
 }

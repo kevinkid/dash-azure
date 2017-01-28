@@ -9,7 +9,7 @@ var https = require("https");
 
 
 
-     
+
 router.get('/', function (req, res) {
     res.redirect("/index.html");
 });
@@ -17,6 +17,17 @@ router.get('/', function (req, res) {
 //  Microsoft signin route 
 router.get('/signin', function (req, res) {
     res.redirect(authHelper.getAuthUrl());
+});
+
+
+router.post('/', function (req, res) {
+   
+    if (req.query.validationToken) {
+        
+    } else {
+    
+    }
+         
 });
 
 router.get('/callback', function (req, res) {
@@ -29,29 +40,32 @@ router.get('/callback', function (req, res) {
         if (token) {
             console.dir("Got token !");
             console.dir(token);
-
+            
             // Expiration date 86400000 [ms]
-
+            
             subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toISOString();//ISO time format 
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
             // Make the request to subscription service.
             requestHelper.postData(
-            '/v1.0/subscriptions',
+                '/beta/subscriptions',
             token.accessToken,
             JSON.stringify(subscriptionConfiguration),
             function (requestError, subscriptionData) {
                     if (subscriptionData !== null) {
                         subscriptionData.userId = token.userId;
                         subscriptionData.accessToken = token.accessToken;
-                        //@todo: store subsciption details 
+                                                                           
+                        // store subscription data 
+                         require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeUser");
+
                         subscriptionId = subscriptionData.id;
                         res.redirect(
                             '/dashboard.html?subscriptionId=' + subscriptionId +
-                  '&userId=' + subscriptionData.userId+'subObject='+JSON.stringify(subscriptionData)+'}'
+                  '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
                         );
                     } else if (requestError) {
                         // @todo: remote this bad error response only for development.
-                        res.redirect("/index.html?Error="+ JSON.stringify(requestError));
+                        res.redirect("/index.html?Error=" + JSON.stringify(requestError));
                         //console.dir(requestError);
                         //res.json(requestError);
                         //res.status(500);
@@ -70,10 +84,10 @@ router.get('/callback', function (req, res) {
 // @todo: Define long time programmatically 
 router.get("/signout/:subscriptionId", function (req, res) {
     var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
-
+    
     if (req.params.subscriptionId) {
         requestHelper.deleteData(
-            '/v1.0/subscriptons/' + req.params.subscriptonId,
+            '/beta/subscriptons/' + req.params.subscriptonId,
             function (err) {
                 if (!err) {
                     //@todo: Remove from the database 
