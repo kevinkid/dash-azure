@@ -42,7 +42,6 @@ router.post('/', function (req, res, next) {
 
     } else {
         
-        //res.send(req.body);
 
         // store notification to the database instead .
         require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeNotification");
