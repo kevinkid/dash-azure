@@ -47,7 +47,7 @@ router.get('/callback', function (req, res) {
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
             // Make the request to subscription service.
             requestHelper.postData(
-                '/beta/subscriptions',
+                '/v1.0/subscriptions',
             token.accessToken,
             JSON.stringify(subscriptionConfiguration),
             function (requestError, subscriptionData) {
@@ -56,7 +56,7 @@ router.get('/callback', function (req, res) {
                         subscriptionData.accessToken = token.accessToken;
                                                                            
                         // store subscription data 
-                         require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeUser");
+                         //require("../Handlers/dbHandler.js")(mongoose, req.body.value,"storeUser");
 
                         subscriptionId = subscriptionData.id;
                         res.redirect(
@@ -87,7 +87,7 @@ router.get("/signout/:subscriptionId", function (req, res) {
     
     if (req.params.subscriptionId) {
         requestHelper.deleteData(
-            '/beta/subscriptons/' + req.params.subscriptonId,
+            '/v1.0/subscriptons/' + req.params.subscriptonId,
             function (err) {
                 if (!err) {
                     //@todo: Remove from the database 
