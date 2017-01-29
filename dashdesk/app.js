@@ -9,8 +9,8 @@ var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
+// var signalrc = require("signalr-client");
 var signalr = require("signalrjs");
-// var signalr = require("./node_modules/signalrjs/lib/jquery.signalR-2.0.2.js");
 var signalR = signalr();
 var jsdom = require("node-jsdom");
 var Url = require("url");
@@ -25,6 +25,20 @@ app.set('port', process.env.PORT || 3000);
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env === 'development';
+
+
+
+// cors config 
+// Server Request config
+app.use(function(req, res, next) {
+  req.header("Access-Control-Allow-Headers","Content-Type");
+  req.header("Access-Control-Allow-Headers","Access-Control-Allow-Credentials");
+  res.header("Access-Control-Allow-Headers","Access-Control-Allow-Origin");
+  res.header("Access-Control-Allow-Origin", "http://localhost:17284");
+  res.header("Access-Control-Allow-Credentials","true");
+  res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
+  next();
+});
 
 
 // Db config 
@@ -51,14 +65,48 @@ app.use(bodyParser.urlencoded({
 
 
 
+app.post("/message",function(req, res){
+	var client  = new signalrc.client(
+		"http://localhost:3000/signalr"// @note: remove for testing 
+		,['MyHub']
+        ,10 
+        , false 
+	);
+
+    client.invoke(
+		'MyHub', // Hub Name (case insensitive)
+		'Send',	// Method Name (case insensitive)
+		'client', 'invoked from client' //additional parameters to match signature
+		);
+        res.json("Notification sent ");
+
+
+	client.on(
+		// Hub Name (case insensitive)
+		'TestHub',	
+
+		// Method Name (case insensitive)
+		'AddMessage',	
+
+		// Callback function with parameters matching call from hub
+		function(name, message) { 
+			console.log("revc => " + name + ": " + message); 
+		});
+
+});
+
+
+
+
 // server client communication 
-app.post('/message', function(req, res){
+app.post('/working browser signalr client', function(req, res){
     //  var baseUrl = Url.parse(req.url).host;
     // @note: since its server side you can use localhost to make it faster . 
     // @todo: since we are calling for internal resources try using localhost .
 // var jquery = baseUrl+"/js/jquery-1.10.2.min.js";
 // var jQuerySignalR = baseUrl+"js/jQuery.signalR.js";
 // @docs: https://www.npmjs.com/package/node-jsdom
+/*
 var browser = jsdom.env(
   // @note: get the url from node.env object 
   "http://localhost:3000",
@@ -98,6 +146,9 @@ var browser = jsdom.env(
 
 browser = null; // Dispose of the browser after each notification .
 
+*/
+
+
     res.json("notification recieved  !");
     // Dispose the client after send the message .
     return;
@@ -111,6 +162,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/listen', listen);
 
+console.dir(signalR);// check for connection notification 
 
 // Client - Server hub connection  
 var hub = signalR.hub('MyHub', {
