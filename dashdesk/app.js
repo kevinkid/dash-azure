@@ -52,14 +52,17 @@ app.use(bodyParser.urlencoded({
 // server client communication 
 app.post('/message', function(req, res){
 
+// @docs: https://www.npmjs.com/package/node-jsdom
 var browser = jsdom.env(
+  // @note: get the url from node.env object 
   "https://dashdesk.azurewebsites.net",
+  // @note: The url above should be server served which we dont want 
   ["https://code.jquery.com/jquery-3.1.1.min.js","http://raw.githubusercontent.com/SignalR/bower-signalr/master/jquery.signalR.js"],
   function (errors, window) {
     
     console.log("Window loaded ");
     console.log(window.$.connection);
-
+    // @docs: https://www.npmjs.com/package/signalrjs
       var $ = window.$;
       var connection = $.connection.hub;
       var MyHub = $.connection.MyHub;
@@ -67,9 +70,10 @@ var browser = jsdom.env(
       $.connection.hub.start().done(function(){
           MyHub.server.send('message string'); // this should be an array with name and message 
       }); 
+      $.connection.hub.end();
   });
 
-browser = {}; // Dispose of the browser after each notification .
+browser = null; // Dispose of the browser after each notification .
 
     res.json("notification recieved  !");
     // Dispose the client after send the message .
