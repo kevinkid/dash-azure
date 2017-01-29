@@ -10,8 +10,10 @@ var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
 var signalr = require("signalrjs");
+// var signalr = require("./node_modules/signalrjs/lib/jquery.signalR-2.0.2.js");
 var signalR = signalr();
 var jsdom = require("node-jsdom");
+var Url = require("url");
 
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
@@ -51,26 +53,47 @@ app.use(bodyParser.urlencoded({
 
 // server client communication 
 app.post('/message', function(req, res){
-
+    //  var baseUrl = Url.parse(req.url).host;
+    // @note: since its server side you can use localhost to make it faster . 
+    // @todo: since we are calling for internal resources try using localhost .
+// var jquery = baseUrl+"/js/jquery-1.10.2.min.js";
+// var jQuerySignalR = baseUrl+"js/jQuery.signalR.js";
 // @docs: https://www.npmjs.com/package/node-jsdom
 var browser = jsdom.env(
   // @note: get the url from node.env object 
-  "https://dashdesk.azurewebsites.net",
+  "http://localhost:3000",
   // @note: The url above should be server served which we dont want 
-  ["https://code.jquery.com/jquery-3.1.1.min.js","http://raw.githubusercontent.com/SignalR/bower-signalr/master/jquery.signalR.js"],
+  ["http://localhost:3000/js/jquery-1.10.2.min.js","http://localhost:3000/js/jquery.signalR-2.0.3.min.js"],
   function (errors, window) {
     
-    console.log("Window loaded ");
+    console.log("Browser loaded ");
     console.log(window.$.connection);
     // @docs: https://www.npmjs.com/package/signalrjs
       var $ = window.$;
-      var connection = $.connection.hub;
-      var MyHub = $.connection.MyHub;
+//https://dashdesk.azurewebsites.net
+      var connection = $.connection('http://localhost:3000/signalr');
+        connection.error(function(error){
+            console.dir("Connection Error");
+            console.log(error);
+        });
 
-      $.connection.hub.start().done(function(){
-          MyHub.server.send('message string'); // this should be an array with name and message 
-      }); 
-      $.connection.hub.end();
+        connection.received(function (data) {
+            console.log('The time is ' + data);
+        });
+
+        connection.start().done(function() {
+            console.log("connection started!");
+            console.dir("connection state: "+connection.state);
+        });
+        
+    //   var connection = $.connection.hub;
+    //   var MyHub = $.connection.MyHub;
+
+    //   $.connection.hub.start().done(function(){
+    //       MyHub.server.send('message string'); // this should be an array with name and message 
+    //   }); 
+    //   $.connection.hub.end();
+
   });
 
 browser = null; // Dispose of the browser after each notification .
@@ -100,14 +123,13 @@ var hub = signalR.hub('MyHub', {
 });
 
 
-
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
-    //fs.writeFile('./log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',{encoding: "utf8",mode: "0o666",flag: "w"}, function () {console.dir("App loging");});
+    //[file loging doesn't workin in azure ]fs.writeFile('./log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',{encoding: "utf8",mode: "0o666",flag: "w"}, function () {console.dir("App loging");});
 });
 
 
-// remote debuging - node.cmd backup
+// @todo; replace the script statement in cmd file with this
 //node.exe %1 %2 %3
 
 module.exports = app;
