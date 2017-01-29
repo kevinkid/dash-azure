@@ -8,10 +8,10 @@ var router = express.Router();
 var io = require('../helpers/socketHelper.js');
 var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
-var signalR = require("../app.js").signalR;
+var signalR = require("signalr-client");
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 var mongoose = require("mongoose");
-var notification = require("../Handlers/client.js");
+var client = require("../Handlers/client.js");
 var subscription = require("../Handlers/subscription.js");
 var db = require("../Handlers/dbHandler.js");
 
@@ -34,7 +34,7 @@ router.post('/', function (req, res, next) {
         
 
         // @note: anthing after res will not be executed .
-        res.status(202);
+        // res.status(202);
         
         clientStatesValid = false;
 
@@ -58,11 +58,11 @@ router.post('/', function (req, res, next) {
             processNotification(subscriptionId, resource, res, next);
 
             // @note: uncomment for multiple notifications, very smart way of handling notifications just send them altogether together .
-            // for (i = 0; i < req.body.value.length; i++) {
-            //    resource = req.body.value[i].resource;
-            //    subscriptionId = req.body.value[i].subscriptionId;
-            //    processNotification(subscriptionId, resource, res, next);
-            // }
+            for (i = 0; i < req.body.value.length; i++) {
+               resource = req.body.value[i].resource;
+               subscriptionId = req.body.value[i].subscriptionId;
+               processNotification(subscriptionId, resource, res, next);
+            }// This was uncommented .
             
             // Send a status of 'Accepted'
             status = 202;
@@ -79,9 +79,9 @@ router.post('/', function (req, res, next) {
 
 function processNotification(subscriptionId, resource, res, next) {
         
-    db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionDet){
+    db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
 
-        if (subscriptionDet) {
+        if (subscriptionData) {
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.accessToken,
                 function (requestError, endpointData) {

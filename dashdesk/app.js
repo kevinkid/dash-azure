@@ -11,6 +11,7 @@ var listen = require("./routes/listen");
 var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
+var jsdom = require("node-jsdom");
 
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
@@ -30,18 +31,6 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 mongoose.connect("mongodb://localhost:27017/dash");// local 
 //require("./Handlers/dbHandler.js")(mongoose);
 
-// Cors config @todo: uncomment me 
-//app.use(function (req, res, next) {
-//    req.header("Access-Control-Allow-Headers", "Content-Type");
-//    res.header("Access-Control-Allow-Origin", "https://dashdesk.azurewebsites.net");
-//    res.header("Access-Control-Allow-Headers", "Content-Type");
-//    res.header("Access-Control-Allow-Credentials", "false");
-//    res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
-//    next();
-//});
-
-
-
 
 //SignalR config
 signalR.serverProperties.ProtocolVersion = 1.3;
@@ -59,35 +48,41 @@ app.use(bodyParser.urlencoded({
 }));
 
 
+
+// server client communication 
+app.post('/message', function(req, res){
+
+var browser = jsdom.env(
+  "https://dashdesk.azurewebsites.net",
+  ["https://code.jquery.com/jquery-3.1.1.min.js","http://raw.githubusercontent.com/SignalR/bower-signalr/master/jquery.signalR.js"],
+  function (errors, window) {
+    
+    console.log("Window loaded ");
+    console.log(window.$.connection);
+
+      var $ = window.$;
+      var connection = $.connection.hub;
+      var MyHub = $.connection.MyHub;
+
+      $.connection.hub.start().done(function(){
+          MyHub.server.send('message string'); // this should be an array with name and message 
+      }); 
+  });
+
+browser = {}; // Dispose of the browser after each notification .
+
+    res.json("notification recieved  !");
+    // Dispose the client after send the message .
+    return;
+
+});
+
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes config 
 app.use('/', routes);
 app.use('/listen', listen);
-
-
-// socket handling
-//require("./Handlers/SocketHandler.js")(app, signalR);
-
-// Capture 404 errors 
-app.use(function (req, res, next) {
-    var error = new error('Not Found ');
-    error.status = 404;
-    next(error);
-});
-
-
-// Error Handling  
-if (app.get("env") === "development") {
-    app.use(function (err, req, res) {
-        res.render("error", {
-            message: err.message,
-            error: err,
-            title: "Error"
-        });
-    });
-}
 
 
 // Client - Server hub connection  
@@ -104,16 +99,7 @@ var hub = signalR.hub('MyHub', {
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
-    fs.writeFile('./log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',
-        {
-        encoding: "utf8",
-        mode: "0o666",
-        flag: "w"
-    }, function () {
-        console.dir("App loging");
-    });
-    console.dir(hub);
-    //@todo: Find a way to communicate to the clients without broadcasting , well signalr does that for us but we need to be more specific .
+    //fs.writeFile('./log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',{encoding: "utf8",mode: "0o666",flag: "w"}, function () {console.dir("App loging");});
 });
 
 

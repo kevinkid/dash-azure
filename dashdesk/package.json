@@ -27,9 +27,11 @@
     "mongodb": "^2.1.6",
     "mongoose": "^4.4.2",
     "morgan": "^1.6.1",
+    "node-jsdom": "^3.1.5",
     "offline-js": "^0.7.15",
     "pug": "^2.0.0-alpha3",
     "serve-favicon": "^2.3.0",
+    "signalr-client": "0.0.17",
     "signalrjs": "^0.2.2",
     "socket.io": "^1.4.5",
     "stylus": "*"
