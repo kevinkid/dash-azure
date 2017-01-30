@@ -128,7 +128,12 @@ app.post("/message",function(req, res){
     var clientManager = signalR._connectionManager;
     console.dir("Connection is:");
     console.dir(clientManager);
-    var messageObj = {}
+    var messageObj = {
+        Args:['server','Notification ! '],// <raw message>
+        Hub:'MyHub',//<hub name>
+        Method:'AddMessage',// <client method>
+        State:1// <what ever the state number means>
+    };
     clientManager.forEach(function(client){
         // broadcast to all the clients 
         //@todo: narrow down to each client 
@@ -146,10 +151,12 @@ app.post("/message",function(req, res){
         // <signalr prop>
                   	this._transports['longPolling'] = longPollingTransport; 
     //  <expected>
-    signalR._trasports.longPolling.send(<connection>[client],<messageData>JSON.stringify([messageObj])
+    signalR._trasports.longPolling.send(<connection>[client],<messageData>[messageObj]);
 
         */
-        signalR._transports.serverSentEvents.send(client.connection,['Server','Notification !']);// √
+        console.log("testing fun :) ");
+            signalR._transports.longPolling.send(client.connection,messageObj);
+        // signalR._transports.serverSentEvents.send(client.connection,['Server','Notification !']);// √
     });
     
     // console.dir(signalR._transports.serverSendEvents.clients.all.invoke('AddMessage').withArgs(['Server','Notification from the server .']));// √
