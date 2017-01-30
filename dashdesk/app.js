@@ -9,11 +9,12 @@ var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
 var logger = require("morgan");
-// var signalrc = require("signalr-client");
+var signalrc = require("signalr-client");
 var signalr = require("signalrjs");
 var signalR = signalr();
 var jsdom = require("node-jsdom");
 var Url = require("url");
+var virtualClient ;
 
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
@@ -63,9 +64,19 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes config 
+app.use('/', routes);
+app.use('/listen', listen);
+
+
+//===========================================================>
 
 app.post("/message",function(req, res){
+
+    // Client-server connection
 	var client  = new signalrc.client(
 		"http://localhost:3000/signalr"// @note: remove for testing 
 		,['MyHub']
@@ -74,21 +85,16 @@ app.post("/message",function(req, res){
 	);
 
     client.invoke(
-		'MyHub', // Hub Name (case insensitive)
-		'Send',	// Method Name (case insensitive)
-		'client', 'invoked from client' //additional parameters to match signature
+		'MyHub', 
+		'Send',	
+		'client', 'invoked from client'
 		);
         res.json("Notification sent ");
 
 
 	client.on(
-		// Hub Name (case insensitive)
 		'TestHub',	
-
-		// Method Name (case insensitive)
-		'AddMessage',	
-
-		// Callback function with parameters matching call from hub
+		'AddMessage',
 		function(name, message) { 
 			console.log("revc => " + name + ": " + message); 
 		});
@@ -98,15 +104,19 @@ app.post("/message",function(req, res){
 
 
 
-// server client communication 
+//Working client-server communication 
 app.post('/working browser signalr client', function(req, res){
-    //  var baseUrl = Url.parse(req.url).host;
-    // @note: since its server side you can use localhost to make it faster . 
-    // @todo: since we are calling for internal resources try using localhost .
+    
+//  var baseUrl = Url.parse(req.url).host;
+// @note: since its server side you can use localhost to make it faster . 
+// @todo: since we are calling for internal resources try using localhost .
 // var jquery = baseUrl+"/js/jquery-1.10.2.min.js";
 // var jQuerySignalR = baseUrl+"js/jQuery.signalR.js";
 // @docs: https://www.npmjs.com/package/node-jsdom
-/*
+
+
+//------------------------------------------------------->
+
 var browser = jsdom.env(
   // @note: get the url from node.env object 
   "http://localhost:3000",
@@ -118,8 +128,8 @@ var browser = jsdom.env(
     console.log(window.$.connection);
     // @docs: https://www.npmjs.com/package/signalrjs
       var $ = window.$;
-//https://dashdesk.azurewebsites.net
-      var connection = $.connection('http://localhost:3000/signalr');
+
+      var connection = $.connection('http://localhost:3000/');
         connection.error(function(error){
             console.dir("Connection Error");
             console.log(error);
@@ -146,7 +156,8 @@ var browser = jsdom.env(
 
 browser = null; // Dispose of the browser after each notification .
 
-*/
+
+//------------------------------------------------------------->
 
 
     res.json("notification recieved  !");
@@ -155,24 +166,84 @@ browser = null; // Dispose of the browser after each notification .
 
 });
 
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes config 
-app.use('/', routes);
-app.use('/listen', listen);
 
-console.dir(signalR);// check for connection notification 
+
+
+
+//==============================================================>
+
+
+/**
+ * [signalR object] try to find the socket event emitter.
+ * 
+ *  {
+  route: '/signalr',
+  serverProperties: 
+   { KeepAliveTimeout: 20,
+     DisconnectTimeout: 30,
+     ConnectionTimeout: 110,
+     TryWebSockets: false,
+     ProtocolVersion: 1.5,
+     TransportConnectTimeout: 5,
+     LongPollDelay: 0,
+     HeartBeatInterval: 15000 },
+  _transports: 
+   { serverSentEvents: 
+      { _connectionDetails: [Object],
+        _writeServerSendEvent: [Function],
+        connect: [Function],
+        send: [Function],
+        sendHeartBeat: [Function] },
+     longPolling: 
+      { _connectionDetails: [Object],
+        connect: [Function],
+        send: [Function] } },
+  _connectionManager: 
+   { _connections: {},
+     _userTokens: 
+      { _userTokens: {},
+        put: [Function],
+        getByUser: [Function],
+        delByUser: [Function],
+        delByToken: [Function] },
+     put: [Function],
+     updateConnection: [Function],
+     getByToken: [Function],
+     getByUser: [Function],
+     forEach: [Function],
+     setUserToken: [Function],
+     delByToken: [Function] } }
+ * 
+ */
+
+
+
 
 // Client - Server hub connection  
 var hub = signalR.hub('MyHub', {
     Send : function (name, message) {
-        // @note: This type of 
+        
+        console.dir("------------[SignalR Object]----------------------");
+        //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{object}
+        signalR._transports.serverSendEvents.send('find a connection','message from server');// √
+        // console.dir(signalR._transports.serverSendEvents.clients.all.invoke('AddMessage').withArgs(['Server','Notification from the server .']));// √
+        console.dir("------------[SignalR Object]-----------------------");
+
+
+        // client AddMessage method are invoked from the clients property
+        // of the Send property which belongs to the hub instance created 
+        // Each hub instance contains an object and a hub name. 
+        console.dir("-------------------[Hub Object]-----------------");
         console.log(this);
+        console.dir("-------------------[Hub Object]-----------------");
         this.clients.all.invoke('AddMessage').withArgs([name, message]);
+        // this.clients.user("user name").invoke('AddMessage').withArgs(["name","custom message"]);
+        // this.Send('username','message from send function');// @note: maybe store this script and be invoking it ?
         console.log('send:' + message);
     }
 });
+
 
 
 var server = app.listen(app.get('port'), function () {
