@@ -1,0 +1,35 @@
+TypeError: first argument must be a string or Buffer
+    at ServerResponse.OutgoingMessage.write (_http_outgoing.js:441:11)
+    at Object.module.exports._writeServerSendEvent (c:\dashdesk\dashdesk\node_modules\signalrjs\lib\transports\sseTransport.js:17:15)
+    at Object.module.exports.send (c:\dashdesk\dashdesk\node_modules\signalrjs\lib\transports\sseTransport.js:31:8)
+    at c:\dashdesk\dashdesk\app.js:134:46
+    at Object.module.exports.forEach (c:\dashdesk\dashdesk\node_modules\signalrjs\lib\connections\connectionManager.js:36:5)
+    at c:\dashdesk\dashdesk\app.js:131:19
+    at Layer.handle [as handle_request] (c:\dashdesk\dashdesk\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\dashdesk\dashdesk\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\dashdesk\dashdesk\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\dashdesk\dashdesk\node_modules\express\lib\router\layer.js:95:5)
+    at c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:271:10)
+    at c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:618:15
+    at next (c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:176:3)
+
+//SOLUTION: Don't set break points, evey time you send a message a timeout is initialised or 
+// we a fucked .
+_http_outgoing.js:346
+    throw new Error('Can\'t set headers after they are sent.');
+    ^
+
+Error: Can't set headers after they are sent.
+    at ServerResponse.OutgoingMessage.setHeader (_http_outgoing.js:346:11)
+    at ServerResponse.writeHead (_http_server.js:180:21)
+    at Object.module.exports.send (c:\dashdesk\dashdesk\node_modules\signalrjs\lib\transports\longPollingTransport.js:24:14)
+    at null._onTimeout (c:\dashdesk\dashdesk\node_modules\signalrjs\lib\signalRJS.js:93:14)
+    at Timer.listOnTimeout (timers.js:92:15)
+
+
+// server data payload 
+"{"C":"d-2C017119-A,2|B,0|C,1|D,0","M":["Server","Notification !"]}"
+
