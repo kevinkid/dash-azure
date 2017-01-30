@@ -72,39 +72,77 @@ app.use('/', routes);
 app.use('/listen', listen);
 
 
+//@note: getting connections might return no connections after authentication process
+// This method counts the number of connections you have .
+//@todo: keep track of number of connection using a hook to invoke downloading notification 
+// on the client .
+
+function getConnectionByUser(sessionKey){
+    var conn = signalR._connectionManager._connections;
+    return conn.getByUser(sessionKey);//@todo: check if it returns back a connection .
+}
+
+//@returns {Bool} - true if connection established .
+function verfyConnection(identity){
+    var conList = signalR._connectionManager._connections;
+    if(identity){
+        if(conList.hasOwnProperty(identity)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+}
+
+//@desc: checks for changes in connections and to initiate
+// download of notifications from lost client connections
+function connectionsHook(){
+
+}
+
+//@returns{Number} - Number of current connections to the server 
+function connectionNum(){
+    var currentConnections = signalR._connectionManager._connections; 
+    var conCount = 0;
+    for(var key in props){
+        count += 1;
+    }
+    console.log("Number count:"+count-1);
+    return conCount-1;
+}
+
+function sendNotification(identity,msg){
+    if(identity){
+
+    }
+}
+
+
 //===========================================================>
 
 app.post("/message",function(req, res){
-
-    // Client-server connection
-	var client  = new signalrc.client(
-		"http://localhost:3000/signalr"// @note: remove for testing 
-		,['MyHub']
-        ,10 
-        , false 
-	);
-
-    client.invoke(
-		'MyHub', 
-		'Send',	
-		'client', 'invoked from client'
-		);
-        res.json("Notification sent ");
-
-
-	client.on(
-		'TestHub',	
-		'AddMessage',
-		function(name, message) { 
-			console.log("revc => " + name + ": " + message); 
-		});
+    var identity ;
+    console.dir("------------[SignalR Message ♥ ]----------------------");
+    //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
+    // Get the client connection, if it goesn't exist store the notification untill they are online again .
+    var clientManager = signalR._connectionManager;
+    console.dir("Connection is:");
+    console.dir(clientManager);
+    clientManager.forEach(function(client){
+        // broadcast to all the clients 
+        //@todo: narrow down to each client 
+        signalR._transports.serverSentEvents.send(client.connection,'Server Notification !');// √
+    });
+    
+    // console.dir(signalR._transports.serverSendEvents.clients.all.invoke('AddMessage').withArgs(['Server','Notification from the server .']));// √
+    console.dir("------------[SignalR Message]-----------------------");
 
 });
 
 
 
 
-//Working client-server communication 
+//Working client-server communication [virtual client]
 app.post('/working browser signalr client', function(req, res){
     
 //  var baseUrl = Url.parse(req.url).host;
@@ -224,19 +262,12 @@ browser = null; // Dispose of the browser after each notification .
 var hub = signalR.hub('MyHub', {
     Send : function (name, message) {
         
-        console.dir("------------[SignalR Object]----------------------");
-        //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{object}
-        signalR._transports.serverSendEvents.send('find a connection','message from server');// √
-        // console.dir(signalR._transports.serverSendEvents.clients.all.invoke('AddMessage').withArgs(['Server','Notification from the server .']));// √
-        console.dir("------------[SignalR Object]-----------------------");
-
-
         // client AddMessage method are invoked from the clients property
         // of the Send property which belongs to the hub instance created 
         // Each hub instance contains an object and a hub name. 
-        console.dir("-------------------[Hub Object]-----------------");
+        console.dir("-------------------[Hub Message]-----------------");
         console.log(this);
-        console.dir("-------------------[Hub Object]-----------------");
+        console.dir("-------------------[Hub Message]-----------------");
         this.clients.all.invoke('AddMessage').withArgs([name, message]);
         // this.clients.user("user name").invoke('AddMessage').withArgs(["name","custom message"]);
         // this.Send('username','message from send function');// @note: maybe store this script and be invoking it ?
