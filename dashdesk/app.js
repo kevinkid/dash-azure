@@ -129,7 +129,7 @@ app.post("/message",function(req, res){
     console.dir("Connection is:");
     console.dir(clientManager);
     var messageObj = {
-        Args:['server','Notification ! '],// <raw message>
+        Args:['server',req.body.notifcaton],// <raw message>
         Hub:'MyHub',//<hub name>
         Method:'AddMessage',// <client method>
         State:1// <what ever the state number means>
@@ -154,7 +154,6 @@ app.post("/message",function(req, res){
     signalR._trasports.longPolling.send(<connection>[client],<messageData>[messageObj]);
 
         */
-        console.log("testing fun :) ");
             signalR._transports.longPolling.send(client.connection,messageObj);
         // signalR._transports.serverSentEvents.send(client.connection,['Server','Notification !']);// √
     });
