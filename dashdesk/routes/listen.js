@@ -50,7 +50,7 @@ router.post('/', function (req, res, next) {
         // }
         
         // validate all notifications 
-        if (clientStatesValid) {
+        if (true) {
             // process all the notifications   
             
             resource = req.body.value[0].resource;
@@ -88,7 +88,7 @@ function processNotification(subscriptionId, resource, res, next) {
                     if (endpointData) {
                         //@todo:  Send notification to client 
                         console.dir(endpointData);
-                        db.StoreNotification(mongoose, qs.escape(endpointData), notification);
+                        db.StoreNotification(mongoose, qs.escape(JSON.stringifyendpointData().clientDetails[0]), notification);
                         connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
                     } else if (requestError) {
                         res.status(500);

@@ -47,9 +47,7 @@ router.get('/callback', function (req, res) {
                         subscriptionData.userId = token.userId;
                         subscriptionData.accessToken = token.accessToken;
                         
-                        subscription = qs.escape(subscriptionData);//@note: parse during database query.
-
-                        db.InstallClient(mongoose, subscription, client, function (error) {
+                        db.InstallClient(mongoose, qs.escape(JSON.stringify(subscriptionData)), client, function (error) {
                             if(error){
                                 subscriptionId = subscriptionData.id;
                                 res.redirect(
@@ -63,6 +61,7 @@ router.get('/callback', function (req, res) {
                                 '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
                                 );
                             }
+                            
                         
                         });
                        

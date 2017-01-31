@@ -83,7 +83,7 @@ module.exports = {
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
                 console.dir("Hurray ! data: " + subscriptionDet);
-                callback(qs.escape(subscriptionDet));
+                callback(JSON.parse(qs.escape(subscriptionDet)));
             } else {
                 console.dir("Error quering database. ");
                 callback(null);
