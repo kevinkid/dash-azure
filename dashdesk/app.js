@@ -15,7 +15,6 @@ var signalR = signalr();
 var jsdom = require("node-jsdom");
 var Url = require("url");
 var virtualClient ;
-
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 
@@ -30,7 +29,6 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 
 // cors config 
-// Server Request config
 app.use(function(req, res, next) {
   req.header("Access-Control-Allow-Headers","Content-Type");
   req.header("Access-Control-Allow-Headers","Access-Control-Allow-Credentials");
@@ -121,46 +119,19 @@ function sendNotification(identity,msg){
 //===========================================================>
 
 app.post("/message",function(req, res){
-    var identity ;
-    console.dir("------------[SignalR Message ♥ ]----------------------");
     //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
-    // Get the client connection, if it goesn't exist store the notification untill they are online again .
     var clientManager = signalR._connectionManager;
-    console.dir("Connection is:");
-    console.dir(clientManager);
     var messageObj = {
-        Args:['server',req.body.notifcaton],// <raw message>
-        Hub:'MyHub',//<hub name>
-        Method:'AddMessage',// <client method>
-        State:1// <what ever the state number means>
+        Args:['server',req.body.notifcaton],
+        Hub:'MyHub',
+        Method:'AddMessage',
+        State:1
     };
     clientManager.forEach(function(client){
-        // broadcast to all the clients 
         //@todo: narrow down to each client 
-        /*Map: - explanation | = prop
-        --- Args:Array[2] ["kevin", " like yo"]
-        === length:2--
-           ==== __proto__:Array[0] --
-         ===   0:"kevin"===
-         ===   1:" like yo"===
-           --- Hub:"MyHub"
-          --  Method:"AddMessage"--
-           -- State:1--
-           // <function>
-           	send : function(connection,messageData){
-        // <signalr prop>
-                  	this._transports['longPolling'] = longPollingTransport; 
-    //  <expected>
-    signalR._trasports.longPolling.send(<connection>[client],<messageData>[messageObj]);
-
-        */
-            signalR._transports.longPolling.send(client.connection,messageObj);
-        // signalR._transports.serverSentEvents.send(client.connection,['Server','Notification !']);// √
+        signalR._transports.longPolling.send(client.connection,messageObj);// √
     });
     
-    // console.dir(signalR._transports.serverSendEvents.clients.all.invoke('AddMessage').withArgs(['Server','Notification from the server .']));// √
-    console.dir("------------[SignalR Message]-----------------------");
-
     res.json("Notification sent !");
 
 });

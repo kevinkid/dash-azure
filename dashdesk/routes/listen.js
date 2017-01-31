@@ -5,7 +5,6 @@
 var express = require('express');
 var fs = require("fs");
 var router = express.Router();
-var io = require('../helpers/socketHelper.js');
 var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
 var signalR = require("signalr-client");
