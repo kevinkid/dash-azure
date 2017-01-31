@@ -19,7 +19,7 @@ module.exports = {
     InstallClient : function(mongoose, data, client){
 
         var newClient = new client({
-            subscription: [data]
+            clientDetails: [data]
         });
         
         newClient.save(function (error) {
@@ -78,7 +78,7 @@ module.exports = {
     },
     GetSubscription : function (mongoose, data, client, callback){
 
-        client.find({ "email": "john:yahoo.com" }, function (error, subscriptionDet) {
+        client.find({ "clientDetails": data }, function (error, subscriptionDet) {
         if (!error) {
             console.dir("Hurray ! data: "+ subscriptionDet);
             callback(subscriptionDet);

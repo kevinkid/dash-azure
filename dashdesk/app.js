@@ -46,108 +46,31 @@ app.use(function(req, res, next) {
 
 // Db config 
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
-//  mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
-mongoose.connect("mongodb://localhost:27017/dash");// local 
+ mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
+// mongoose.connect("mongodb://localhost:27017/dash");// local 
 
-//---[Database Operations Test]
-app.post('/store',function(req, res){
-    //@note: the passing the client as param may not work 
-    db.InstallClient(mongoose,{clientDetails : [req.body.notifications]},client);
-    res.json({Message: "Success storing data"});
-    res.status(200);
-});
-app.get('/get',function(){
-       db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
-       res.json(subscriptionData);
-       res.status(200);
-    });
-});
-//---
 
 //SignalR config
 signalR.serverProperties.ProtocolVersion = 1.3;
 app.use(signalR.createListener());
 console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
 
-
+// View config 
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Routes config 
 app.use('/', routes);
 app.use('/listen', listen);
 app.use('/message',message);
-
-
-/**
- * [signalR object]
- * 
- *  {
-  route: '/signalr',
-  serverProperties: 
-   { KeepAliveTimeout: 20,
-     DisconnectTimeout: 30,
-     ConnectionTimeout: 110,
-     TryWebSockets: false,
-     ProtocolVersion: 1.5,
-     TransportConnectTimeout: 5,
-     LongPollDelay: 0,
-     HeartBeatInterval: 15000 },
-  _transports: 
-   { serverSentEvents: 
-      { _connectionDetails: [Object],
-        _writeServerSendEvent: [Function],
-        connect: [Function],
-        send: [Function],
-        sendHeartBeat: [Function] },
-     longPolling: 
-      { _connectionDetails: [Object],
-        connect: [Function],
-        send: [Function] } },
-  _connectionManager: 
-   { _connections: {},
-     _userTokens: 
-      { _userTokens: {},
-        put: [Function],
-        getByUser: [Function],
-        delByUser: [Function],
-        delByToken: [Function] },
-     put: [Function],
-     updateConnection: [Function],
-     getByToken: [Function],
-     getByUser: [Function],
-     forEach: [Function],
-     setUserToken: [Function],
-     delByToken: [Function] } }
- * 
- */
-
-
-// Client - Hub connection instance   
-var hub = signalR.hub('MyHub', {
-    Send : function (name, message) {
-        
-        // client AddMessage method are invoked from the clients property
-        // of the Send property which belongs to the hub instance created 
-        // Each hub instance contains an object and a hub name. 
-        console.dir("-------------------[Hub Message]-----------------");
-        console.log(this);
-        console.dir("-------------------[Hub Message]-----------------");
-        this.clients.all.invoke('AddMessage').withArgs([name, message]);
-        // this.clients.user("user name").invoke('AddMessage').withArgs(["name","custom message"]);
-        // this.Send('username','message from send function');// @note: maybe store this script and be invoking it ?
-        console.log('send:' + message);
-    }
-});
 
 
 app.post("/message",function(req, res){
@@ -166,21 +89,41 @@ app.post("/message",function(req, res){
 
 });
 
-var server = app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port'));
-    //[file loging doesn't workin in azure ]fs.writeFile('./log.txt', 'Starting [' + (new Date(Date.now() + 86400000).toISOString())+']',{encoding: "utf8",mode: "0o666",flag: "w"}, function () {console.dir("App loging");});
+
+
+/*------------------------------------------------------------
+------------------[Database Operations Test]------------------*/
+app.post('/store',function(req, res){
+    //@note: the passing the client as param may not work 
+    db.InstallClient(mongoose,req.body.notifications,client);
+    console.dir("Success storing data");
+    res.json({Message: "Success storing data"});
+    res.status(200);
+});
+app.get('/get',function(req, res){
+       db.GetSubscription(mongoose, 'some random data that we need .',client, function(subscriptionData){
+       res.json(subscriptionData);
+       res.status(200);
+    });
+});
+///*---------------------------------------------------------*/
+
+
+
+
+
+// Client - Hub connection instance   
+signalR.hub('MyHub', {
+    Send : function (name, message) {
+        this.clients.all.invoke('AddMessage').withArgs([name, message]);
+        console.dir("-------------------[Hub Message]-----------------");
+        console.log('Message:' + message);
+        console.dir("-------------------[Hub Message]-----------------");
+    }
 });
 
-
-// Client - Server hub connection  
-//@Todo: put in the client generator to instanciate a new client on each connection .
-var hub = signalR.hub('MyHub', {
-    Send : function (name, message) {
-        // @note: This type of 
-        console.log(this);
-        this.clients.all.invoke('AddMessage').withArgs([name, message]);
-        console.log('send:' + message);
-    }
+app.listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 

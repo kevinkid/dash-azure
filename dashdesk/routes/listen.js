@@ -78,7 +78,6 @@ router.post('/', function (req, res, next) {
 function processNotification(subscriptionId, resource, res, next) {
         
     db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
-
         if (subscriptionData) {
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.accessToken,
