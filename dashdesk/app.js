@@ -13,7 +13,6 @@ var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
 var Url = require("url");
-var virtualClient ;
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 //---
@@ -37,7 +36,7 @@ app.use(function(req, res, next) {
   req.header("Access-Control-Allow-Headers","Content-Type");
   req.header("Access-Control-Allow-Headers","Access-Control-Allow-Credentials");
   res.header("Access-Control-Allow-Headers","Access-Control-Allow-Origin");
-  res.header("Access-Control-Allow-Origin", "http://localhost:17284");
+  res.header("Access-Control-Allow-Origin", "https://*/*");
   res.header("Access-Control-Allow-Credentials","true");
   res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
   next();
