@@ -4,6 +4,8 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var ClientSchema = new Schema({
+    subscriptionId: String,
+    accessToken: [],
     clientDetails: []
 });
 

@@ -16,9 +16,11 @@ module.exports = {
         });
 
     },
-    InstallClient : function (mongoose, data, client, callback) {
+    InstallClient : function (mongoose, data,id,token, client, callback) {
         
         var newClient = new client({
+            subscriptionId: id,
+            accessToken: token,
             clientDetails: [data]
         });
         
@@ -82,8 +84,13 @@ module.exports = {
         
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
-                console.dir("Hurray ! data: " + subscriptionDet);
-                callback(JSON.parse(qs.escape(subscriptionDet)));
+                console.dir("Hurray ! data: " );
+                console.dir(subscriptionDet);
+                if(subscriptionDet.length > 0 || 0){
+                    callback(JSON.parse(qs.escape(subscriptionDet)));
+                }else {
+                    callback(null);
+                }
             } else {
                 console.dir("Error quering database. ");
                 callback(null);

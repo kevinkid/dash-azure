@@ -79,25 +79,23 @@ router.post('/', function (req, res, next) {
 
 
 function processNotification(subscriptionId, resource, res, next) {
-    
     db.GetSubscription(qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.clientDetails.accessToken,
                 function (requestError, endpointData) {
                     if (endpointData) {
-                        //@todo:  Send notification to client 
                         console.dir(endpointData);
                         db.StoreNotification(mongoose, qs.escape(JSON.stringifyendpointData().clientDetails[0]), notification);
                         connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
                     } else if (requestError) {
-                        res.status(500);
+                        res.status(202);
                         next(requestError);
                     }
                 }
             );
-        } else if (dbError) {
-            res.status(500);
+        } else if (subscriptionData === null) {
+            res.status(202);
         }
     });
 }
