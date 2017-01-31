@@ -47,7 +47,7 @@ router.get('/callback', function (req, res) {
                         subscriptionData.accessToken = token.accessToken;
             
                         //@note: the passing the client as param may not work 
-                        db.InstallClient(mongoose,notifications,client);
+                        db.InstallClient(mongoose,subscriptionData,client);
                         
                         subscriptionId = subscriptionData.id;
                         res.redirect(

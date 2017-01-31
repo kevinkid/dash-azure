@@ -41,9 +41,8 @@ module.exports = {
             clientManager.forEach(function(client){
                 signalR._transports.longPolling.send(client.connection,messageObj);// √
             });
-            
             res.json("Notification sent !");
         }
     }
-
-}
+    
+};

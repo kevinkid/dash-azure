@@ -7,7 +7,7 @@ var signalR = signalr();
 router.post("/message",function(req, res){
     var clientManager = signalR._connectionManager;
     var messageObj = {
-        Args:['server',req.body.notifcaton],
+        Args:['server',req.body.notification],
         Hub:'MyHub',
         Method:'AddMessage',
         State:1

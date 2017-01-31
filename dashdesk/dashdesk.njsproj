@@ -48,6 +48,11 @@
     <Compile Include="Helpers\Keygen.js" />
     <Compile Include="helpers\requestHelper.js" />
     <Compile Include="public\js\client.js" />
+    <Compile Include="routes\message.js" />
+    <None Include="public\js\_references.js" />
+    <Compile Include="public\js\jQuery.js" />
+    <Compile Include="public\js\jquery.signalR-2.0.3.js" />
+    <Compile Include="public\js\jquery.signalR-2.0.3.min.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="constants.js" />
     <Compile Include="routes\listen.js" />
@@ -88,8 +93,11 @@
     <Content Include="README.md" />
     <Content Include="views\contact.jade" />
     <Content Include="views\about.jade" />
+    <Content Include="views\error.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
+    <Content Include="views\new-layout.jade" />
+    <Content Include="views\notification" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <Content Include="bin\ChangeConfig.ps1" />
