@@ -16,6 +16,11 @@ var Url = require("url");
 var virtualClient ;
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
+//---
+var mongoose = require("mongoose");
+var client = require("./Handlers/client.js");
+var db = require("./Handlers/dbHandler.js");
+//---
 
 // Port config 
 app.set('port', process.env.PORT || 3000);
@@ -44,6 +49,20 @@ app.use(function(req, res, next) {
 //  mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
 mongoose.connect("mongodb://localhost:27017/dash");// local 
 
+//---[Database Operations Test]
+app.post('/store',function(req, res){
+    //@note: the passing the client as param may not work 
+    db.InstallClient(mongoose,{clientDetails : [req.body.notifications]},client);
+    res.json({Message: "Success storing data"});
+    res.status(200);
+});
+app.get('/get',function(){
+       db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
+       res.json(subscriptionData);
+       res.status(200);
+    });
+});
+//---
 
 //SignalR config
 signalR.serverProperties.ProtocolVersion = 1.3;

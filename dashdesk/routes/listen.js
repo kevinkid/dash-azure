@@ -36,15 +36,15 @@ router.post('/', function (req, res, next) {
         clientStatesValid = false;
 
         //First, validate all the clientState values in array
-        for (i = 0; i < req.body.value.length; i++) {
-            if (req.body.value[i].clientState !== clientStateValueExpected) {
-                // If just one clientState is invalid, we discard the whole batch
-                clientStatesValid = false;
-                break;
-            } else {
-                clientStatesValid = true;
-            }
-        }
+        // for (i = 0; i < req.body.value.length; i++) {
+        //     if (req.body.value[i].clientState !== clientStateValueExpected) {
+        //         // If just one clientState is invalid, we discard the whole batch
+        //         clientStatesValid = false;
+        //         break;
+        //     } else {
+        //         clientStatesValid = true;
+        //     }
+        // }
         
         // validate all notifications 
         if (clientStatesValid) {
