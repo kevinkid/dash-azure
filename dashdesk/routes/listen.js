@@ -7,11 +7,9 @@ var fs = require("fs");
 var router = express.Router();
 var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
-var signalR = require("signalr-client");
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 var mongoose = require("mongoose");
 var client = require("../Handlers/client.js");
-var subscription = require("../Handlers/subscription.js");
 var db = require("../Handlers/dbHandler.js");
 
 
@@ -57,11 +55,11 @@ router.post('/', function (req, res, next) {
             processNotification(subscriptionId, resource, res, next);
 
             // @note: uncomment for multiple notifications, very smart way of handling notifications just send them altogether together .
-            for (i = 0; i < req.body.value.length; i++) {
-               resource = req.body.value[i].resource;
-               subscriptionId = req.body.value[i].subscriptionId;
-               processNotification(subscriptionId, resource, res, next);
-            }// This was uncommented .
+            // for (i = 0; i < req.body.value.length; i++) {
+            //    resource = req.body.value[i].resource;
+            //    subscriptionId = req.body.value[i].subscriptionId;
+            //    processNotification(subscriptionId, resource, res, next);
+            // }// This was uncommented .
             
             // Send a status of 'Accepted'
             status = 202;
@@ -76,6 +74,7 @@ router.post('/', function (req, res, next) {
 
 
 
+
 function processNotification(subscriptionId, resource, res, next) {
         
     db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
@@ -85,15 +84,11 @@ function processNotification(subscriptionId, resource, res, next) {
                 '/beta/' + resource, subscriptionData.accessToken,
                 function (requestError, endpointData) {
                     if (endpointData) {
-
                         //@todo:  Send notification to client 
                         console.dir(endpointData);
-
                     } else if (requestError) {
-
                         res.status(500);
                         next(requestError);
-
                     }
                 }
             );

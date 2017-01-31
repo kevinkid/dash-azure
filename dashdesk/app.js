@@ -8,11 +8,10 @@ var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
+var message = require("./routes/message");
 var logger = require("morgan");
-var signalrc = require("signalr-client");
 var signalr = require("signalrjs");
 var signalR = signalr();
-var jsdom = require("node-jsdom");
 var Url = require("url");
 var virtualClient ;
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
@@ -44,7 +43,6 @@ app.use(function(req, res, next) {
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
 //  mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
 mongoose.connect("mongodb://localhost:27017/dash");// local 
-//require("./Handlers/dbHandler.js")(mongoose);
 
 
 //SignalR config
@@ -68,149 +66,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes config 
 app.use('/', routes);
 app.use('/listen', listen);
-
-
-//@note: getting connections might return no connections after authentication process
-// This method counts the number of connections you have .
-//@todo: keep track of number of connection using a hook to invoke downloading notification 
-// on the client .
-
-function getConnectionByUser(sessionKey){
-    var conn = signalR._connectionManager._connections;
-    return conn.getByUser(sessionKey);//@todo: check if it returns back a connection .
-}
-
-//@returns {Bool} - true if connection established .
-function verfyConnection(identity){
-    var conList = signalR._connectionManager._connections;
-    if(identity){
-        if(conList.hasOwnProperty(identity)){
-            return true;
-        }else {
-            return false;
-        }
-    }
-}
-
-//@desc: checks for changes in connections and to initiate
-// download of notifications from lost client connections
-function connectionsHook(){
-
-}
-
-//@returns{Number} - Number of current connections to the server 
-function connectionNum(){
-    var currentConnections = signalR._connectionManager._connections; 
-    var conCount = 0;
-    for(var key in props){
-        count += 1;
-    }
-    console.log("Number count:"+count-1);
-    return conCount-1;
-}
-
-function sendNotification(identity,msg){
-    if(identity){
-
-    }
-}
-
-
-//===========================================================>
-
-app.post("/message",function(req, res){
-    //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
-    var clientManager = signalR._connectionManager;
-    var messageObj = {
-        Args:['server',req.body.notifcaton],
-        Hub:'MyHub',
-        Method:'AddMessage',
-        State:1
-    };
-    clientManager.forEach(function(client){
-        //@todo: narrow down to each client 
-        signalR._transports.longPolling.send(client.connection,messageObj);// √
-    });
-    
-    res.json("Notification sent !");
-
-});
-
-
-
-
-//Working client-server communication [virtual client]
-app.post('/working browser signalr client', function(req, res){
-    
-//  var baseUrl = Url.parse(req.url).host;
-// @note: since its server side you can use localhost to make it faster . 
-// @todo: since we are calling for internal resources try using localhost .
-// var jquery = baseUrl+"/js/jquery-1.10.2.min.js";
-// var jQuerySignalR = baseUrl+"js/jQuery.signalR.js";
-// @docs: https://www.npmjs.com/package/node-jsdom
-
-
-//------------------------------------------------------->
-
-var browser = jsdom.env(
-  // @note: get the url from node.env object 
-  "http://localhost:3000",
-  // @note: The url above should be server served which we dont want 
-  ["http://localhost:3000/js/jquery-1.10.2.min.js","http://localhost:3000/js/jquery.signalR-2.0.3.min.js"],
-  function (errors, window) {
-    
-    console.log("Browser loaded ");
-    console.log(window.$.connection);
-    // @docs: https://www.npmjs.com/package/signalrjs
-      var $ = window.$;
-
-      var connection = $.connection('http://localhost:3000/');
-        connection.error(function(error){
-            console.dir("Connection Error");
-            console.log(error);
-        });
-
-        connection.received(function (data) {
-            console.log('The time is ' + data);
-        });
-
-        connection.start().done(function() {
-            console.log("connection started!");
-            console.dir("connection state: "+connection.state);
-        });
-        
-    //   var connection = $.connection.hub;
-    //   var MyHub = $.connection.MyHub;
-
-    //   $.connection.hub.start().done(function(){
-    //       MyHub.server.send('message string'); // this should be an array with name and message 
-    //   }); 
-    //   $.connection.hub.end();
-
-  });
-
-browser = null; // Dispose of the browser after each notification .
-
-
-//------------------------------------------------------------->
-
-
-    res.json("notification recieved  !");
-    // Dispose the client after send the message .
-    return;
-
-});
-
-
-
-
-
-
-//==============================================================>
+app.use('/message',message);
 
 
 /**
- * [signalR object] try to find the socket event emitter.
+ * [signalR object]
  * 
  *  {
   route: '/signalr',
@@ -253,9 +113,7 @@ browser = null; // Dispose of the browser after each notification .
  */
 
 
-
-
-// Client - Server hub connection  
+// Client - Hub connection instance   
 var hub = signalR.hub('MyHub', {
     Send : function (name, message) {
         
@@ -273,6 +131,21 @@ var hub = signalR.hub('MyHub', {
 });
 
 
+app.post("/message",function(req, res){
+    var clientManager = signalR._connectionManager;
+    var messageObj = {
+        Args:['server',req.body.notifcaton],
+        Hub:'MyHub',
+        Method:'AddMessage',
+        State:1
+    };
+    clientManager.forEach(function(client){
+        signalR._transports.longPolling.send(client.connection,messageObj);// √
+    });
+    
+    res.json("Notification sent !");
+
+});
 
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

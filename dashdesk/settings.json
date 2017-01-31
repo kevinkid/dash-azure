@@ -3,7 +3,7 @@
   "production": {
     "server": {
       "host": "https://dashdesk.azurewebsites.net",
-      "port": "3422"
+      "port": "Default"
     },
     "database": {
       "host": "mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash",
@@ -15,7 +15,7 @@
   "development": {
     "server": {
       "host": "http://localhost:666",
-      "port": "666"
+      "port": "6666"
     },
     "database": {
       "host": "mongodb://localhost:27017/dash",

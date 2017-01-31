@@ -6,9 +6,9 @@ var authHelper = require('../helpers/authHelper.js');
 var requestHelper = require("../helpers/requestHelper.js");
 var subscriptionConfiguration = require("../constants").subscriptionConfiguration;
 var https = require("https");
-var subscription = require("../Handlers/subscription.js");
-var db = require("../Handlers/dbHandler.js");
 var mongoose = require("mongoose");
+var client = require("../Handlers/client.js");
+var db = require("../Handlers/dbHandler.js");
 
 
 
@@ -46,9 +46,8 @@ router.get('/callback', function (req, res) {
                         subscriptionData.userId = token.userId;
                         subscriptionData.accessToken = token.accessToken;
             
-                        // Dotn know if it will work but let us store bother the client and the subscription 
-                        db.StoreSubscription(mongoose,subscriptionData,subscription);
-                        db.RegisterClient(mongoose,{subscriptionId: req.body.subscriptionId,notifications : [notifications]});
+                        //@note: the passing the client as param may not work 
+                        db.InstallClient(mongoose,{clientDetails : [notifications]},client);
 
                         subscriptionId = subscriptionData.id;
                         res.redirect(

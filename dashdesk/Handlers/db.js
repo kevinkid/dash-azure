@@ -19,5 +19,3 @@ var notification = mongoose.model("notifications", notificationSchema);
 
 // @note: modules can only export one at a time otherwise use an object . 
 module.exports = subscription;
-
-
