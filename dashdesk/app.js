@@ -172,7 +172,16 @@ var server = app.listen(app.get('port'), function () {
 });
 
 
-// @todo; replace the script statement in cmd file with this
-//node.exe %1 %2 %3
+// Client - Server hub connection  
+//@Todo: put in the client generator to instanciate a new client on each connection .
+var hub = signalR.hub('MyHub', {
+    Send : function (name, message) {
+        // @note: This type of 
+        console.log(this);
+        this.clients.all.invoke('AddMessage').withArgs([name, message]);
+        console.log('send:' + message);
+    }
+});
+
 
 module.exports = app;
