@@ -9,6 +9,7 @@ var https = require("https");
 var mongoose = require("mongoose");
 var client = require("../Handlers/client.js");
 var db = require("../Handlers/dbHandler.js");
+var subscription = {};
 
 
 
@@ -31,7 +32,7 @@ router.get('/callback', function (req, res) {
     var subscriptionExpirationDateTime;
     authHelper.getTokenFromCode(req.query.code, function (authenticationError, token) {
         if (token) {
-
+            
             // Expiration date 86400000 [ms] -eq 24hr 
             subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toISOString();//ISO time format 
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
@@ -42,20 +43,23 @@ router.get('/callback', function (req, res) {
             JSON.stringify(subscriptionConfiguration),
             function (requestError, subscriptionData) {
                     if (subscriptionData !== null) {
-
+                        subscription = subscriptionData;
                         subscriptionData.userId = token.userId;
                         subscriptionData.accessToken = token.accessToken;
-            
-                        //@note: the passing the client as param may not work 
-                        db.InstallClient(mongoose,subscriptionData,client);
                         
-                        subscriptionId = subscriptionData.id;
-                        res.redirect(
-                            '/dashboard.html?subscriptionId=' + subscriptionId +
+                        //@note: the passing the client as param may not work 
+                        db.InstallClient(mongoose, subscription, client, function () {
+                            
+                            subscriptionId = subscriptionData.id;
+                            res.redirect(
+                                '/dashboard.html?subscriptionId=' + subscriptionId +
                   '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
-                        );
+                            );
+                        
+                        });
+                       
                     } else if (requestError) {
-
+                        
                         // @todo: remote this bad error response only for development.
                         res.redirect("/index.html?Error=" + JSON.stringify(requestError));
                     }

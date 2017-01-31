@@ -13,6 +13,8 @@ var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
 var Url = require("url");
+var client = require("./Handlers/client.js");
+var db = require("./Handlers/dbHandler.js");
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 //---
@@ -44,9 +46,16 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 
 // Db config 
+
+var options = { server: { socketOptions: { keepAlive: 500000, connectTimeoutMS: 50000 } }, 
+                replset: { socketOptions: { keepAlive: 500000, connectTimeoutMS : 50000 } } };  
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
- mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash");// prod
+mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash",options);// prod
 // mongoose.connect("mongodb://localhost:27017/dash");// local 
+var conn = mongoose.connection;             
+
+ 
+
 
 
 //SignalR config
@@ -69,40 +78,39 @@ app.use(bodyParser.urlencoded({
 // Routes config 
 app.use('/', routes);
 app.use('/listen', listen);
-app.use('/message',message);
+app.use('/message', message);
 
 
-app.post("/message",function(req, res){
+app.post("/message", function (req, res) {
     var clientManager = signalR._connectionManager;
     var messageObj = {
-        Args:['server',req.body.notifcaton],
-        Hub:'MyHub',
-        Method:'AddMessage',
-        State:1
+        Args: ['server', req.body.notifcaton],
+        Hub: 'MyHub',
+        Method: 'AddMessage',
+        State: 1
     };
-    clientManager.forEach(function(client){
-        signalR._transports.longPolling.send(client.connection,messageObj);// √
+    clientManager.forEach(function (client) {
+        signalR._transports.longPolling.send(client.connection, messageObj);// √
     });
-    
     res.json("Notification sent !");
-
 });
+    
 
 
 
 /*------------------------------------------------------------
 ------------------[Database Operations Test]------------------*/
-app.post('/store',function(req, res){
+app.post('/store', function (req, res) {
     //@note: the passing the client as param may not work 
-    db.InstallClient(mongoose,req.body.notifications,client);
+    db.InstallClient(mongoose, req.body.notifications, client,function () {});
     console.dir("Success storing data");
-    res.json({Message: "Success storing data"});
+    res.json({ Message: "Success storing data" });
     res.status(200);
 });
-app.get('/get',function(req, res){
-       db.GetSubscription(mongoose, 'some random data that we need .',client, function(subscriptionData){
-       res.json(subscriptionData);
-       res.status(200);
+app.get('/get', function (req, res) {
+    db.GetSubscription(mongoose, 'some random data that we need .', client, function (subscriptionData) {
+        res.json(subscriptionData);
+        res.status(200);
     });
 });
 ///*---------------------------------------------------------*/
@@ -121,9 +129,19 @@ signalR.hub('MyHub', {
     }
 });
 
+
+
+conn.on('error', console.error.bind(console, 'connection error:'));  
+ 
+conn.once('open', function() {
+
+    console.log("Database connection established ");
+
+    
 app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
+});
 
 module.exports = app;

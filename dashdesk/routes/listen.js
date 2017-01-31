@@ -17,26 +17,26 @@ var signalR = signalr();
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
-  
+    
     var status;
     var clientStatesValid;
     var i;
     var resource;
     var subscriptionId;
-
+    
     if (req.query.validationToken) {
-
+        
         res.send(req.query.validationToken);
         res.status(200);
         
     } else {
         
-
+        
         // @note: anthing after res will not be executed .
         // res.status(202);
         
         clientStatesValid = false;
-
+        
         //First, validate all the clientState values in array
         // for (i = 0; i < req.body.value.length; i++) {
         //     if (req.body.value[i].clientState !== clientStateValueExpected) {
@@ -51,11 +51,11 @@ router.post('/', function (req, res, next) {
         // validate all notifications 
         if (clientStatesValid) {
             // process all the notifications   
-
+            
             resource = req.body.value[0].resource;
             subscriptionId = req.body.value[0].subscriptionId;
             processNotification(subscriptionId, resource, res, next);
-
+            
             // @note: uncomment for multiple notifications, very smart way of handling notifications just send them altogether together .
             // for (i = 0; i < req.body.value.length; i++) {
             //    resource = req.body.value[i].resource;
@@ -67,7 +67,7 @@ router.post('/', function (req, res, next) {
             status = 202;
         } else {
             
-           // Dispose of unkown clientstate notifications 
+            // Dispose of unkown clientstate notifications 
             status = 202;
         }
     }
@@ -78,8 +78,8 @@ router.post('/', function (req, res, next) {
 
 
 function processNotification(subscriptionId, resource, res, next) {
-        
-    db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
+    
+    db.GetSubscription(mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.clientDetails.accessToken,
@@ -87,8 +87,8 @@ function processNotification(subscriptionId, resource, res, next) {
                     if (endpointData) {
                         //@todo:  Send notification to client 
                         console.dir(endpointData);
-                        db.StoreNotification(mongoose,notifications,notification);
-                        connectionManager.sendNotification(signalR,null,JSON.stringify(endpointData));
+                        db.StoreNotification(mongoose, notifications, notification);
+                        connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
                     } else if (requestError) {
                         res.status(500);
                         next(requestError);
