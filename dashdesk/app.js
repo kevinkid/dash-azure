@@ -13,8 +13,9 @@ var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
 var Url = require("url");
-var client = require("./Handlers/client.js");
 var db = require("./Handlers/dbHandler.js");
+var client = require("./Handlers/client.js");
+var notifications = require("./Handlers/notifications.js");
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 //---

@@ -7,10 +7,11 @@ var fs = require("fs");
 var router = express.Router();
 var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
+var qs = require("querystring");
 var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
 var mongoose = require("mongoose");
-var client = require("../Handlers/client.js");
 var db = require("../Handlers/dbHandler.js");
+var client = require("../Handlers/client.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
 var signalr = require("signalrjs");
 var signalR = signalr();
@@ -79,7 +80,7 @@ router.post('/', function (req, res, next) {
 
 function processNotification(subscriptionId, resource, res, next) {
     
-    db.GetSubscription(mongoose, subscriptionId, client, function (subscriptionData) {
+    db.GetSubscription(qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.clientDetails.accessToken,
@@ -87,7 +88,7 @@ function processNotification(subscriptionId, resource, res, next) {
                     if (endpointData) {
                         //@todo:  Send notification to client 
                         console.dir(endpointData);
-                        db.StoreNotification(mongoose, notifications, notification);
+                        db.StoreNotification(mongoose, qs.escape(endpointData), notification);
                         connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
                     } else if (requestError) {
                         res.status(500);

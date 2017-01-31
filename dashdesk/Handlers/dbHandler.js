@@ -29,6 +29,7 @@ module.exports = {
                 callback();
             } else {
                 console.log("Error writing database .");
+                callback(error);
             }
         });
 
@@ -77,12 +78,12 @@ module.exports = {
     UninstallClient : function (mongoose, data, client) {
         // remove from database 
     },
-    GetSubscription : function (mongoose, data, client, callback) {
+    GetSubscription : function (qs,mongoose, data, client, callback) {
         
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
                 console.dir("Hurray ! data: " + subscriptionDet);
-                callback(subscriptionDet);
+                callback(qs.escape(subscriptionDet));
             } else {
                 console.dir("Error quering database. ");
                 callback(null);
