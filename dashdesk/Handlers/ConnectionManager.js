@@ -1,5 +1,5 @@
 module.exports = {
-    getConnectionByUser : function getConnectionByUser(signalR, sessionKey){
+    getConnectionByUser : function (signalR, sessionKey){
         var conn = signalR._connectionManager._connections;
         return conn.getByUser(sessionKey);//@note: Doesn't return a connection
     },
@@ -16,7 +16,7 @@ module.exports = {
     hook : function(signalR){
         return 'difference in connection since last check';
     },
-    connections:  function connectionNum(signalR){
+    connections:  function (signalR){
         var currentConnections = signalR._connectionManager._connections; 
         var conCount = 0;
         for(var key in props){
@@ -25,7 +25,7 @@ module.exports = {
         console.log("Number count:"+count-1);
         return conCount-1;
     },
-    sendNotification : function sendNotification(signalR, identity, msg){
+    sendNotification : function (signalR, identity, msg){
         if(identity){
             //@Todo: Notify single user by token or sessionKey
         }else {
