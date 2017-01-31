@@ -11,7 +11,9 @@ var clientStateValueExpected = require('../constants').subscriptionConfiguration
 var mongoose = require("mongoose");
 var client = require("../Handlers/client.js");
 var db = require("../Handlers/dbHandler.js");
-
+var connectionManager = require("../Handlers/ConnectionManager.js");
+var signalr = require("signalrjs");
+var signalR = signalr();
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
@@ -80,11 +82,13 @@ function processNotification(subscriptionId, resource, res, next) {
     db.GetSubscription(mongoose, subscriptionId,client, function(subscriptionData){
         if (subscriptionData) {
             requestHelper.getData(
-                '/beta/' + resource, subscriptionData.accessToken,
+                '/beta/' + resource, subscriptionData.clientDetails.accessToken,
                 function (requestError, endpointData) {
                     if (endpointData) {
                         //@todo:  Send notification to client 
                         console.dir(endpointData);
+                        db.StoreNotification(mongoose,notifications,notification);
+                        connectionManager.sendNotification(signalR,null,JSON.stringify(endpointData));
                     } else if (requestError) {
                         res.status(500);
                         next(requestError);

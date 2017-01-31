@@ -78,7 +78,7 @@ module.exports = {
     },
     GetSubscription : function (mongoose, data, client, callback){
 
-        client.find({ "clientDetails": data }, function (error, subscriptionDet) {
+        client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
         if (!error) {
             console.dir("Hurray ! data: "+ subscriptionDet);
             callback(subscriptionDet);
@@ -88,6 +88,19 @@ module.exports = {
         }
         });
 
+    },
+    StoreNotification : function(mongoose, newNotifcation, notification){
+        var newNotifcation  = new client({
+            notificationDetails: [data]
+        });
+        
+        newClient.save(function (error) {
+            if(!error){
+                console.log("Success storing notification .");
+            }else {
+                console.log("Error Storing Notification .");
+            }
+        });
     }
 };
 

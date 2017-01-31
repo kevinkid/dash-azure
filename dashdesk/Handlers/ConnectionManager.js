@@ -1,9 +1,9 @@
 module.exports = {
-    getConnectionByUser : function getConnectionByUser(sessionKey){
+    getConnectionByUser : function getConnectionByUser(signalR, sessionKey){
         var conn = signalR._connectionManager._connections;
         return conn.getByUser(sessionKey);//@note: Doesn't return a connection
     },
-    verify : function verfyConnection(identity){
+    verify : function verfyConnection(signalR,identity){
         var conList = signalR._connectionManager._connections;
         if(identity){
             if(conList.hasOwnProperty(identity)){
@@ -13,10 +13,10 @@ module.exports = {
             }
         }
     },
-    hook : function(){
+    hook : function(signalR){
         return 'difference in connection since last check';
     },
-    connections:  function connectionNum(){
+    connections:  function connectionNum(signalR){
         var currentConnections = signalR._connectionManager._connections; 
         var conCount = 0;
         for(var key in props){
@@ -25,9 +25,9 @@ module.exports = {
         console.log("Number count:"+count-1);
         return conCount-1;
     },
-    sendNotification : function sendNotification(identity,msg){
+    sendNotification : function sendNotification(signalR, identity, msg){
         if(identity){
-            //@Todo: get a single user by token or sessionKey
+            //@Todo: Notify single user by token or sessionKey
         }else {
             //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
             var clientManager = signalR._connectionManager;
