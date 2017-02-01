@@ -85,9 +85,10 @@ module.exports = {
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
                 console.dir("Hurray ! data: " );
-                console.dir();
-                for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
-                callback(subscriptionDet);
+                // for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
+                console.dir("SubscriptionId:");
+                console.dir(subscriptionDet[0]._doc.accessToken[0].accessToken);
+                callback(subscriptionDet[0]._doc.accessToken[0]);
             } else {
                 console.dir("Error quering database. ");
                 callback(null);

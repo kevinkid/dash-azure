@@ -55,6 +55,7 @@ router.post('/', function (req, res, next) {
             
             resource = req.body.value[0].resource;
             subscriptionId = req.body.value[0].subscriptionId;
+            res.status(202);
             processNotification(subscriptionId, resource, res, next);
             
             // @note: uncomment for multiple notifications, very smart way of handling notifications just send them altogether together .
@@ -66,10 +67,12 @@ router.post('/', function (req, res, next) {
             
             // Send a status of 'Accepted'
             status = 202;
+            res.status(status);
         } else {
             
             // Dispose of unkown clientstate notifications 
             status = 202;
+            res.status(status);
         }
     }
     res.status(status).end(http.STATUS_CODES[status]);
@@ -91,12 +94,14 @@ function processNotification(subscriptionId, resource, res, next) {
     db.GetSubscription(qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
             requestHelper.getData(
-                '/beta/' + resource, subscriptionData.clientDetails.accessToken,
+                '/beta/' + resource, subscriptionData.accessToken,
                 function (requestError, endpointData) {
+                    console.log(endpointData);
                     if (endpointData) {
                         console.dir(endpointData);
-                        db.StoreNotification(mongoose, qs.escape(JSON.stringifyendpointData().clientDetails[0]), notification);
+                        db.StoreNotification(mongoose, qs.escape(JSON.stringify(endpointData).clientDetails[0]), notification);
                         connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
+                        next();
                     } else if (requestError) {
                         res.status(202);
                         next(requestError);

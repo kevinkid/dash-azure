@@ -13,6 +13,7 @@ var logger = require("morgan");
 var signalr = require("signalrjs");
 var signalR = signalr();
 var Url = require("url");
+var qs = require("querystring");
 var db = require("./Handlers/dbHandler.js");
 var client = require("./Handlers/client.js");
 var notifications = require("./Handlers/notifications.js");
@@ -109,7 +110,8 @@ app.post('/store', function (req, res) {
     res.status(200);
 });
 app.get('/get', function (req, res) {
-    db.GetSubscription(mongoose, 'some random data that we need .', client, function (subscriptionData) {
+    //qs,mongoose, data, client, callback
+    db.GetSubscription(qs, mongoose, "a313ceb5-4b70-4688-8087-f2f211f7ead6", client, function (subscriptionData) {
         res.json(subscriptionData);
         res.status(200);
     });
