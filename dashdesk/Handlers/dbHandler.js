@@ -85,12 +85,9 @@ module.exports = {
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
                 console.dir("Hurray ! data: " );
-                console.dir(subscriptionDet);
-                if(subscriptionDet.length > 0 || 0){
-                    callback(JSON.parse(qs.escape(subscriptionDet)));
-                }else {
-                    callback(null);
-                }
+                console.dir();
+                for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
+                callback(subscriptionDet);
             } else {
                 console.dir("Error quering database. ");
                 callback(null);

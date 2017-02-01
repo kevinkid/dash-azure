@@ -76,7 +76,16 @@ router.post('/', function (req, res, next) {
 });
 
 
-
+/*
+    _posts: 
+     { '$__original_save': [],
+       '$__original_validate': [],
+       '$__original_remove': [] },
+    '$__original_validate': { [Function] numAsyncPres: 1 },
+    validate: [Function: wrappedPointCut],
+    '$__original_remove': { [Function] numAsyncPres: 1 },
+    remove: [Function: wrappedPointCut] } ]
+*/
 
 function processNotification(subscriptionId, resource, res, next) {
     db.GetSubscription(qs, mongoose, subscriptionId, client, function (subscriptionData) {
@@ -94,7 +103,7 @@ function processNotification(subscriptionId, resource, res, next) {
                     }
                 }
             );
-        } else if (subscriptionData === null) {
+        } else {
             res.status(202);
         }
     });
