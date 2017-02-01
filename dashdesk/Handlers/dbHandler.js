@@ -84,17 +84,24 @@ module.exports = {
         
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
-                console.dir("Hurray ! data: " );
-                // for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
-                console.dir("SubscriptionId:");
-                console.dir(subscriptionDet[0]._doc.accessToken[0].accessToken);
-                callback(subscriptionDet[0]._doc.accessToken[0]);
+                if(subscriptionDet.length > 0 || 0){
+                    console.log("Subscription Found ! ");
+                    console.dir(subscriptionDet);
+                    console.dir("SubscriptionId:");
+                    console.dir(subscriptionDet[0]._doc.accessToken[0].accessToken);
+                    // for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
+                    callback(subscriptionDet[0]._doc.accessToken[0]);
+                    callback(subscriptionDet);
+                } else {
+                    console.dir("Subscription not found !");
+                    console.dir(subscriptionDet);
+                    callback(null);
+                }
             } else {
                 console.dir("Error quering database. ");
                 callback(null);
             }
         });
-
     },
     StoreNotification : function (mongoose, newNotifcation, notification) {
         var newNotifcation = new client({

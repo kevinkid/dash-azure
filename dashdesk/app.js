@@ -111,7 +111,7 @@ app.post('/store', function (req, res) {
 });
 app.get('/get', function (req, res) {
     //qs,mongoose, data, client, callback
-    db.GetSubscription(qs, mongoose, "a313ceb5-4b70-4688-8087-f2f211f7ead6", client, function (subscriptionData) {
+    db.GetSubscription(qs, mongoose, "f9d9b759-a82a-4036-ae2e-003877abcd6c", client, function (subscriptionData) {
         res.json(subscriptionData);
         res.status(200);
     });

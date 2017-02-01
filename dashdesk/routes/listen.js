@@ -35,19 +35,18 @@ router.post('/', function (req, res, next) {
         
         // @note: anthing after res will not be executed .
         // res.status(202);
-        
-        clientStatesValid = false;
+            clientStatesValid = false;
         
         //First, validate all the clientState values in array
-        // for (i = 0; i < req.body.value.length; i++) {
-        //     if (req.body.value[i].clientState !== clientStateValueExpected) {
-        //         // If just one clientState is invalid, we discard the whole batch
-        //         clientStatesValid = false;
-        //         break;
-        //     } else {
-        //         clientStatesValid = true;
-        //     }
-        // }
+        for (i = 0; i < req.body.value.length; i++) {
+            if (req.body.value[i].clientState !== clientStateValueExpected) {
+                // If just one clientState is invalid, we discard the whole batch
+                clientStatesValid = false;
+                break;
+            } else {
+                clientStatesValid = true;
+            }
+        }
         
         // validate all notifications 
         if (true) {
@@ -55,19 +54,18 @@ router.post('/', function (req, res, next) {
             
             resource = req.body.value[0].resource;
             subscriptionId = req.body.value[0].subscriptionId;
-            res.status(202);
             processNotification(subscriptionId, resource, res, next);
+            res.status(202);
             
-            // @note: uncomment for multiple notifications, very smart way of handling notifications just send them altogether together .
-            // for (i = 0; i < req.body.value.length; i++) {
-            //    resource = req.body.value[i].resource;
-            //    subscriptionId = req.body.value[i].subscriptionId;
-            //    processNotification(subscriptionId, resource, res, next);
-            // }// This was uncommented .
+            for (i = 0; i < req.body.value.length; i++) {
+               resource = req.body.value[i].resource;
+               subscriptionId = req.body.value[i].subscriptionId;
+                res.status(202);
+               //processNotification(subscriptionId, resource, res, next);
+            }
             
             // Send a status of 'Accepted'
-            status = 202;
-            res.status(status);
+            
         } else {
             
             // Dispose of unkown clientstate notifications 
@@ -79,16 +77,6 @@ router.post('/', function (req, res, next) {
 });
 
 
-/*
-    _posts: 
-     { '$__original_save': [],
-       '$__original_validate': [],
-       '$__original_remove': [] },
-    '$__original_validate': { [Function] numAsyncPres: 1 },
-    validate: [Function: wrappedPointCut],
-    '$__original_remove': { [Function] numAsyncPres: 1 },
-    remove: [Function: wrappedPointCut] } ]
-*/
 
 function processNotification(subscriptionId, resource, res, next) {
     db.GetSubscription(qs, mongoose, subscriptionId, client, function (subscriptionData) {
