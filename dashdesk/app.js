@@ -23,6 +23,8 @@ var notifications = require("./Handlers/notifications.js");
 var mongoose = require("mongoose");
 var client = require("./Handlers/client.js");
 var db = require("./Handlers/dbHandler.js");
+var requestHelper = require('./helpers/requestHelper.js');
+var connectionManager = require("./Handlers/ConnectionManager.js");
 //---
 
 // Port config 
@@ -111,13 +113,54 @@ app.post('/store', function (req, res) {
 });
 app.get('/get', function (req, res) {
     //qs,mongoose, data, client, callback
-    db.GetSubscription(qs, mongoose, "f9d9b759-a82a-4036-ae2e-003877abcd6c", client, function (subscriptionData) {
+    db.GetSubscription(qs, mongoose, "4a1c26bd-5666-4e04-ab7f-528d1116be76", client, function (subscriptionData) {
         res.json(subscriptionData);
         res.status(200);
     });
 });
-///*---------------------------------------------------------*/
+/// Get last message using graph
+app.post('/test', function(req, res){
+    var resource,
+        token;
+        db.GetSubscription(requestHelper, qs, mongoose, "4a1c26bd-5666-4e04-ab7f-528d1116be76", client, function (subscriptionData) {
+        if (subscriptionData) {
+            if(subscriptionData !== null){
+            // resource = "https://graph.microsoft.com/v1.0/me/"+subscriptionData.tenantId+"/messages?$top=1";//@todo: add the user Id from the token object
+          resource = "https://graph.microsoft.com/beta/me/messages?$=1";
+          // nodejs is refusing to make two server requests inside of callbacks . am not sure if did that before . 
+            token = subscriptionData;
+           res.status(202);
+           res.end();
+            GetMail(resource, token);
 
+            }
+
+        } else {
+            res.status(500);
+        }
+    });
+});
+///*---------------------------------------------------------*/
+                 
+function GetMail(resource,subscriptionData){
+    console.dir("Getting email .");
+        requestHelper.getData(
+        '/beta/me/' + resource, subscriptionData,
+        function (requestError, endpointData) {
+            console.log(endpointData);
+            if (endpointData) {
+                // res.status(202);
+                console.dir(endpointData);
+                console.dir("From : "+endpointData.value[0].from.users);
+                console.dir("Email : "+endpointData.value[0].body.content);// content is in html parse or something .
+                db.StoreNotification(mongoose, qs.escape(JSON.stringify(endpointData).clientDetails[0]), notification);
+                connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
+            } else if (requestError) {
+                console.dir(requestError);
+            }
+        }
+    );
+}
 
 
 

@@ -86,13 +86,16 @@ module.exports = {
             if (!error) {
                 if(subscriptionDet.length > 0 || 0){
                     console.log("Subscription Found ! ");
-                    console.dir(subscriptionDet);
+                    console.dir(subscriptionDet[0]._doc.accessToken[0]);
                     console.dir("SubscriptionId:");
                     console.dir(subscriptionDet[0]._doc.accessToken[0].accessToken);
+                    callback(subscriptionDet[0]._doc.accessToken[0]);
                     // for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
                     // Dont do a callback 
+                    /*
+                    //@todo: Try this just incase the issue is promises in mongoose db .
                      requestHelper.getData(
-                        '/beta/' + resource, (subscriptionDet[0]._doc.accessToken[0].accessToken,
+                        '/beta/' + resource, subscriptionDet[0]._doc.accessToken[0].accessToken,
                         function (requestError, endpointData) {
                             console.log(endpointData);
                             if (endpointData) {
@@ -107,6 +110,7 @@ module.exports = {
                             }
                         }
                     );
+                    */
                 } else {
                     console.dir("Subscription not found !");
                     console.dir(error);

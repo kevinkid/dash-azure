@@ -12,6 +12,7 @@ var clientStateValueExpected = require('../constants').subscriptionConfiguration
 var mongoose = require("mongoose");
 var db = require("../Handlers/dbHandler.js");
 var client = require("../Handlers/client.js");
+var notification = require("../Handlers/notification.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
 var signalr = require("signalrjs");
 var signalR = signalr();
@@ -58,8 +59,9 @@ router.post('/', function (req, res, next) {
                resource = req.body.value[i].resource;
                subscriptionId = req.body.value[i].subscriptionId;
                 res.status(202);
+                res.end();
                 if(req.body.value[i].changeType === "Created"){
-
+                    console.dir("Notification Mail recieved . ");
                     processNotification(subscriptionId, resource, res, next);
                 }else{
                     console.log("Ignore other notifications.");
@@ -80,12 +82,17 @@ router.post('/', function (req, res, next) {
     res.status(status).end(http.STATUS_CODES[status]);
 });
 
-
+function htmlParse(html){
+    var endStr;
+    
+    return endStr;
+}
 
 function processNotification(subscriptionId, resource, res, next) {
     db.GetSubscription(requestHelper, qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
-            connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
+            var email ,
+            body;
                         
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.accessToken,
@@ -93,8 +100,9 @@ function processNotification(subscriptionId, resource, res, next) {
                     console.log(endpointData);
                     if (endpointData) {
                         console.dir(endpointData);
-                        db.StoreNotification(mongoose, qs.escape(JSON.stringify(endpointData).clientDetails[0]), notification);
-                        connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
+                        // body = htmlParse(endpointData.value.);
+                        db.StoreNotification(mongoose, endpointDat), notification);
+                        connectionManager.sendNotification(signalR, null, 'email', 'body');
                         next();
                     } else if (requestError) {
                         res.status(202);
