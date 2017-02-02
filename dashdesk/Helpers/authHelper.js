@@ -42,6 +42,30 @@ function getTokenFromCode(code, callback) {
     );
 }
 
+/**
+ * get accesstoken from refreshtoken
+ * @param  {String}   refereshToken stored refreshtoken
+ * @param  {Function} callback      
+ */
+function getTokenFromRefreshToken(refereshToken, callback) {
+    var authContext = new AuthenticationContext(adalConfiguration.authority);
+    authContext.acquireTokenWithRefreshToken(
+        refereshToken,
+        adalConfiguration.redirectUri,
+        resource,
+        adalConfiguration.clientID,
+        adalConfiguration.clientSecret,
+        function (error, token) {
+            if (error) {
+                console.log("error Getting token from refereshToken .");
+                callback(error,null);
+            }else {
+                console.log("Succss getting access token .");
+                callback(null,token);
+            }
+        })
+}
+
 exports.getAuthUrl = getAuthUrl;
 exports.getTokenFromCode = getTokenFromCode;
 

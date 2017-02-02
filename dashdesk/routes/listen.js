@@ -19,7 +19,7 @@ var signalR = signalr();
 /* Default listen route */
 router.post('/', function (req, res, next) {
     
-    var status;
+    var status = 202;;
     var clientStatesValid;
     var i;
     var resource;
@@ -27,11 +27,13 @@ router.post('/', function (req, res, next) {
     
     if (req.query.validationToken) {
         
+        status = 202;
         res.send(req.query.validationToken);
         res.status(200);
         
     } else {
-        
+
+        status = 202;
         
         // @note: anthing after res will not be executed .
         // res.status(202);
@@ -51,27 +53,29 @@ router.post('/', function (req, res, next) {
         // validate all notifications 
         if (true) {
             // process all the notifications   
-            
-            resource = req.body.value[0].resource;
-            subscriptionId = req.body.value[0].subscriptionId;
-            processNotification(subscriptionId, resource, res, next);
-            res.status(202);
-            
+                        
             for (i = 0; i < req.body.value.length; i++) {
                resource = req.body.value[i].resource;
                subscriptionId = req.body.value[i].subscriptionId;
                 res.status(202);
-               //processNotification(subscriptionId, resource, res, next);
+                if(req.body.value[i].changeType === "Created"){
+
+                    processNotification(subscriptionId, resource, res, next);
+                }else{
+                    console.log("Ignore other notifications.");
+                }
             }
             
             // Send a status of 'Accepted'
-            
+            status = 202;
+            res.status(status);
         } else {
             
             // Dispose of unkown clientstate notifications 
             status = 202;
             res.status(status);
         }
+        status = 202;
     }
     res.status(status).end(http.STATUS_CODES[status]);
 });
@@ -79,8 +83,10 @@ router.post('/', function (req, res, next) {
 
 
 function processNotification(subscriptionId, resource, res, next) {
-    db.GetSubscription(qs, mongoose, subscriptionId, client, function (subscriptionData) {
+    db.GetSubscription(requestHelper, qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
+            connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
+                        
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.accessToken,
                 function (requestError, endpointData) {
@@ -96,8 +102,9 @@ function processNotification(subscriptionId, resource, res, next) {
                     }
                 }
             );
+           res.status(202);
         } else {
-            res.status(202);
+            res.status(500);
         }
     });
 }

@@ -80,7 +80,7 @@ module.exports = {
     UninstallClient : function (mongoose, data, client) {
         // remove from database 
     },
-    GetSubscription : function (qs,mongoose, data, client, callback) {
+    GetSubscription : function (requestHelper, qs,mongoose, data, client, callback) {
         
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
@@ -90,11 +90,26 @@ module.exports = {
                     console.dir("SubscriptionId:");
                     console.dir(subscriptionDet[0]._doc.accessToken[0].accessToken);
                     // for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
-                    callback(subscriptionDet[0]._doc.accessToken[0]);
-                    callback(subscriptionDet);
+                    // Dont do a callback 
+                     requestHelper.getData(
+                        '/beta/' + resource, (subscriptionDet[0]._doc.accessToken[0].accessToken,
+                        function (requestError, endpointData) {
+                            console.log(endpointData);
+                            if (endpointData) {
+                                console.dir(endpointData);
+                                db.StoreNotification(mongoose, qs.escape(JSON.stringify(endpointData).clientDetails[0]), notification);
+                                callback(endpointData);
+                                next();
+                            } else if (requestError) {
+                                console.dir(requestError);
+                                callback(null);
+                                next(requestError);
+                            }
+                        }
+                    );
                 } else {
                     console.dir("Subscription not found !");
-                    console.dir(subscriptionDet);
+                    console.dir(error);
                     callback(null);
                 }
             } else {

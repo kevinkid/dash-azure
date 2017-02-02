@@ -8,7 +8,7 @@ exports.adalConfiguration = {
 
 
 exports.subscriptionConfiguration = {
-    changeType: "Created, Updated, Deleted",
+    changeType: "Created, Deleted",
     notificationUrl: 'https://dashlisten.usefinch.eu/listen',
     resource: 'me/mailFolders(\'Inbox\')/messages',
     clientState: 'cLIENTsTATEfORvALIDATION'
