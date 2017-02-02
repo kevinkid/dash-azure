@@ -16,6 +16,7 @@ var notification = require("../Handlers/notification.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
 var signalr = require("signalrjs");
 var signalR = signalr();
+var htmlToJson = require("html-to-json");
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
@@ -84,7 +85,13 @@ router.post('/', function (req, res, next) {
 
 function htmlParse(html){
     var endStr;
-    
+    endStr = htmlToJson.parse(html,{
+        'text': function(result){
+            return result.find('body').text();
+        }
+    },function(err, results){
+        console.log(results);
+    });
     return endStr;
 }
 

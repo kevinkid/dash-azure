@@ -119,6 +119,7 @@ app.get('/get', function (req, res) {
     });
 });
 /// Get last message using graph
+///NOTE: Use to reply to notifications . 
 app.post('/test', function(req, res){
     var resource,
         token;
@@ -130,7 +131,7 @@ app.post('/test', function(req, res){
           // nodejs is refusing to make two server requests inside of callbacks . am not sure if did that before . 
             token = subscriptionData;
            res.status(202);
-           res.end();
+           res.end();// A single thread cannot make two request at the same time . 
             GetMail(resource, token);
 
             }
@@ -140,7 +141,6 @@ app.post('/test', function(req, res){
         }
     });
 });
-///*---------------------------------------------------------*/
                  
 function GetMail(resource,subscriptionData){
     console.dir("Getting email .");
@@ -161,6 +161,7 @@ function GetMail(resource,subscriptionData){
         }
     );
 }
+///*---------------------------------------------------------*/
 
 
 
