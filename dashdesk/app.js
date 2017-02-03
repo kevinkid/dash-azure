@@ -127,7 +127,7 @@ app.post('/test', function(req, res){
         if (subscriptionData) {
             if(subscriptionData !== null){
             // resource = "https://graph.microsoft.com/v1.0/me/"+subscriptionData.tenantId+"/messages?$top=1";//@todo: add the user Id from the token object
-          resource = "https://graph.microsoft.com/beta/me/messages?$=1";
+          resource = "https://graph.microsoft.com/v1.0/me/messages?$top=1";
           // nodejs is refusing to make two server requests inside of callbacks . am not sure if did that before . 
             token = subscriptionData;
            res.status(202);

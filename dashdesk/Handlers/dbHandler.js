@@ -90,27 +90,7 @@ module.exports = {
                     console.dir("SubscriptionId:");
                     console.dir(subscriptionDet[0]._doc.accessToken[0].accessToken);
                     callback(subscriptionDet[0]._doc.accessToken[0]);
-                    // for(var key in qs.parse(subscriptionDet)){ subscriptionDet = key}
-                    // Dont do a callback 
-                    /*
-                    //@todo: Try this just incase the issue is promises in mongoose db .
-                     requestHelper.getData(
-                        '/beta/' + resource, subscriptionDet[0]._doc.accessToken[0].accessToken,
-                        function (requestError, endpointData) {
-                            console.log(endpointData);
-                            if (endpointData) {
-                                console.dir(endpointData);
-                                db.StoreNotification(mongoose, qs.escape(JSON.stringify(endpointData).clientDetails[0]), notification);
-                                callback(endpointData);
-                                next();
-                            } else if (requestError) {
-                                console.dir(requestError);
-                                callback(null);
-                                next(requestError);
-                            }
-                        }
-                    );
-                    */
+                   
                 } else {
                     console.dir("Subscription not found !");
                     console.dir(error);
@@ -122,9 +102,9 @@ module.exports = {
             }
         });
     },
-    StoreNotification : function (mongoose, newNotifcation, notification) {
+    StoreNotification : function (mongoose, newNotifcation, notification,client) {
         var newNotifcation = new client({
-            notificationDetails: [data]
+            notificationDetails: [notification]
         });
         
         newClient.save(function (error) {

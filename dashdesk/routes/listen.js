@@ -12,11 +12,11 @@ var clientStateValueExpected = require('../constants').subscriptionConfiguration
 var mongoose = require("mongoose");
 var db = require("../Handlers/dbHandler.js");
 var client = require("../Handlers/client.js");
-var notification = require("../Handlers/notification.js");
+var notification = require("../Handlers/notifications.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
 var signalr = require("signalrjs");
 var signalR = signalr();
-var htmlToJson = require("html-to-json");
+var Striptags = require("striptags");
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
@@ -53,7 +53,7 @@ router.post('/', function (req, res, next) {
         }
         
         // validate all notifications 
-        if (true) {
+        if (clientStatesValid) {
             // process all the notifications   
                         
             for (i = 0; i < req.body.value.length; i++) {
@@ -61,11 +61,11 @@ router.post('/', function (req, res, next) {
                subscriptionId = req.body.value[i].subscriptionId;
                 res.status(202);
                 res.end();
-                if(req.body.value[i].changeType === "Created"){
-                    console.dir("Notification Mail recieved . ");
+                if(req.body.value[i].changeType === "created"){
+                    console.dir("Incoming Mail Notificaiton  ");
                     processNotification(subscriptionId, resource, res, next);
                 }else{
-                    console.log("Ignore other notifications.");
+                    console.log("Ignored <"+req.body.value[i].changeType+">");
                 }
             }
             
@@ -85,13 +85,7 @@ router.post('/', function (req, res, next) {
 
 function htmlParse(html){
     var endStr;
-    endStr = htmlToJson.parse(html,{
-        'text': function(result){
-            return result.find('body').text();
-        }
-    },function(err, results){
-        console.log(results);
-    });
+    endStr = Striptags(html);
     return endStr;
 }
 
@@ -108,12 +102,14 @@ function processNotification(subscriptionId, resource, res, next) {
                     if (endpointData) {
                         console.dir(endpointData);
                         // body = htmlParse(endpointData.value.);
-                        db.StoreNotification(mongoose, endpointDat), notification);
-                        connectionManager.sendNotification(signalR, null, 'email', 'body');
-                        next();
+                        email = endpointData.from.address;
+                        body = endpointData.body.content;
+                        body = htmlParse(body);
+                        console.dir("Notification From:"+email+" : "+body);
+                        connectionManager.sendNotification(signalR, null, (endpointData.hasAttachments) ? email+"@Att":email,body);
+                        db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) , (endpointData.hasAttachments) ? email+"@Att":email,body,client);
                     } else if (requestError) {
-                        res.status(202);
-                        next(requestError);
+                       console.dir(requestError);
                     }
                 }
             );
