@@ -85,7 +85,10 @@ router.post('/', function (req, res, next) {
 
 function htmlParse(html){
     var endStr;
-    endStr = Striptags(html);
+    endStr = Striptags(html).toString();
+    endStr = endStr.replace(/\r/gmi,"");
+    endStr = endStr.replace(/\n/gmi,"");
+    endStr = endStr.replace(/&(.*);/gmi ,"")
     return endStr;
 }
 
@@ -93,29 +96,43 @@ function processNotification(subscriptionId, resource, res, next) {
     db.GetSubscription(requestHelper, qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
             var email ,
-            body;
-                        
+                body;
+                  /**
+                   * If token is expired .
+                   * var now  = "04/09/2013 15:00:00";
+                   * var then = "04/09/2013 14:20:30";
+                   * moment.utc(moment(now,"DD/MM/YYYY HH:mm:ss").diff(moment(then,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
+                   */
+
+                    // for some reason am creating subscriptions with expired tokens. maybe to time on aure and on my local machine are different.
+
             requestHelper.getData(
                 '/beta/' + resource, subscriptionData.accessToken,
                 function (requestError, endpointData) {
                     console.log(endpointData);
                     if (endpointData) {
-                        console.dir(endpointData);
-                        // body = htmlParse(endpointData.value.);
-                        email = endpointData.from.address;
-                        body = endpointData.body.content;
-                        body = htmlParse(body);
-                        console.dir("Notification From:"+email+" : "+body);
-                        connectionManager.sendNotification(signalR, null, (endpointData.hasAttachments) ? email+"@Att":email,body);
-                        db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) , (endpointData.hasAttachments) ? email+"@Att":email,body,client);
-                    } else if (requestError) {
+                        if(endpointData !== null){
+
+                            console.dir(endpointData);
+                            // body = htmlParse(endpointData.value.);
+                            email = endpointData.from.emailAddress.address;
+                            body = endpointData.body.content;
+                            body = htmlParse(body);
+                            console.dir("Notification From:"+email+" : "+body);
+                            connectionManager.sendNotification(signalR, null, ((endpointData.hasAttachments) ? email+"@Att":email),body);
+                            db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) , (endpointData.hasAttachments) ? email+"@Att":email,body,client);
+                            console.dir("Successful notification  ");
+                        }else {
+                            //@todo: Unsubscribe notifications and refresh expired tokens .
+                            console.dir("Subscription recognised by Dash");
+                        }    
+                } else if (requestError) {
                        console.dir(requestError);
                     }
                 }
             );
-           res.status(202);
         } else {
-            res.status(500);
+             console.dir("Ignore expired subscriptions ");
         }
     });
 }

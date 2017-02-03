@@ -25,15 +25,15 @@ module.exports = {
         console.log("Number count:" + count - 1);
         return conCount - 1;
     },
-    sendNotification : function (signalR, identity, msg) {
+    sendNotification : function (signalR, identity, name, message) {
         if (identity) {
             //@Todo: Notify single user by token or sessionKey
         } else {
             //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
             var clientManager = signalR._connectionManager;
-            msg = msg.toString();
+    
             var messageObj = {
-                Args: ['server', msg],
+                Args: [name, message],
                 Hub: 'MyHub',
                 Method: 'AddMessage',
                 State: 1
@@ -41,7 +41,7 @@ module.exports = {
             clientManager.forEach(function (client) {
                 signalR._transports.longPolling.send(client.connection, messageObj);// √
             });
-            res.json("Notification sent !");
+            console.dir("Notification sent !");
         }
     }
     
