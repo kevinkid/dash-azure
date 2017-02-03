@@ -17,6 +17,7 @@ var qs = require("querystring");
 var db = require("./Handlers/dbHandler.js");
 var client = require("./Handlers/client.js");
 var notifications = require("./Handlers/notifications.js");
+var jsdom = require("jsdom");
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 //---
@@ -104,6 +105,8 @@ app.post("/message", function (req, res) {
 
 /*------------------------------------------------------------
 ------------------[Database Operations Test]------------------*/
+
+
 app.post('/store', function (req, res) {
     //@note: the passing the client as param may not work 
     db.InstallClient(mongoose, req.body.notifications, client,function () {});
@@ -161,7 +164,28 @@ function GetMail(resource,subscriptionData){
         }
     );
 }
+
+app.post('/noitacifiton', function(req, res){
+    //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
+    var clientManager = signalR._connectionManager,
+        Name = req.body.name,
+        Message = req.body.message;
+    var messageObj = {
+        Args: [Name, Message],
+        Hub: 'MyHub',
+        Method: 'AddMessage',
+        State: 1
+    };
+    clientManager.forEach(function (client) {
+        signalR._transports.longPolling.send(client.connection, messageObj);// √
+    });
+    console.dir("Notification sent !");
+    res.json("Notification sent !");
+});
+
 ///*---------------------------------------------------------*/
+
+
 
 
 

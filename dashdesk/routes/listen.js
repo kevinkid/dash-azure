@@ -12,10 +12,9 @@ var clientStateValueExpected = require('../constants').subscriptionConfiguration
 var mongoose = require("mongoose");
 var db = require("../Handlers/dbHandler.js");
 var client = require("../Handlers/client.js");
-var notification = require("../Handlers/notifications.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
-var signalr = require("signalrjs");
-var signalR = signalr();
+var notification = require("../Handlers/notifications.js");
+var jsdom = require("jsdom");
 var Striptags = require("striptags");
 
 /* Default listen route */
@@ -119,8 +118,9 @@ function processNotification(subscriptionId, resource, res, next) {
                             body = endpointData.body.content;
                             body = htmlParse(body);
                             console.dir("Notification From:"+email+" : "+body);
-                            connectionManager.sendNotification(signalR, null, ((endpointData.hasAttachments) ? email+"@Att":email),body);
-                            db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) , (endpointData.hasAttachments) ? email+"@Att":email,body,client);
+                            connectionManager.sendNotification(jsdom, ((endpointData.hasAttachments) ? email+"@Att":email),body);
+                                // connectionManager.sendNotification(jsdom, "sampleeamil","body");
+                            //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
                             console.dir("Successful notification  ");
                         }else {
                             //@todo: Unsubscribe notifications and refresh expired tokens .

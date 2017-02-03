@@ -25,24 +25,40 @@ module.exports = {
         console.log("Number count:" + count - 1);
         return conCount - 1;
     },
-    sendNotification : function (signalR, identity, name, message) {
-        if (identity) {
-            //@Todo: Notify single user by token or sessionKey
-        } else {
-            //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
-            var clientManager = signalR._connectionManager;
-    
-            var messageObj = {
-                Args: [name, message],
-                Hub: 'MyHub',
-                Method: 'AddMessage',
-                State: 1
-            };
-            clientManager.forEach(function (client) {
-                signalR._transports.longPolling.send(client.connection, messageObj);// √
+    sendNotification : function (virtualClient, Name, Message) {
+            console.dir("Sending notification .");
+            //TODO: Stop broadcasting .
+            var browser = virtualClient.env(
+            "http://localhost:3000",
+            ["http://localhost:3000/js/jquery-1.10.2.min.js"],
+            function (errors, window) {
+                if(!errors){
+                    var $ = window.$;
+
+                    var settings = {
+                        "async": true,
+                        "url": "http://localhost:3000/noitacifiton",
+                        "method": "POST",
+                        "headers": {
+                            "content-type": "application/json",
+                            "transport-token": "365b0130-a957-f155-a505-ec0fa39363ce"
+                        },
+                        "processData": false,
+                        "data": JSON.stringify({
+                            name: Name,
+                            message: Message
+                        })
+                    }
+                    $.ajax(settings).done(function (response) {
+                        console.dir("Notify response :"+response);
+                    });
+
+                }else {
+                    console.log(errors);
+                }
             });
-            console.dir("Notification sent !");
-        }
+
+            // browser = null; //TODO: Dispose 
+        
     }
-    
 };

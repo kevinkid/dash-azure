@@ -102,12 +102,12 @@ module.exports = {
             }
         });
     },
-    StoreNotification : function (mongoose, newNotifcation, notification,client) {
+    StoreNotification : function (mongoose,notification,client) {
         var newNotifcation = new client({
             notificationDetails: [notification]
         });
         
-        newClient.save(function (error) {
+        newNotifcation.save(function (error) {
             if (!error) {
                 console.log("Success storing notification .");
             } else {
