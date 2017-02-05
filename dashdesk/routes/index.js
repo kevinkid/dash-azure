@@ -48,16 +48,16 @@ router.get('/callback', function (req, res) {
                         subscriptionData.accessToken = token.accessToken;
                         
                         db.InstallClient(mongoose, qs.escape(JSON.stringify(subscriptionData)), subscriptionData.id, token, client, function (error) {
-                            if(error){
+                            if (error) {
                                 subscriptionId = subscriptionData.id;
                                 res.redirect(
-                                '/dashboard.html?dbError='+error+'&subscriptionId=' + subscriptionId +
+                                    '/dashboard.html?dbError=' + error + '&subscriptionId=' + subscriptionId +
                                 '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
-                            );
-                            }else {
+                                );
+                            } else {
                                 subscriptionId = subscriptionData.id;
                                 res.redirect(
-                                '/dashboard.html?subscriptionId=' + subscriptionId +
+                                    '/dashboard.html?subscriptionId=' + subscriptionId +
                                 '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
                                 );
                             }
@@ -76,7 +76,7 @@ router.get('/callback', function (req, res) {
 
 
 
-    
+
 
 router.get("/signout/:subscriptionId", function (req, res) {
     var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
@@ -96,7 +96,7 @@ router.get("/signout/:subscriptionId", function (req, res) {
     res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=' + redirectUri);
 });
 
-    
+
 
 
 module.exports = router;

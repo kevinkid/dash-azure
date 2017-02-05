@@ -4,27 +4,20 @@
  * See LICENSE in the project root for license information.
  -->
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-        <title></title>
-        <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="/css/fabric.min.css">
-        <link rel="stylesheet" href="/css/fabric.components.min.css">
-    </head>
-    <body>
-        <h1 class="ms-font-su">Thank you </h1>
-        <p class="ms-font-xl">You start getting notifications <span id="userId"></span> mail events .</p>
-        <p class="ms-font-xl">Waiting for notifications for subscription <span id="subscriptionId"></span>...</p>
-        <div id="notifications"></div>
-
-        <!--<button id="signOutButton" class="ms-Button ms-Button--compound">
-            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--person"></i></span>
-            <span class="ms-Button-label">Sign out</span>
-            <span class="ms-Button-description">Sign out and delete the subscription</span>
-        </button>-->
-        <!--@todo: Replace the socket with the signalr realtime socket client  -->
-        <script type="text/javascript" src="https://dashdesk.azurewebsites.net:3001/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="/js/client.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title></title>
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/fabric.min.css">
+    <link rel="stylesheet" href="/css/fabric.components.min.css">
+</head>
+<body>
+    <h1 class="ms-font-su">Thank you </h1>
+    <p class="ms-font-xl">You start getting notifications <span id="userId"></span> mail events .</p>
+    <p class="ms-font-xl">Waiting for notifications for subscription <span id="subscriptionId"></span>...</p>
+    <div id="notifications"></div>
+    <script type="text/javascript" src="https://dashdesk.azurewebsites.net:3001/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/client.js"></script>
+</body>
 </html>

@@ -16,7 +16,7 @@ module.exports = {
         });
 
     },
-    InstallClient : function (mongoose, data,id,token, client, callback) {
+    InstallClient : function (mongoose, data, id, token, client, callback) {
         
         var newClient = new client({
             subscriptionId: id,
@@ -80,11 +80,11 @@ module.exports = {
     UninstallClient : function (mongoose, data, client) {
         // remove from database 
     },
-    GetSubscription : function (requestHelper, qs,mongoose, data, client, callback) {
+    GetSubscription : function (requestHelper, qs, mongoose, data, client, callback) {
         
         client.find({ "subscriptionId": data }, function (error, subscriptionDet) {
             if (!error) {
-                if(subscriptionDet.length > 0 || 0){
+                if (subscriptionDet.length > 0 || 0) {
                     console.log("Subscription Found ! ");
                     console.dir(subscriptionDet[0]._doc.accessToken[0]);
                     console.dir("SubscriptionId:");
@@ -102,7 +102,7 @@ module.exports = {
             }
         });
     },
-    StoreNotification : function (mongoose,notification,client) {
+    StoreNotification : function (mongoose, notification, client) {
         var newNotifcation = new client({
             notificationDetails: [notification]
         });

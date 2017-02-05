@@ -36,7 +36,7 @@ router.post('/', function (req, res, next) {
         
         status = 202;
         
-  
+        
         clientStatesValid = false;
         
         //First, validate all the clientState values in array
