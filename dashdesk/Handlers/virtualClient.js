@@ -1,14 +1,4 @@
-//  var baseUrl = Url.parse(req.url).host;
-// @note: since its server side you can use localhost to make it faster . 
-// @todo: since we are calling for internal resources try using localhost .
-// var jquery = baseUrl+"/js/jquery-1.10.2.min.js";
-// var jQuerySignalR = baseUrl+"js/jQuery.signalR.js";
-// @docs: https://www.npmjs.com/package/node-jsdom
-
-
 /*-------------------------------------------------------
-* client method 
-var jsdom = require("node-jsdom");
 var browser = jsdom.env(
   "http://localhost:3000",
   ["http://localhost:3000/js/jquery-1.10.2.min.js","http://localhost:3000/js/jquery.signalR-2.0.3.min.js"],

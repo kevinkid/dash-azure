@@ -1,7 +1,7 @@
 module.exports = {
     getConnectionByUser : function (signalR, sessionKey) {
         var conn = signalR._connectionManager._connections;
-        return conn.getByUser(sessionKey);//@note: Doesn't return a connection
+        return conn.getByUser(sessionKey);
     },
     verify : function verfyConnection(signalR, identity) {
         var conList = signalR._connectionManager._connections;
@@ -26,18 +26,18 @@ module.exports = {
         return conCount - 1;
     },
     sendNotification : function (virtualClient, Name, Message) {
-            console.dir("Sending notification .");
-            //TODO: Stop broadcasting .
-            var browser = virtualClient.env(
-            "http://localhost:3000",
-            ["http://localhost:3000/js/jquery-1.10.2.min.js"],
+        console.dir("Sending notification .");
+        //TODO: Stop broadcasting .
+        var browser = virtualClient.env(
+            "http://dashdesk.azurewebsite.net",
+            ["http://dashdesk.azurewebsite.net/js/jquery-1.10.2.min.js"],
             function (errors, window) {
-                if(!errors){
+                if (!errors) {
                     var $ = window.$;
-
+                    
                     var settings = {
                         "async": true,
-                        "url": "http://localhost:3000/noitacifiton",
+                        "url": "http://dashdesk.azurewebsite.net/noitacifiton",
                         "method": "POST",
                         "headers": {
                             "content-type": "application/json",
@@ -50,15 +50,15 @@ module.exports = {
                         })
                     }
                     $.ajax(settings).done(function (response) {
-                        console.dir("Notify response :"+response);
+                        console.dir("Notify response :" + response);
                     });
+        //            browser = null; //TODO: Dispose 
 
-                }else {
+                } else {
                     console.log(errors);
                 }
             });
 
-            // browser = null; //TODO: Dispose 
         
     }
 };

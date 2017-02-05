@@ -107,7 +107,6 @@
     <Folder Include="bin\" />
     <Folder Include="helpers\" />
     <Folder Include="Handlers\" />
-    <Folder Include="logs\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />
     <Folder Include="public\js\" />
@@ -161,6 +160,5 @@
     <!-- @[Analysis ignored Directories to make visual studio faster] -->
     <AnalysisIgnoredDirectories>bower_components;dir_not_included</AnalysisIgnoredDirectories>
     <AnalysisIgnoredDirectories>node_modules;dir_not_included</AnalysisIgnoredDirectories>
-
   </PropertyGroup>
 </Project>

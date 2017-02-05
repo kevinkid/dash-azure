@@ -39,27 +39,29 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 
 // cors config 
-app.use(function(req, res, next) {
-  req.header("Access-Control-Allow-Headers","Content-Type");
-  req.header("Access-Control-Allow-Headers","Access-Control-Allow-Credentials");
-  res.header("Access-Control-Allow-Headers","Access-Control-Allow-Origin");
-  res.header("Access-Control-Allow-Origin", "https://*/*");
-  res.header("Access-Control-Allow-Credentials","true");
-  res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
-  next();
+app.use(function (req, res, next) {
+    req.header("Access-Control-Allow-Headers", "Content-Type");
+    req.header("Access-Control-Allow-Headers", "Access-Control-Allow-Credentials");
+    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin");
+    res.header("Access-Control-Allow-Origin", "https://*/*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
+    next();
 });
 
 
 // Db config 
 
-var options = { server: { socketOptions: { keepAlive: 500000, connectTimeoutMS: 50000 } }, 
-                replset: { socketOptions: { keepAlive: 500000, connectTimeoutMS : 50000 } } };  
+var options = {
+    server: { socketOptions: { keepAlive: 500000, connectTimeoutMS: 50000 } }, 
+    replset: { socketOptions: { keepAlive: 500000, connectTimeoutMS : 50000 } }
+};
 //mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
-mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash",options);// prod
+mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash", options);// prod
 // mongoose.connect("mongodb://localhost:27017/dash");// local 
-var conn = mongoose.connection;             
+var conn = mongoose.connection;
 
- 
+
 
 
 
@@ -99,7 +101,7 @@ app.post("/message", function (req, res) {
     });
     res.json("Notification sent !");
 });
-    
+
 
 
 
@@ -109,7 +111,7 @@ app.post("/message", function (req, res) {
 
 app.post('/store', function (req, res) {
     //@note: the passing the client as param may not work 
-    db.InstallClient(mongoose, req.body.notifications, client,function () {});
+    db.InstallClient(mongoose, req.body.notifications, client, function () { });
     console.dir("Success storing data");
     res.json({ Message: "Success storing data" });
     res.status(200);
@@ -123,19 +125,19 @@ app.get('/get', function (req, res) {
 });
 /// Get last message using graph
 ///NOTE: Use to reply to notifications . 
-app.post('/test', function(req, res){
+app.post('/test', function (req, res) {
     var resource,
         token;
-        db.GetSubscription(requestHelper, qs, mongoose, "4a1c26bd-5666-4e04-ab7f-528d1116be76", client, function (subscriptionData) {
+    db.GetSubscription(requestHelper, qs, mongoose, "4a1c26bd-5666-4e04-ab7f-528d1116be76", client, function (subscriptionData) {
         if (subscriptionData) {
-            if(subscriptionData !== null){
-            // resource = "https://graph.microsoft.com/v1.0/me/"+subscriptionData.tenantId+"/messages?$top=1";//@todo: add the user Id from the token object
-          resource = "https://graph.microsoft.com/v1.0/me/messages?$top=1";
-          // nodejs is refusing to make two server requests inside of callbacks . am not sure if did that before . 
-            token = subscriptionData;
-           res.status(202);
-           res.end();// A single thread cannot make two request at the same time . 
-            GetMail(resource, token);
+            if (subscriptionData !== null) {
+                // resource = "https://graph.microsoft.com/v1.0/me/"+subscriptionData.tenantId+"/messages?$top=1";//@todo: add the user Id from the token object
+                resource = "https://graph.microsoft.com/v1.0/me/messages?$top=1";
+                // nodejs is refusing to make two server requests inside of callbacks . am not sure if did that before . 
+                token = subscriptionData;
+                res.status(202);
+                res.end();// A single thread cannot make two request at the same time . 
+                GetMail(resource, token);
 
             }
 
@@ -144,18 +146,18 @@ app.post('/test', function(req, res){
         }
     });
 });
-                 
-function GetMail(resource,subscriptionData){
+
+function GetMail(resource, subscriptionData) {
     console.dir("Getting email .");
-        requestHelper.getData(
+    requestHelper.getData(
         '/beta/me/' + resource, subscriptionData,
         function (requestError, endpointData) {
             console.log(endpointData);
             if (endpointData) {
                 // res.status(202);
                 console.dir(endpointData);
-                console.dir("From : "+endpointData.value[0].from.users);
-                console.dir("Email : "+endpointData.value[0].body.content);// content is in html parse or something .
+                console.dir("From : " + endpointData.value[0].from.users);
+                console.dir("Email : " + endpointData.value[0].body.content);// content is in html parse or something .
                 db.StoreNotification(mongoose, qs.escape(JSON.stringify(endpointData).clientDetails[0]), notification);
                 connectionManager.sendNotification(signalR, null, JSON.stringify(endpointData));
             } else if (requestError) {
@@ -165,7 +167,7 @@ function GetMail(resource,subscriptionData){
     );
 }
 
-app.post('/noitacifiton', function(req, res){
+app.post('/noitacifiton', function (req, res) {
     //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
     var clientManager = signalR._connectionManager,
         Name = req.body.name,
@@ -194,24 +196,19 @@ app.post('/noitacifiton', function(req, res){
 signalR.hub('MyHub', {
     Send : function (name, message) {
         this.clients.all.invoke('AddMessage').withArgs([name, message]);
-        console.dir("-------------------[Hub Message]-----------------");
-        console.log('Message:' + message);
-        console.dir("-------------------[Hub Message]-----------------");
     }
 });
 
 
 
-conn.on('error', console.error.bind(console, 'connection error:'));  
- 
-conn.once('open', function() {
+conn.on('error', console.error.bind(console, 'connection error:'));
 
-    console.log("Database connection established ");
-
+conn.once('open', function () {
     
-app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port'));
-});
+    console.log("Database connection established ");
+    app.listen(app.get('port'), function () {
+        console.log('Express server listening on port ' + app.get('port'));
+    });
 
 });
 

@@ -33,12 +33,11 @@ router.post('/', function (req, res, next) {
         res.status(200);
         
     } else {
-
+        
         status = 202;
         
-        // @note: anthing after res will not be executed .
-        // res.status(202);
-            clientStatesValid = false;
+  
+        clientStatesValid = false;
         
         //First, validate all the clientState values in array
         for (i = 0; i < req.body.value.length; i++) {
@@ -54,17 +53,17 @@ router.post('/', function (req, res, next) {
         // validate all notifications 
         if (clientStatesValid) {
             // process all the notifications   
-                        
+            
             for (i = 0; i < req.body.value.length; i++) {
-               resource = req.body.value[i].resource;
-               subscriptionId = req.body.value[i].subscriptionId;
+                resource = req.body.value[i].resource;
+                subscriptionId = req.body.value[i].subscriptionId;
                 res.status(202);
                 res.end();
-                if(req.body.value[i].changeType === "created"){
+                if (req.body.value[i].changeType === "created") {
                     console.dir("Incoming Mail Notificaiton  ");
                     processNotification(subscriptionId, resource, res, next);
-                }else{
-                    console.log("Ignored <"+req.body.value[i].changeType+">");
+                } else {
+                    console.log("Ignored <" + req.body.value[i].changeType + ">");
                 }
             }
             
@@ -73,7 +72,6 @@ router.post('/', function (req, res, next) {
             res.status(status);
         } else {
             
-            // Dispose of unkown clientstate notifications 
             status = 202;
             res.status(status);
         }
@@ -82,12 +80,12 @@ router.post('/', function (req, res, next) {
     res.status(status).end(http.STATUS_CODES[status]);
 });
 
-function htmlParse(html){
+function htmlParse(html) {
     var endStr;
     endStr = Striptags(html).toString();
-    endStr = endStr.replace(/\r/gmi,"");
-    endStr = endStr.replace(/\n/gmi,"");
-    endStr = endStr.replace(/&(.*);/gmi ,"")
+    endStr = endStr.replace(/\r/gmi, "");
+    endStr = endStr.replace(/\n/gmi, "");
+    endStr = endStr.replace(/&(.*);/gmi , "")
     return endStr;
 }
 
@@ -96,7 +94,7 @@ function processNotification(subscriptionId, resource, res, next) {
         if (subscriptionData) {
             var email ,
                 body;
-                  /**
+            /**
                    * If token is expired .
                    * var now  = "04/09/2013 15:00:00";
                    * var then = "04/09/2013 14:20:30";
@@ -110,29 +108,28 @@ function processNotification(subscriptionId, resource, res, next) {
                 function (requestError, endpointData) {
                     console.log(endpointData);
                     if (endpointData) {
-                        if(endpointData !== null){
-
+                        if (endpointData !== null) {
+                            
                             console.dir(endpointData);
                             // body = htmlParse(endpointData.value.);
                             email = endpointData.from.emailAddress.address;
                             body = endpointData.body.content;
                             body = htmlParse(body);
-                            console.dir("Notification From:"+email+" : "+body);
-                            connectionManager.sendNotification(jsdom, ((endpointData.hasAttachments) ? email+"@Att":email),body);
-                                // connectionManager.sendNotification(jsdom, "sampleeamil","body");
+                            console.dir("Notification From:" + email + " : " + body);
+                            connectionManager.sendNotification(jsdom, ((endpointData.hasAttachments) ? email + "@Att":email), body);
                             //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
                             console.dir("Successful notification  ");
-                        }else {
-                            //@todo: Unsubscribe notifications and refresh expired tokens .
+                        } else {
+                            //@todo: Handle Unsubscribe notifications and refresh expired tokens .
                             console.dir("Subscription recognised by Dash");
-                        }    
-                } else if (requestError) {
-                       console.dir(requestError);
+                        }
+                    } else if (requestError) {
+                        console.dir(requestError);
                     }
                 }
             );
         } else {
-             console.dir("Ignore expired subscriptions ");
+            console.dir("Ignore expired subscriptions ");
         }
     });
 }
