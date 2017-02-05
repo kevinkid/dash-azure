@@ -38,7 +38,6 @@
     <Compile Include="Handlers\ClientGenerator.js" />
     <Compile Include="Handlers\ConnectionManager.js" />
     <Compile Include="Handlers\dbHandler.js" />
-    <Compile Include="Handlers\httpHelper.js" />
     <Compile Include="Handlers\notifications.js" />
     <Compile Include="Handlers\SocketHandler.js" />
     <Compile Include="Handlers\virtualClient.js" />
@@ -48,7 +47,6 @@
     <Compile Include="public\js\client.js" />
     <Compile Include="routes\message.js" />
     <Compile Include="public\js\_references.js" />
-    <Compile Include="public\js\jQuery.js" />
     <Compile Include="public\js\jquery.signalR-2.0.3.js" />
     <Compile Include="public\js\jquery.signalR-2.0.3.min.js" />
     <Compile Include="routes\index.js" />
@@ -160,5 +158,6 @@
     <!-- @[Analysis ignored Directories to make visual studio faster] -->
     <AnalysisIgnoredDirectories>bower_components;dir_not_included</AnalysisIgnoredDirectories>
     <AnalysisIgnoredDirectories>node_modules;dir_not_included</AnalysisIgnoredDirectories>
+    <AnalysisIgnoredDirectories>node_modules</AnalysisIgnoredDirectories>
   </PropertyGroup>
 </Project>
