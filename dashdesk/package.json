@@ -24,7 +24,7 @@
     "html-to-json": "^0.6.0",
     "jQuery": "^1.7.4",
     "jade": "*",
-    "jsdom": "^8.0.2",
+    "jsdom": "^3.1.1",
     "mongodb": "^2.1.6",
     "mongoose": "^4.4.2",
     "morgan": "^1.6.1",
