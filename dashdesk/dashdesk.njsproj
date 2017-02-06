@@ -157,7 +157,5 @@
   <PropertyGroup>
     <!-- @[Analysis ignored Directories to make visual studio faster] -->
     <AnalysisIgnoredDirectories>bower_components;dir_not_included</AnalysisIgnoredDirectories>
-    <AnalysisIgnoredDirectories>node_modules;dir_not_included</AnalysisIgnoredDirectories>
-    <AnalysisIgnoredDirectories>node_modules</AnalysisIgnoredDirectories>
   </PropertyGroup>
 </Project>

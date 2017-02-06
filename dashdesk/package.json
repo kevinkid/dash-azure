@@ -1,7 +1,7 @@
 {
   "name": "dashdesk",
   "version": "0.0.0",
-  "description": "dashdesk",
+  "description": "Backend for a windows/mac/linux client desktop widget",
   "private": true,
   "author": {
     "name": "kevin",
@@ -18,20 +18,21 @@
     "body-parser": "^1.13.3",
     "cookie-parser": "~1.3.5",
     "cookie-session": "^1.2.0",
+    "cors": "^2.8.1",
     "debug": "~2.2.0",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
-    "html-to-json": "^0.6.0",
-    "jQuery": "^1.7.4",
     "jade": "*",
-    "jsdom": "^3.1.1",
+    "jsdom": "^3.1.2",
     "mongodb": "^2.1.6",
     "mongoose": "^4.4.2",
     "morgan": "^1.6.1",
     "offline-js": "^0.7.15",
     "pug": "^2.0.0-alpha3",
+    "querystring": "^0.2.0",
     "serve-favicon": "^2.3.0",
     "signalrjs": "^0.2.2",
+    "striptags": "^3.0.1",
     "stylus": "*"
   }
 }

@@ -1,4 +1,4 @@
-var signalr = require("signalr");
+var signalr = require("signalrjs");
 var signalR = signalr();
 
 module.exports = function (identity) {
