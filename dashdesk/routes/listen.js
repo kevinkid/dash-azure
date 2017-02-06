@@ -14,8 +14,8 @@ var db = require("../Handlers/dbHandler.js");
 var client = require("../Handlers/client.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
 var notification = require("../Handlers/notifications.js");
-var jsdom = require("jsdom");
-var Striptags = require("striptags");
+var jsdom = require("jsdom-no-contextify");
+//var Striptags = require("striptags");
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
@@ -82,7 +82,7 @@ router.post('/', function (req, res, next) {
 
 function htmlParse(html) {
     var endStr;
-    endStr = Striptags(html).toString();
+    //endStr = Striptags(html).toString();
     endStr = endStr.replace(/\r/gmi, "");
     endStr = endStr.replace(/\n/gmi, "");
     endStr = endStr.replace(/&(.*);/gmi , "")

@@ -17,7 +17,7 @@ var qs = require("querystring");
 var db = require("./Handlers/dbHandler.js");
 var client = require("./Handlers/client.js");
 var notifications = require("./Handlers/notifications.js");
-var jsdom = require("jsdom");
+var jsdom = require("jsdom-no-contextify");
 //var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
 
 //---
@@ -39,15 +39,7 @@ app.locals.ENV_DEVELOPMENT = env === 'development';
 
 
 // cors config 
-app.use(function (req, res, next) {
-    req.header("Access-Control-Allow-Headers", "Content-Type");
-    req.header("Access-Control-Allow-Headers", "Access-Control-Allow-Credentials");
-    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin");
-    res.header("Access-Control-Allow-Origin", "https://*/*");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Origin, Content-Type, Access-Control-Allow-Credentials, Access-Control-Allow-Headers");
-    next();
-});
+
 
 
 // Db config 

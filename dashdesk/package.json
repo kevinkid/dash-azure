@@ -23,7 +23,7 @@
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "jade": "*",
-    "jsdom": "^3.1.2",
+    "jsdom-no-contextify": "^3.1.0",
     "mongodb": "^2.1.6",
     "mongoose": "^4.4.2",
     "morgan": "^1.6.1",
