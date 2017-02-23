@@ -27,38 +27,35 @@ module.exports = {
     },
     sendNotification : function (virtualClient, Name, Message) {
         console.dir("Sending notification .");
-        //TODO: Stop broadcasting .
-        var browser = virtualClient.env(
-            "http://dashdesk.azurewebsite.net",
-            ["http://dashdesk.azurewebsite.net/js/jquery-1.10.2.min.js"],
-            function (errors, window) {
-                if (!errors) {
-                    var $ = window.$;
-                    
-                    var settings = {
-                        "async": true,
-                        "url": "http://dashdesk.azurewebsite.net/noitacifiton",
-                        "method": "POST",
-                        "headers": {
-                            "content-type": "application/json",
-                            "transport-token": "365b0130-a957-f155-a505-ec0fa39363ce"
-                        },
-                        "processData": false,
-                        "data": JSON.stringify({
-                            name: Name,
-                            message: Message
-                        })
+        try {
+            
+            var html = "<!DOCTYPE html> <html> <head> <title></title> </head> <body> </body> </html>";
+            
+            virtualClient.env(html, function (errors, window) {
+                var data = "{\n\t\"name\":\"" + Name + ",\n\t\"message\":\"" + Message + "\n}"
+                console.dir(window);
+                console.dir("Data: " + Name + ":" + Message);
+                console.dir(data);
+                var xhr = new window.XMLHttpRequest();
+                xhr.withCredentials = true;
+                
+                xhr.addEventListener("readystatechange", function () {
+                    if (this.readyState === 4) {
+                        console.log(this.responseText);
                     }
-                    $.ajax(settings).done(function (response) {
-                        console.dir("Notify response :" + response);
-                    });
-        //            browser = null; //TODO: Dispose 
-
-                } else {
-                    console.log(errors);
-                }
+                });
+                
+                xhr.open("POST", "https://dashdesk.azurewebsites.net/noitacifiton?name=" + Name + "&message=" + Message);
+                xhr.setRequestHeader("content-type", "application/json");
+                xhr.setRequestHeader("cache-control", "no-cache");
+                xhr.setRequestHeader("session-token", "fb5d3dac-ec35-6a04-00b5-3db8c89a8472");
+                //TODO: Use the express cookies 
+                xhr.send(data);
             });
+            
+        } catch (ex) {
+            throw ex;
+        }
 
-        
     }
 };

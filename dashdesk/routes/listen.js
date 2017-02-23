@@ -81,11 +81,10 @@ router.post('/', function (req, res, next) {
 });
 
 function htmlParse(html) {
-    var endStr;
-    //endStr = Striptags(html).toString();
-    endStr = endStr.replace(/\r/gmi, "");
-    endStr = endStr.replace(/\n/gmi, "");
-    endStr = endStr.replace(/&(.*);/gmi , "")
+    //TODO: Remove this .
+    var endStr = "";
+    endStr = html;
+    endStr = endStr.toString();
     return endStr;
 }
 
@@ -116,8 +115,12 @@ function processNotification(subscriptionId, resource, res, next) {
                             body = endpointData.body.content;
                             body = htmlParse(body);
                             console.dir("Notification From:" + email + " : " + body);
-                            connectionManager.sendNotification(jsdom, ((endpointData.hasAttachments) ? email + "@Att":email), body);
-                            //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
+                            try{
+                                 connectionManager.sendNotification(jsdom, ((endpointData.hasAttachments) ? email + "@Att":email), qs.escape(body));
+                            }catch(ex){
+                                throw ex;
+                            }
+                           //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
                             console.dir("Successful notification  ");
                         } else {
                             //@todo: Handle Unsubscribe notifications and refresh expired tokens .

@@ -6,15 +6,43 @@ Desc: Contains desired implementation for the current project
 
 * Debug signalr socket connection, i think this error happend sometimes .  
 
-Thu Jan 26 2017 07:52:59 GMT+0000 (Coordinated Universal Time): Application has thrown an uncaught exception and is terminated:
-TypeError: Cannot read property 'type' of undefined
+Thu Jan 26 2017 07:52:59 GMT+0000 (Coordinated Universal Time): Application has thrown an uncaught
+	 exception and is terminated:
+		TypeError: Cannot read property 'type' of undefined
     at null._onTimeout (D:\home\site\wwwroot\node_modules\signalrjs\lib\signalRJS.js:91:46)
     at Timer.listOnTimeout (timers.js:110:15)
 
 1. Clean your code 
-	a.Manage notification subscriptions by changing the database used on the server.
+	a. Modularize your project , such that it can handle different clients and also different account
+		types .
+	b. Clean the microsoft code by introducing swaggrer service .
+
+2.
+	a. Manage notification subscriptions by changing the database used on the server.
 	b. Write your own code the way you understand and the way its going to be easy for you
 		to maintain the code .  
-2. Embed signalr and make sure that you are getting notifications from outlook webhook endpoint .
+	c. Handle expired access credentials by checking and requesting for a token using a referesh 
+		token.
+	d. Create new application credentails using dev.office.com
+	
+3. 
+	a. Write code to download documents to clients if the emails contain attachments .
 
+
+===================
+New Application credentials
+==================
+
+Source: https://apps.dev.microsoft.com
+App name: DashServer
+App/Client ID : a3f15ff0-8302-46b4-9349-1c6f48675657
+App Secret : pgfGvanj4guar4DSmFw7TMR
+
+Note : Use the new credentails in the old applications and find a way to register redirect urls and stuff .
+		https://graph.microsoft.io/en-us/docs/api-reference/v1.0/resources/webhooks
+		https://www.eliostruyf.com/things-to-know-when-creating-subscriptions-via-the-microsoft-graph-api/
+
+	 : These credentails also work with accounts that don't have an office 365  subscription which is just 
+	 	what i needed. Using the documentations above try to make a successful subscription using them.  
+		 Working code sample [	C:\Users\kevin\Documents\dev\GitHub\nodejs-connect-rest-sample ] 
 

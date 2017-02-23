@@ -104,6 +104,8 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="helpers\" />
+    <Folder Include="node_modules\" />
+    <Folder Include="node_modules\.bin\" />
     <Folder Include="Handlers\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />

@@ -1,24 +1,26 @@
-﻿var express = require('express');
-var app = express();
-var http = require('http');
+﻿var app = express();
 var fs = require("fs");
+//var cors = require("cors");
+var signalR = signalr();
+var Url = require("url");
 var path = require('path');
+var http = require('http');
+var logger = require("morgan");
+var qs = require("querystring");
+var express = require('express');
+var signalr = require("signalrjs");
 var mongoose = require("mongoose");
-var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var routes = require("./routes/index");
 var listen = require("./routes/listen");
+var bodyParser = require('body-parser');
 var message = require("./routes/message");
-var logger = require("morgan");
-var signalr = require("signalrjs");
-var signalR = signalr();
-var Url = require("url");
-var qs = require("querystring");
+var jsdom = require("jsdom-no-contextify");
 var db = require("./Handlers/dbHandler.js");
 var client = require("./Handlers/client.js");
 var notifications = require("./Handlers/notifications.js");
-var jsdom = require("jsdom-no-contextify");
-//var settings = JSON.parse(fs.readFileSync('./settings.json', 'utf8'));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
+var settings = JSON.parse(fs.readFileSync(path.join(__dirname,'./settings.json'), 'utf8').replace("﻿",""));// @todo: Debug json parsing and use it for storing credentails/ its already in json  
+
 
 //---
 var mongoose = require("mongoose");
@@ -28,39 +30,35 @@ var requestHelper = require('./helpers/requestHelper.js');
 var connectionManager = require("./Handlers/ConnectionManager.js");
 //---
 
+
 // Port config 
 app.set('port', process.env.PORT || 3000);
 
 // Environment config 
+// Note : There is no production env 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;
 app.locals.ENV_DEVELOPMENT = env === 'development';
 
 
-
 // cors config 
-
-
+//app.use(cors());
 
 // Db config 
-
 var options = {
     server: { socketOptions: { keepAlive: 500000, connectTimeoutMS: 50000 } }, 
     replset: { socketOptions: { keepAlive: 500000, connectTimeoutMS : 50000 } }
 };
-//mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
-mongoose.connect("mongodb://dash2682:dash2682@ds056419.mlab.com:56419/dash", options);// prod
-// mongoose.connect("mongodb://localhost:27017/dash");// local 
+
+mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host);
 var conn = mongoose.connection;
-
-
-
 
 
 //SignalR config
 signalR.serverProperties.ProtocolVersion = 1.3;
 app.use(signalR.createListener());
 console.dir("Protocal v:" + signalR.serverProperties.ProtocolVersion);
+
 
 // View config 
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
@@ -74,6 +72,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+
 // Routes config 
 app.use('/', routes);
 app.use('/listen', listen);
@@ -81,13 +80,16 @@ app.use('/message', message);
 
 
 app.post("/message", function (req, res) {
+
     var clientManager = signalR._connectionManager;
+
     var messageObj = {
         Args: ['server', req.body.notifcaton],
         Hub: 'MyHub',
         Method: 'AddMessage',
         State: 1
     };
+
     clientManager.forEach(function (client) {
         signalR._transports.longPolling.send(client.connection, messageObj);// √
     });
@@ -108,6 +110,7 @@ app.post('/store', function (req, res) {
     res.json({ Message: "Success storing data" });
     res.status(200);
 });
+
 app.get('/get', function (req, res) {
     //qs,mongoose, data, client, callback
     db.GetSubscription(qs, mongoose, "4a1c26bd-5666-4e04-ab7f-528d1116be76", client, function (subscriptionData) {
@@ -115,6 +118,7 @@ app.get('/get', function (req, res) {
         res.status(200);
     });
 });
+
 /// Get last message using graph
 ///NOTE: Use to reply to notifications . 
 app.post('/test', function (req, res) {
@@ -130,9 +134,7 @@ app.post('/test', function (req, res) {
                 res.status(202);
                 res.end();// A single thread cannot make two request at the same time . 
                 GetMail(resource, token);
-
             }
-
         } else {
             res.status(500);
         }
@@ -160,27 +162,29 @@ function GetMail(resource, subscriptionData) {
 }
 
 app.post('/noitacifiton', function (req, res) {
-    //connections => signalR._connectionManager.[<methods>_connections/_userTokens/delByTokens/forEach/getByToken/getByUser/put]._connections{Object}
+
     var clientManager = signalR._connectionManager,
-        Name = req.body.name,
-        Message = req.body.message;
+        Name = req.query.name,
+        Message = req.query.message;
     var messageObj = {
         Args: [Name, Message],
         Hub: 'MyHub',
         Method: 'AddMessage',
         State: 1
     };
-    clientManager.forEach(function (client) {
-        signalR._transports.longPolling.send(client.connection, messageObj);// √
-    });
-    console.dir("Notification sent !");
-    res.json("Notification sent !");
+    try{
+        clientManager.forEach(function (client) {
+            signalR._transports.longPolling.send(client.connection, messageObj);// √
+        });
+        console.dir("Notification sent !");
+                res.json("Success");
+    }catch(ex){
+        res.json(ex);
+        throw ex;
+    }
 });
-
+    
 ///*---------------------------------------------------------*/
-
-
-
 
 
 
@@ -190,7 +194,6 @@ signalR.hub('MyHub', {
         this.clients.all.invoke('AddMessage').withArgs([name, message]);
     }
 });
-
 
 
 conn.on('error', console.error.bind(console, 'connection error:'));
