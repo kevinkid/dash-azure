@@ -1,4 +1,4 @@
-/*-------------------------------------------------------
+/*--------------------------------------------------------------
 var browser = jsdom.env(
   "http://localhost:3000",
   ["http://localhost:3000/js/jquery-1.10.2.min.js","http://localhost:3000/js/jquery.signalR-2.0.3.min.js"],

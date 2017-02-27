@@ -7,7 +7,7 @@ module.exports = {
         //@todo: what would be the perfect unique identifier for a client ?
         client.find({ "subscriptionId": data.subscriptionId }, function (error, clientDet) {
             if (!error) {
-                callback(clientDet[0]);
+                callback(clientDet[0]); 
                 return clientDet;
                 console.dir("Hurray ! data: " + clientDet);
             } else {
@@ -35,47 +35,31 @@ module.exports = {
             }
         });
 
-
     },
     UpdateClient : function (mongoose, key, value, client, callback) {
         
-        client.findOne({ "user": "username" }, function (err, clientList) {
+        client.find({ key: value }, function (err, clientList) {
             if (!err) {
-                clientList.save(function (error) {
-                    if (!error) {
-                        console.dir("Subscription details updated .");
-                        callback(clientList);
-                    } else {
-                        console.dir("Subscription details updating failed " + error);
-                        callback(null);
-                    }
-                });
-        
+                if(clientList.length > 0){
+                    /// Alt : If this doesn't work just change the value and save the document 
+                    client.update({"subscriptionId": data.subscriptionId},
+                                  {$inc: {visits: 1}},
+                                  {multi: false}, function (error,updatedDocs) {
+                                    if(!(updatedDocs < 1)) { 
+                                        console.log("Databate updated !");
+                                        callback();
+                                    } else {
+                                        console.log('No records updated !');
+                                 }
+                            }
+                        );
+                }else {
+                    callback(null); // throw a better error .
+                }
             } else {
                 console.dir("Error record not found , creating one ...");
             }
         });
-
-    },
-    UpdateSubscription : function (mongoose, data, client, callback) {
-        
-        client.findOne({ "subscriptionId": data.subscriptionId }, function (err, subscriptionDetails) {
-            if (!err) {
-                subscriptionDetails.save(function (error) {
-                    if (!error) {
-                        console.dir("Subscription details updated .");
-                        callback(subscriptionDetails);
-                    } else {
-                        console.dir("Subscription details updating failed " + error);
-                        callback(null);
-                    }
-                });
-            
-            } else {
-                console.dir("Error record not found , creating one ...");
-            }
-        });
-
     },
     UninstallClient : function (mongoose, data, client) {
         // remove from database 
@@ -99,6 +83,28 @@ module.exports = {
             } else {
                 console.dir("Error quering database. ");
                 callback(null);
+            }
+        });
+    },
+    UpdateSubscription : function (mongoose, data, client, callback) {
+        
+        client.find({ "subscriptionId": data.subscriptionId }, function (err, subscriptionList) {
+            if (!err) {
+                /// Alt : If this doesn't work just change the value and save the document 
+                client.update({"subscriptionId": data.subscriptionId},
+                                {$inc: {visits: 1}},
+                                {multi: false}, function (error,updatedDocs) {
+                                    if(!(updatedDocs < 1)) { 
+                                        console.log("Databate updated !");
+                                        callback();
+                                    } else {
+                                        console.log('No records updated !');
+                                 }
+                            }
+                        );
+            
+            } else {
+                console.dir("Error record not found , creating one ...");
             }
         });
     },

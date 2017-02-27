@@ -24,16 +24,60 @@
       "password": "nothing"
     }
   },
-  "subscriptionConfiguration": {
-    "ChaneType": "Created, Updated, Deleted",
-    "notificationUrl": "https://dashdesk.azurewebsites.net/listen",
-    "resource": "me/mailfolders(\\'Inbox\\')/messages',",
-    "clientState": "cLIENTsTATEfORvALIDATION"
+  "AccountsConfiguration": {
+    "outlook": {
+      "credentials": {
+            "authority": "https://login.microsoftonline.com/common",
+            "clientID": "d2d6267b-a005-4146-b79a-a754e5e0def3",
+            "clientSecret": "wLPDOaGMOjWtGu9iUzsWsMcOLrXPwNG9uOdswFFQoj0=",
+            "redirectUri": "https://dashdesk.azurewebsites.net/callback"
+      },
+      "subscriptionConfiguration": {
+          "ChaneType": "Created, Updated",
+          "notificationUrl": "https://dashdesk.azurewebsites.net/listen",
+          "resource": "me/mailfolders(\\'Inbox\\')/messages',",
+          "clientState": "cLIENTsTATEfORvALIDATION"
+      }
+    }
   },
-  "adalConfiguration": {
-    "authority": "https://login.microsoftonline.com/common",
-    "clientID": "d2d6267b-a005-4146-b79a-a754e5e0def3",
-    "clientSecret": "wLPDOaGMOjWtGu9iUzsWsMcOLrXPwNG9uOdswFFQoj0=",
-    "redirectUri": "https://dashdesk.azurewebsites.net/callback"
+  "gmail":{
+    "credentials": {
+
+    },
+    "subscriptionConfiguration" :{
+
+    }
+  },
+  "skype" : {
+    "credentials": {
+
+    },
+    "subscriptionConfiguration" :{
+
+    }
+  }, 
+  "yahoo": {
+    "credentials": {
+
+    },
+    "subscriptionConfiguration" :{
+
+    }
+  },
+  "evernote": {
+    "credentials": {
+
+    },
+    "subscriptionConfiguration" :{
+
+    }
+  },
+  "yammah": {
+    "credentials": {
+
+    },
+    "subscriptionConfiguration" :{
+
+    }
   }
 }

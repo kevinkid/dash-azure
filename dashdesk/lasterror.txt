@@ -16,8 +16,6 @@ TypeError: first argument must be a string or Buffer
     at next (c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:256:14)
     at Function.handle (c:\dashdesk\dashdesk\node_modules\express\lib\router\index.js:176:3)
 
-//SOLUTION: Don't set break points, evey time you send a message a timeout is initialised or 
-// we a fucked .
 _http_outgoing.js:346
     throw new Error('Can\'t set headers after they are sent.');
     ^

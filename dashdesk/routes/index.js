@@ -11,7 +11,7 @@ var mongoose = require("mongoose");
 var client = require("../Handlers/client.js");
 var db = require("../Handlers/dbHandler.js");
 var subscription = {};
-
+var accountsManager = require("../Handlers/AccountsHandler.js"); //@Todo : Use the account manager instead .
 
 
 router.get('/', function (req, res) {
@@ -24,7 +24,7 @@ router.get('/signin', function (req, res) {
 });
 
 
-
+/// Install a client route 
 router.get('/callback', function (req, res) {
     console.dir("Checking for code query param .");
     console.dir("Found code in query param .");
@@ -77,7 +77,7 @@ router.get('/callback', function (req, res) {
 
 
 
-
+/// Uninstalling an application using this route .
 router.get("/signout/:subscriptionId", function (req, res) {
     var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
     if (req.params.subscriptionId) {

@@ -1,7 +1,4 @@
-/// NOTE: Register for new credentials using the dev.office.com website 
-/// that way a admin group doesn 't have to install the application on 
-/// the tenant before you can use the application. 
-
+//@Todo : Remove this file and replace with the settings.json file .
 exports.adalConfiguration = {
     authority: 'https://login.microsoftonline.com/common',
     clientID: 'd2d6267b-a005-4146-b79a-a754e5e0def3',

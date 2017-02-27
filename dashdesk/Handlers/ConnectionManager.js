@@ -1,3 +1,10 @@
+/**
+ * @author - bigkevzs 
+ * @todo - Use this file to instanciate a new hubproxy when instlling a new client ,
+ *         make the method unique to each client using the Sessionkey such that both 
+ *         the server method called by the client will be the sessionkey . 
+ */
+
 module.exports = {
     getConnectionByUser : function (signalR, sessionKey) {
         var conn = signalR._connectionManager._connections;
@@ -11,7 +18,7 @@ module.exports = {
             } else {
                 return false;
             }
-        }
+        } 
     },
     hook : function (signalR) {
         return 'difference in connection since last check';
@@ -33,9 +40,7 @@ module.exports = {
             
             virtualClient.env(html, function (errors, window) {
                 var data = "{\n\t\"name\":\"" + Name + ",\n\t\"message\":\"" + Message + "\n}"
-                console.dir(window);
-                console.dir("Data: " + Name + ":" + Message);
-                console.dir(data);
+
                 var xhr = new window.XMLHttpRequest();
                 xhr.withCredentials = true;
                 
@@ -49,13 +54,15 @@ module.exports = {
                 xhr.setRequestHeader("content-type", "application/json");
                 xhr.setRequestHeader("cache-control", "no-cache");
                 xhr.setRequestHeader("session-token", "fb5d3dac-ec35-6a04-00b5-3db8c89a8472");
-                //TODO: Use the express cookies 
+
                 xhr.send(data);
             });
             
         } catch (ex) {
             throw ex;
         }
-
     }
 };
+
+
+

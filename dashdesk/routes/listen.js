@@ -15,7 +15,7 @@ var client = require("../Handlers/client.js");
 var connectionManager = require("../Handlers/ConnectionManager.js");
 var notification = require("../Handlers/notifications.js");
 var jsdom = require("jsdom-no-contextify");
-//var Striptags = require("striptags");
+var moment = require('moment');
 
 /* Default listen route */
 router.post('/', function (req, res, next) {
@@ -27,110 +27,124 @@ router.post('/', function (req, res, next) {
     var subscriptionId;
     
     if (req.query.validationToken) {
-        
-        status = 202;
+
         res.send(req.query.validationToken);
         res.status(200);
+        res.end();
         
     } else {
         
         status = 202;
-        
-        
-        clientStatesValid = false;
-        
-        //First, validate all the clientState values in array
+
+        // Process notifications 
         for (i = 0; i < req.body.value.length; i++) {
-            if (req.body.value[i].clientState !== clientStateValueExpected) {
-                // If just one clientState is invalid, we discard the whole batch
-                clientStatesValid = false;
-                break;
-            } else {
-                clientStatesValid = true;
+            resource = req.body.value[i].resource;
+            subscriptionId = req.body.value[i].subscriptionId;
+            res.status(202);
+            res.end();
+
+            if ((req.body.value[i].changeType === "created" ||
+                req.body.value[i].changeType === "updated") &&
+            req.body.value[i].clientState !== clientStateValueExpected) {
+                
+                processNotification(subscriptionId, resource, res, next);
+
             }
         }
         
-        // validate all notifications 
-        if (clientStatesValid) {
-            // process all the notifications   
-            
-            for (i = 0; i < req.body.value.length; i++) {
-                resource = req.body.value[i].resource;
-                subscriptionId = req.body.value[i].subscriptionId;
-                res.status(202);
-                res.end();
-                if (req.body.value[i].changeType === "created") {
-                    console.dir("Incoming Mail Notificaiton  ");
-                    processNotification(subscriptionId, resource, res, next);
-                } else {
-                    console.log("Ignored <" + req.body.value[i].changeType + ">");
-                }
-            }
-            
-            // Send a status of 'Accepted'
-            status = 202;
-            res.status(status);
-        } else {
-            
-            status = 202;
-            res.status(status);
-        }
+        // Send a status of 'Accepted'
         status = 202;
+        res.status(status);
+
     }
     res.status(status).end(http.STATUS_CODES[status]);
 });
 
-function htmlParse(html) {
-    //TODO: Remove this .
-    var endStr = "";
-    endStr = html;
-    endStr = endStr.toString();
-    return endStr;
+
+
+
+/**
+ * @desc - Determines if the current date is past the input expiry date .
+ * @param {string} - Expiry date 
+ * @return {bool} - boolean value 
+ */
+function CredViablitityCheck(ExpiryDateTime) {
+    return ((moment(ExpiryDateTime).toNow()).search('ago') < 0) ? true : false ;
 }
 
-function processNotification(subscriptionId, resource, res, next) {
+
+
+/**
+ * @param {string} - subscriptionid identify a user 
+ * @param {string} - resource containing deeper notification jquery 
+ * @param {Object} - Node responce object 
+ */
+function processNotification(subscriptionId, resource, res) {
     db.GetSubscription(requestHelper, qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
-            var email ,
-                body;
-            /**
-                   * If token is expired .
-                   * var now  = "04/09/2013 15:00:00";
-                   * var then = "04/09/2013 14:20:30";
-                   * moment.utc(moment(now,"DD/MM/YYYY HH:mm:ss").diff(moment(then,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
-                   */
+            
+                if(CredViablitityCheck()){
 
-                    // for some reason am creating subscriptions with expired tokens. maybe to time on aure and on my local machine are different.
+                    requestHelper.getData(
+                        '/beta/' + resource, subscriptionData.accessToken,
+                        function (requestError, endpointData) {
+                            console.log(endpointData);
+                            if (endpointData) {
+                                if (endpointData !== null) {
+                    
+                                    console.dir("Notification From:" + email + " : " + body);
 
-            requestHelper.getData(
-                '/beta/' + resource, subscriptionData.accessToken,
-                function (requestError, endpointData) {
-                    console.log(endpointData);
-                    if (endpointData) {
-                        if (endpointData !== null) {
-                            
-                            console.dir(endpointData);
-                            // body = htmlParse(endpointData.value.);
-                            email = endpointData.from.emailAddress.address;
-                            body = endpointData.body.content;
-                            body = htmlParse(body);
-                            console.dir("Notification From:" + email + " : " + body);
-                            try{
-                                 connectionManager.sendNotification(jsdom, ((endpointData.hasAttachments) ? email + "@Att":email), qs.escape(body));
-                            }catch(ex){
-                                throw ex;
+                                    connectionManager.sendNotification(jsdom,
+                                                                        ((endpointData.hasAttachments) ? (endpointData.from.emailAddress.address) + "@Att":endpointData.from.emailAddress.address),
+                                                                        qs.escape(endpointData.body.content));
+                                //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
+                                                                
+                                    console.dir("Notification sent Successfully  ");
+                                } else {
+
+                                    //@todo: Handle Unsubscribe notifications and refresh expired tokens .
+                                    console.dir("Subscription recognised by Dash");
+
+                                }
+                            } else if (requestError) {
+                                console.dir(requestError);
                             }
-                           //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
-                            console.dir("Successful notification  ");
-                        } else {
-                            //@todo: Handle Unsubscribe notifications and refresh expired tokens .
-                            console.dir("Subscription recognised by Dash");
+                        });
+
+                }else {
+                    //@Todo: Use the referesh token to reset the credentails
+                    requestHelper.getTokenFromRefreshToken(endpointData.refreshToken, function(error, token){
+                        if(!error){
+                            db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
+                                          
+                                requestHelper.getData(
+                                '/beta/' + resource, subscriptionData.accessToken,
+                                function (requestError, endpointData) {
+                                    console.log(endpointData);
+                                    if (endpointData) {
+                                        if (endpointData !== null) {
+                      
+                                            console.dir("Notification From:" + email + " : " + body);
+
+                                            connectionManager.sendNotification(jsdom,
+                                                     ((endpointData.hasAttachments) ? (endpointData.from.emailAddress.address) + "@Att@": (endpointData.from.emailAddress.address)),
+                                                    qs.escape( endpointData.body.content));
+                                            //db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
+
+                                            console.dir("Notification sent Successfully  ");
+                                        } else {
+                                            //@todo: Handle Unsubscribe notifications and refresh expired tokens .
+                                            console.dir("Subscription recognised by Dash");
+                                        }
+                                    } else if (requestError) {
+                                        console.dir(requestError);
+                                    }
+                                });
+                        }else {
+                            ///@Todo : Try implementing a retry for new accesstoken credentails
                         }
-                    } else if (requestError) {
-                        console.dir(requestError);
-                    }
-                }
-            );
+                    });
+            }
         } else {
             console.dir("Ignore expired subscriptions ");
         }

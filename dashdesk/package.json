@@ -9,8 +9,7 @@
   },
   "keywords": [
     "Office 365 Api",
-    "Web Authentication",
-    "fun :)"
+    "Web Authentication"
   ],
   "dependencies": {
     "adal-node": "^0.1.18",
@@ -24,9 +23,9 @@
     "express-session": "^1.11.3",
     "jade": "*",
     "jsdom-no-contextify": "^3.1.0",
+    "moment": "^2.17.1",
     "mongodb": "^2.1.6",
     "mongoose": "^4.4.2",
-    "morgan": "^1.6.1",
     "offline-js": "^0.7.15",
     "pug": "^2.0.0-alpha3",
     "querystring": "^0.2.0",
@@ -34,5 +33,8 @@
     "signalrjs": "^0.2.2",
     "striptags": "^3.0.1",
     "stylus": "*"
+  },
+  "devDependencies": {
+    "gulp-nodemon": "^2.2.1"
   }
 }

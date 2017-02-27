@@ -1,21 +1,16 @@
 ﻿---
 Author: bigkevzs
-Desc: Contains desired implementation for the current project
+Desc: Contains desired implementations for the current project
 ---
 
-
-* Debug signalr socket connection, i think this error happend sometimes .  
-
-Thu Jan 26 2017 07:52:59 GMT+0000 (Coordinated Universal Time): Application has thrown an uncaught
-	 exception and is terminated:
-		TypeError: Cannot read property 'type' of undefined
-    at null._onTimeout (D:\home\site\wwwroot\node_modules\signalrjs\lib\signalRJS.js:91:46)
-    at Timer.listOnTimeout (timers.js:110:15)
+* Note : You cannot relay on subscriptionId to identify a client during an add account 
+			request . Find a none repeating client key generator library for c# online .
 
 1. Clean your code 
 	a. Modularize your project , such that it can handle different clients and also different account
 		types .
 	b. Clean the microsoft code by introducing swaggrer service .
+	c. Get clientkey generator for the client c# wpf application . !important 
 
 2.
 	a. Manage notification subscriptions by changing the database used on the server.
@@ -29,9 +24,10 @@ Thu Jan 26 2017 07:52:59 GMT+0000 (Coordinated Universal Time): Application has 
 	a. Write code to download documents to clients if the emails contain attachments .
 
 
-===================
+============================
 New Application credentials
-==================
+============================
+
 
 Source: https://apps.dev.microsoft.com
 App name: DashServer
