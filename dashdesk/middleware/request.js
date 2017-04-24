@@ -1,7 +1,6 @@
 var https = require('https');
 var Host = 'graph.microsoft.com';
 var config = require('../api/config');
-var PostPayload = config.accounts.outlook.subscriptionConfiguration;
 
 
 // Main logic 

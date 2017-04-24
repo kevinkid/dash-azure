@@ -1,8 +1,7 @@
 /**
- * @author - bigkevzs 
  * @todo - Use this file to instanciate a new hubproxy when instlling a new client ,
  *         make the method unique to each client using the Sessionkey such that both 
- *         the server method called by the client will be the sessionkey . 
+ *         the server and client method called by the client code will be the sessionkey . 
  */
 
 module.exports = {
@@ -18,7 +17,7 @@ module.exports = {
             } else {
                 return false;
             }
-        } 
+        }
     },
     hook : function (signalR) {
         return 'difference in connection since last check';
@@ -63,6 +62,3 @@ module.exports = {
         }
     }
 };
-
-
-

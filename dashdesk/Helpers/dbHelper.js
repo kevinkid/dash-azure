@@ -2,7 +2,7 @@
 
 module.exports = {
     
-    FindClient : function (mongoose, data, client, callback) {
+    findClient : function (mongoose, data, client, callback) {
         
         //@todo: what would be the perfect unique identifier for a client ?
         client.find({ "subscriptionId": data.subscriptionId }, function (error, clientDet) {

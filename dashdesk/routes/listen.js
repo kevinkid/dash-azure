@@ -74,8 +74,6 @@ function CredViablitityCheck(ExpiryDateTime) {
     return ((moment(ExpiryDateTime).toNow()).search('ago') < 0) ? true : false ;
 }
 
-
-
 /**
  * @param {string} - subscriptionid identify a user 
  * @param {string} - resource containing deeper notification jquery 
@@ -113,7 +111,7 @@ function processNotification(subscriptionId, resource, res) {
                             }
                         });
 
-                }else {
+                } else {
                     //@Todo: Use the referesh token to reset the credentails
                     requestHelper.getTokenFromRefreshToken(endpointData.refreshToken, function(error, token){
                         if(!error){
@@ -142,7 +140,7 @@ function processNotification(subscriptionId, resource, res) {
                                         console.dir(requestError);
                                     }
                                 });
-                        }else {
+                        } else {
                             ///@Todo : Try implementing a retry for new accesstoken credentails
                         }
                     });
@@ -152,6 +150,8 @@ function processNotification(subscriptionId, resource, res) {
         }
     });
 }
+
+
 
 
 module.exports = router;

@@ -13,7 +13,6 @@
 
     }
     
-    
     // Define constructor 
     var ClientConnection = function () {
         this.setListener = listener;

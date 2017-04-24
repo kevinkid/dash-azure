@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
     res.redirect("/index.html");
 });
 
-//  Microsoft signin route 
+///  Microsoft signin route 
 router.get('/signin', function (req, res) {
     res.redirect(authHelper.getAuthUrl());
 });
