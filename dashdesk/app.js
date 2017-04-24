@@ -17,26 +17,20 @@ var routes = require("./routes/index");
 var db = require("./Helpers/dbHelper");
 var client = require("./Handlers/client");
 var notifications = require("./Handlers/notifications");
-var settings = JSON.parse(fs.readFileSync(path.join(__dirname,'./settings.json'), 'utf8').replace("﻿",""));  
+var config = require('./api/config');
 var DBConnection = mongoose.connection;
 DBConnection.setMaxListeners(0);
-//var cors = require("cors");
+var cors = require("cors");
+var conCounter = 0;
 
-// settings 
-app.CONFIG = settings;
-
-console.dir(settings);
 
 // Port config 
 app.set('port', process.env.PORT || 3000);
 
 // Environment config 
-// Note : There is no production env 
-var env = process.env.NODE_ENV || 'development';
-app.locals.ENV = env;
-app.locals.ENV_DEVELOPMENT = env === 'development';
-
-
+var ENV = process.env.NODE_ENV || 'development';
+app.locals.ENV = ENV;
+app.locals.ENV_DEVELOPMENT = ENV === 'development';
 
 /**
  * @desc - signalr hub configuration .
@@ -52,20 +46,10 @@ signalR.hub('MyHub', {
     }
 });
 
-
-
 // cors config 
-//app.use(cors());
+app.use(cors());
 
-// Db config 
-var DBoptions = {
-    server: { socketOptions: { keepAlive: 500000, connectTimeoutMS: 50000, auto_reconnect: true } }, 
-    replset: { socketOptions: { keepAlive: 500000, connectTimeoutMS : 50000, auto_reconnect: true } }
-};
-
-
-
-// View config 
+// app config 
 app.use(require('stylus').middleware(path.join(__dirname, 'dash-frontend')));
 app.use(favicon(__dirname + '/dash-frontend/img/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'dash-frontend')));
@@ -76,36 +60,38 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-
-// Routes config 
+// Define routes 
+// TODO: Define better routes to handle advanced queries
 app.use('/', routes);
 app.use('/listen', listen);
 app.use('/message', message);
 
 
+// Db config 
+var DBoptions = {
+    server: { socketOptions: { keepAlive: 500000, connectTimeoutMS: 50000, auto_reconnect: true } }, 
+    replset: { socketOptions: { keepAlive: 500000, connectTimeoutMS : 50000, auto_reconnect: true } }
+};
 
+mongoose.connect((config.database[ ENV ]).host, DBoptions);
 
-/**
- * Note: This Database Auto reconnect implementation has a memory leak .
- */
-mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host, DBoptions);
-
-DBConnection.on('error', function(){
+DBConnection.on('error', function() {
     mongoose.disconnect();
 });
- 
 
-DBConnection.on('disconnected', function(){
-    mongoose.connect((settings[(env === "development")? "development" : "production"]).database.host, DBoptions);
+// TODO: See nodejs error object, write better errors.
+DBConnection.on('disconnected', function(err) {
+    if (conCounter>5) throw new Error({ message: "Database connection failure "
+                                        , dbURI: config.database[ ENV ].host
+                                        , DB: config.database[ ENV ] });
+    mongoose.connect((config.database[ ENV ]).host, DBoptions);
+    conCounter++;
 });
 
-    
 DBConnection.once('open', function () {
-    console.log("Database connection established ");
+    console.log("Database connected ! ");
     app.listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));
     });
 });
 
-
-module.exports = app;

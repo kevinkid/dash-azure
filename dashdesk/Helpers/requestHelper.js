@@ -4,9 +4,8 @@
  */
 var https = require('https');
 var Host = 'graph.microsoft.com';
-var app = require('../app');
-var PostPayload = app.CONFIG.database.outlook.subscriptionConfiguration;
-
+var config = require('../api/config');
+var PostPayload = config.accounts.outlook.subscriptionConfiguration;
 
 
 /**
@@ -58,8 +57,7 @@ function postData(path, token, data, callback) {
             }
         });
     });
-    
-    
+      
     var date = JSON.parse(data).expirationDateTime;
     
     console.dir("date is:");
@@ -91,7 +89,7 @@ function getData(path, token, callback) {
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json;odata.metadata=minimal;' +
-              'odata.streaming=true;IEEE754Compatible=false',
+                    'odata.streaming=true;IEEE754Compatible=false',
             Authorization: 'Bearer ' + token
         }
     };

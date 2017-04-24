@@ -8,9 +8,8 @@
     "email": "bigevin2682@gmail.com"
   },
   "scripts": {
-    "start": "node ./dashdesk/app.js",
+    "start": "node app.js",
     "test": "gulp run"
-
   },
   "keywords": [
     "Office 365 Api",

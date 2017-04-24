@@ -8,7 +8,8 @@ var router = express.Router();
 var requestHelper = require('../helpers/requestHelper.js');
 var http = require('http');
 var qs = require("querystring");
-var clientStateValueExpected = require('../constants').subscriptionConfiguration.clientState;
+var config = require('../api/config');
+var clientStateValueExpected = config.accounts.outlook.subscriptionConfiguration.clientState;
 var mongoose = require("mongoose");
 var db = require("../Helpers/dbHelper.js");
 var client = require("../Handlers/client.js");
@@ -38,6 +39,7 @@ router.post('/', function (req, res, next) {
 
         // Process notifications 
         for (i = 0; i < req.body.value.length; i++) {
+
             resource = req.body.value[i].resource;
             subscriptionId = req.body.value[i].subscriptionId;
             res.status(202);
@@ -45,7 +47,7 @@ router.post('/', function (req, res, next) {
 
             if ((req.body.value[i].changeType === "created" ||
                 req.body.value[i].changeType === "updated") &&
-            req.body.value[i].clientState !== clientStateValueExpected) {
+                req.body.value[i].clientState !== clientStateValueExpected) {
                 
                 processNotification(subscriptionId, resource, res, next);
 

@@ -4,7 +4,8 @@
  */
 
 var AuthenticationContext = require('adal-node').AuthenticationContext;
-var adalConfiguration = require('../constants.js').adalConfiguration;
+var config = require('../api/config');
+var adalConfiguration = config.accounts.outlook.adalConfiguration;
 var resource = 'https://graph.microsoft.com/';
 
 /**
@@ -12,7 +13,7 @@ var resource = 'https://graph.microsoft.com/';
  * @return {string} a fully formed uri with which authentication can be completed.
  */
 function getAuthUrl() {
-    return adalConfiguration.authority + '/oauth2/authorize' +
+    return adalConfiguration.credentials + '/oauth2/authorize' +
     '?client_id=' + adalConfiguration.clientID +
     '&response_type=code' +
     '&redirect_uri=' + adalConfiguration.redirectUri;

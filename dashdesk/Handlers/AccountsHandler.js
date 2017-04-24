@@ -4,9 +4,8 @@
  *  are going to be in here .
  */
 var mongoose = require('mongoose');
-var db = require('./../dbHelper');
-var settings = require('../app').settings;
-
+var db = require('../Helpers/dbHelper');
+var config = require('../api/config');
 var AccountUrls = {
     'skype' :  '',
     'outlook': '',
