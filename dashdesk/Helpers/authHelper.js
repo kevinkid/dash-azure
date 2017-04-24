@@ -1,7 +1,7 @@
 
 var AuthenticationContext = require('adal-node').AuthenticationContext;
-var adalConfiguration = config.accounts.outlook.credentials;
 var config = require('../api/config');
+var adalConfiguration = config.accounts.outlook.credentials;
 var resource = 'https://graph.microsoft.com/';
 
 /**

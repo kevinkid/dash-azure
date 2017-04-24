@@ -8,7 +8,7 @@ var AuthenticationContext = require('adal-node').AuthenticationContext;
 var resource = 'https://graph.microsoft.com/';
 
 
-function generatePayload (inputObj) {
+function generatePayload () {
 
 }
 
