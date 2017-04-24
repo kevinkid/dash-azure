@@ -4,7 +4,8 @@
  */
 var https = require('https');
 var Host = 'graph.microsoft.com';
-var PostPayload = require("../constants").subscriptionConfiguration;
+var app = require('../app');
+var PostPayload = app.CONFIG.database.outlook.subscriptionConfiguration;
 
 
 
@@ -43,7 +44,7 @@ function postData(path, token, data, callback) {
         res.on('data', function (chunk) {
             console.dir("Subscription responded .");
             subscriptionData += chunk;
-//'{\r\n  "error": {\r\n    "code": "InvalidRequest",\r\n    "message": "Subscription validation request failed. Must respond with 200 OK to this request.",\r\n    "innerError": {\r\n      "request-id": "aa09c28b-b8ce-4e42-96cf-9d5dcb9412a0",\r\n      "date": "2017-01-19T15:18:24"\
+            //'{\r\n  "error": {\r\n    "code": "InvalidRequest",\r\n    "message": "Subscription validation request failed. Must respond with 200 OK to this request.",\r\n    "innerError": {\r\n      "request-id": "aa09c28b-b8ce-4e42-96cf-9d5dcb9412a0",\r\n      "date": "2017-01-19T15:18:24"\
         });
         res.on('end', function () {
             console.dir("subscription request ended .");

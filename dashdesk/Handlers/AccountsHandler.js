@@ -4,8 +4,8 @@
  *  are going to be in here .
  */
 var mongoose = require('mongoose');
-var db = require('./dbHandler.js');
-var settings = require('../app.js').settings;
+var db = require('./../dbHelper');
+var settings = require('../app').settings;
 
 var AccountUrls = {
     'skype' :  '',
@@ -25,7 +25,7 @@ var AccountUrls = {
  * @returns {string} - The authentication url for the perticular account 
  */
 function GetAuthUrl(accountType,clientkey) {
-    if (!clientkey &&  accountType != null){
+    if (!clientkey &&  accountType != null) {
         var IsExisting = VerfityAccountExistance(accountType);
         if((typeof IsExisting) == 'boolean') {
             return AccountUrls[accountType];

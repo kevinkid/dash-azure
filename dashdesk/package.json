@@ -7,6 +7,11 @@
     "name": "kevin",
     "email": "bigevin2682@gmail.com"
   },
+  "scripts": {
+    "start": "node ./dashdesk/app.js",
+    "test": "gulp run"
+
+  },
   "keywords": [
     "Office 365 Api",
     "Web Authentication"

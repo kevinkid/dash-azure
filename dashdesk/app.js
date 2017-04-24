@@ -14,16 +14,18 @@ var jsdom = require("jsdom-no-contextify");
 var message = require("./routes/message");
 var listen = require("./routes/listen");
 var routes = require("./routes/index");
-var db = require("./Handlers/dbHandler.js");
-var client = require("./Handlers/client.js");
-var notifications = require("./Handlers/notifications.js");
+var db = require("./Helpers/dbHelper");
+var client = require("./Handlers/client");
+var notifications = require("./Handlers/notifications");
 var settings = JSON.parse(fs.readFileSync(path.join(__dirname,'./settings.json'), 'utf8').replace("﻿",""));  
 var DBConnection = mongoose.connection;
 DBConnection.setMaxListeners(0);
 //var cors = require("cors");
 
 // settings 
-app.settings = settings;
+app.CONFIG = settings;
+
+console.dir(settings);
 
 // Port config 
 app.set('port', process.env.PORT || 3000);

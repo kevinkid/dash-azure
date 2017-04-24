@@ -9,7 +9,7 @@ var https = require("https");
 var qs = require("querystring");
 var mongoose = require("mongoose");
 var client = require("../Handlers/client.js");
-var db = require("../Handlers/dbHandler.js");
+var db = require("../Helpers/dbHelper.js");
 var subscription = {};
 var accountsManager = require("../Handlers/AccountsHandler.js"); //@Todo : Use the account manager instead .
 
