@@ -2,7 +2,9 @@ var https = require('https');
 var Host = 'graph.microsoft.com';
 var config = require('../api/config');
 
-
+/**
+ * @desc - Handles the webhook logic because it contains implementains that are different from what out api does .
+ */
 
 function handleRequest () {
     var options = {

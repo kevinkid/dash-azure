@@ -5,11 +5,11 @@
 var express = require('express');
 var fs = require("fs");
 var router = express.Router();
-var requestHelper = require('../helpers/requestHelper.js');
+var api = require('../api/api.js');
 var http = require('http');
 var qs = require("querystring");
 var config = require('../api/config');
-var clientStateValueExpected = config.accounts.outlook.subscriptionConfiguration.clientState;
+var clientStateValueExpected = config.accounts.office.subscriptionConfiguration.clientState;
 var mongoose = require("mongoose");
 var db = require("../Helpers/dbHelper.js");
 var client = require("../Handlers/client.js");
@@ -80,12 +80,12 @@ function CredViablitityCheck(ExpiryDateTime) {
  * @param {Object} - Node responce object 
  */
 function processNotification(subscriptionId, resource, res) {
-    db.GetSubscription(requestHelper, qs, mongoose, subscriptionId, client, function (subscriptionData) {
+    db.GetSubscription(api, qs, mongoose, subscriptionId, client, function (subscriptionData) {
         if (subscriptionData) {
             
                 if(CredViablitityCheck()){
 
-                    requestHelper.getData(
+                    api.getData(
                         '/beta/' + resource, subscriptionData.accessToken,
                         function (requestError, endpointData) {
                             console.log(endpointData);
@@ -113,11 +113,11 @@ function processNotification(subscriptionId, resource, res) {
 
                 } else {
                     //@Todo: Use the referesh token to reset the credentails
-                    requestHelper.getTokenFromRefreshToken(endpointData.refreshToken, function(error, token){
+                    api.getTokenFromRefreshToken(endpointData.refreshToken, function(error, token){
                         if(!error){
                             db.StoreNotification(mongoose,qs.escape(JSON.stringify(endpointData)) ,client);
                                           
-                                requestHelper.getData(
+                                api.getData(
                                 '/beta/' + resource, subscriptionData.accessToken,
                                 function (requestError, endpointData) {
                                     console.log(endpointData);

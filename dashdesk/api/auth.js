@@ -1,3 +1,9 @@
+var oauth = require('oauth');
+var AuthenticationContext = require('adal-node').AuthenticationContext;
+var config = require('../api/config');
+var adalConfiguration = config.accounts.office.credentials;
+var resource = 'https://graph.microsoft.com/';
+
 
 /**
  * Generate a fully formed uri to use for authentication based on the supplied resource argument

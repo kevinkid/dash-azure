@@ -13,7 +13,7 @@ Desc: Contains desired implementations for the current project
 		Replacements 
 			> Helpers/authHelper.js -> api/auth.js
 			> Helpers/requestHelper.js -> api.api.js
-			
+	Note: Outlook and office outlook are two different, get the auth url for the outlook first then we will use the other one later .
 	c. Get clientkey generator for the client c# wpf application . !important 
 
 2.

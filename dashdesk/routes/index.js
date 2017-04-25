@@ -2,16 +2,16 @@
 var express = require("express");
 var router = express.Router();
 var authContext = require("adal-node").AuthenticationContext;
-var authHelper = require('../helpers/authHelper.js');
-var requestHelper = require("../helpers/requestHelper.js");
-var subscriptionConfiguration = require("../api/config").accounts.outlook.subscriptionConfiguration;
+var authHelper = require('../api/auth.js');
+var api = require("../api/api.js");
+var subscriptionConfiguration = require("../api/config").accounts.office.subscriptionConfiguration;
 var https = require("https");
 var qs = require("querystring");
 var mongoose = require("mongoose");
 var client = require("../Handlers/client.js");
 var db = require("../Helpers/dbHelper.js");
 var subscription = {};
-var accountsManager = require("../Handlers/AccountsHandler.js"); //@Todo : Use the account manager instead .
+var accountsFactory = require("../Handlers/AccountsFactory.js"); //@Todo : Use the account manager instead .
 
 
 router.get('/', function (req, res) {
@@ -20,7 +20,7 @@ router.get('/', function (req, res) {
 
 ///  Microsoft signin route 
 router.get('/signin', function (req, res) {
-    res.redirect(authHelper.getAuthUrl());
+    res.redirect(accountsFactory.getAuthUrl());
 });
 
 
@@ -38,7 +38,7 @@ router.get('/callback', function (req, res) {
             subscriptionExpirationDateTime = new Date(Date.now() + 86400000).toISOString();//ISO time format 
             subscriptionConfiguration.expirationDateTime = subscriptionExpirationDateTime;
             
-            requestHelper.postData(
+            api.postData(
                 '/v1.0/subscriptions',
             token.accessToken,
             JSON.stringify(subscriptionConfiguration),
@@ -81,7 +81,7 @@ router.get('/callback', function (req, res) {
 router.get("/signout/:subscriptionId", function (req, res) {
     var redirectUri = req.protocal + "://" + req.hostname + ":" + req.app.settings.port;
     if (req.params.subscriptionId) {
-        requestHelper.deleteData(
+        api.deleteData(
             '/v1.0/subscriptons/' + req.params.subscriptonId,
             function (err) {
                 if (!err) {
