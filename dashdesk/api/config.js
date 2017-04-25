@@ -42,7 +42,8 @@ module.exports = {
       "credentails": {
         "clientID": "35abf803-88f0-45fd-87a0-b4ff31069bd3",
         "privateKey": "fje6VcOvnP2y9z7DHU3XCQY",
-        "redirectUris": ["https://dashdesk.azurewebsites.net/callback", "https://dashdesk.azurewebsites.net/listen"],
+        "redirectUris": ["https://dashdesk.azurewebsites.net/callback",
+                           "https://dashdesk.azurewebsites.net/listen"],
         "authority": "https://login.microsoftonline.com/common",
         "authorize_endpoint": "/oauth2/v2.0/authorize",
         "token_endpoint": "/oauth2/v2.0/token",
