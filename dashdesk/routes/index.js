@@ -28,7 +28,24 @@ router.get('/signin', function (req, res) {
 router.get('/callback', function (req, res) {
     console.dir("Checking for code query param .");
     console.dir("Found code in query param .");
+
+    //TODO: Handle different account authentication from here 
+    //TODO: Also handle pre-exsisting accounts from here .
+    //TODO: To verify the account of people find a way to keep
+    // the email provided in cookies then embed it in the callback
+    var exist = accountsFactory.verifyAccount(req.query.email);
     
+    if (!exist) {
+
+    } else {
+        // TODO: Get the subscription id for the account 
+        subscriptionId = subscriptionData.id;
+        res.redirect(
+            '/dashboard.html?subscriptionId=' + subscriptionId +
+        '&userId=' + subscriptionData.userId + 'subObject={' + JSON.stringify(subscriptionData) + '}'
+        );
+    }
+
     var subscriptionId;
     var subscriptionExpirationDateTime;
     authHelper.getTokenFromCode(req.query.code, function (authenticationError, token) {

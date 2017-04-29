@@ -5,7 +5,12 @@ var AuthenticationContext = require('adal-node').AuthenticationContext;
 var config = require('../api/config');
 var adalConfiguration = config.accounts.office.credentials;
 var resource = 'https://graph.microsoft.com/';
+var db = require('../Helpers/dbHelper');
 
+function Query (email) {
+    // TODO: query the database for the account 
+    db.findClient()
+}
 
 // TODO: Include other accounts that are easier .
 function generateAuthURL (account) {
@@ -51,6 +56,11 @@ function getAuthenticationURL(accountType, clientkey) {
     }
 }
 
+// NOTE: There are two reason why we might need to verify for an account 
+// 1. if a user is installing a new client 
+// 2. if a user is installing a new client in a different machine 
+// TODO: Make sure the client set the clientkey on the browser for us to 
+//       query. That is if the clientkey exist .
 
 function verifyAccount(clientkey) {
     db.findClient(mongoose,{data: clientkey},clientkey,function(dbClient){

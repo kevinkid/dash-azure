@@ -1,10 +1,10 @@
-var https = require('https');
-var Host = 'graph.microsoft.com';
-var config = require('../api/config');
+var https = require("https");
+var Host = "graph.microsoft.com";
+var config = require("../api/config");
 var PostPayload = config.accounts.office.subscriptionConfiguration;
-var middleware = require('../middleware/request'); /* TODO: Make sure that this middleware handles the webook logic implementation  */
-var AuthenticationContext = require('adal-node').AuthenticationContext;
-var resource = 'https://graph.microsoft.com/';
+var middleware = require("../middleware/request"); /* TODO: Make sure that this middleware handles the webook logic implementation  */
+var AuthenticationContext = require("adal-node").AuthenticationContext;
+var resource = "https://graph.microsoft.com/";
 
 
 var api = {
@@ -19,25 +19,25 @@ var api = {
             path: path,
             method: payload.action,
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-                'Content-Length': data.length
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+                "Content-Length": data.length
             }
         };
 
         var req = https.request(options, function (res) {
-            var endpointData = '';
-            res.on('data', function (chunk) {
+            var endpointData = "";
+            res.on("data", function (chunk) {
                 endpointData += chunk;
             });
-            res.on('end', function () {
+            res.on("end", function () {
                 callback(null);
             });
         });
 
         req.end();
 
-        req.on('error', function (error) {
+        req.on("error", function (error) {
             callback(error);
         });
     },
@@ -51,11 +51,11 @@ var api = {
         var options = {
             host: Host,
             path: path,
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-                'Content-Length': data.length
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+                "Content-Length": data.length
             }
         };
         
@@ -69,13 +69,13 @@ var api = {
         console.dir(token);
         
         var req = https.request(options, function (res) {
-            var subscriptionData = '';
-            res.on('data', function (chunk) {
+            var subscriptionData = "";
+            res.on("data", function (chunk) {
                 console.dir("Subscription responded .");
                 subscriptionData += chunk;
-                //'{\r\n  "error": {\r\n    "code": "InvalidRequest",\r\n    "message": "Subscription validation request failed. Must respond with 200 OK to this request.",\r\n    "innerError": {\r\n      "request-id": "aa09c28b-b8ce-4e42-96cf-9d5dcb9412a0",\r\n      "date": "2017-01-19T15:18:24"\
+                //"{\r\n  "error": {\r\n    "code": "InvalidRequest",\r\n    "message": "Subscription validation request failed. Must respond with 200 OK to this request.",\r\n    "innerError": {\r\n      "request-id": "aa09c28b-b8ce-4e42-96cf-9d5dcb9412a0",\r\n      "date": "2017-01-19T15:18:24"\
             });
-            res.on('end', function () {
+            res.on("end", function () {
                 console.dir("subscription request ended .");
                 if (res.statusCode === 201) {
                     console.dir("Success subscription ");
@@ -94,11 +94,11 @@ var api = {
         console.dir(date);
         
         // Serve payload 
-        // req.write("{\r\n  \"changeType\": \"Created\",\r\n  \"notificationUrl\": \"https://dash-heroku.heroku.com/listen\",\r\n  \"resource\": \"me/mailFolders('Inbox')messages\",\r\n  \"clientState\": \"cLIENTsTATEfORvALIDATION\",\r\n  \"expirationDateTime\":\""+date+"\"\r\n}");
+        // req.write("{\r\n  \"changeType\": \"Created\",\r\n  \"notificationUrl\": \"https://dash-heroku.heroku.com/listen\",\r\n  \"resource\": \"me/mailFolders("Inbox")messages\",\r\n  \"clientState\": \"cLIENTsTATEfORvALIDATION\",\r\n  \"expirationDateTime\":\""+date+"\"\r\n}");
         req.write(data);
         req.end();
         
-        req.on('error', function (error) {
+        req.on("error", function (error) {
             callback(error, null);
         });
     },
@@ -109,21 +109,21 @@ var api = {
         var options = {
             host: Host,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json;odata.metadata=minimal;' +
-                        'odata.streaming=true;IEEE754Compatible=false',
-                Authorization: 'Bearer ' + token
+                "Content-Type": "application/json",
+                Accept: "application/json;odata.metadata=minimal;" +
+                        "odata.streaming=true;IEEE754Compatible=false",
+                Authorization: "Bearer " + token
             }
         };
         
         var req = https.request(options, function (res) {
-            var endpointData = '';
-            res.on('data', function (chunk) {
+            var endpointData = "";
+            res.on("data", function (chunk) {
                 endpointData += chunk;
             });
-            res.on('end', function () {
+            res.on("end", function () {
                 if (res.statusCode === 200) {
                     callback(null, JSON.parse(endpointData));
                 } else {
@@ -132,10 +132,10 @@ var api = {
             });
         });
         
-        req.write('');
+        req.write("");
         req.end();
         
-        req.on('error', function (error) {
+        req.on("error", function (error) {
             callback(error, null);
         });
     },
@@ -147,27 +147,27 @@ var api = {
         var options = {
             host: Host,
             path: path,
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'text/plain',
-                'X-HTTP-Method': 'DELETE',
-                Authorization: 'Bearer ' + token
+                "Content-Type": "text/plain",
+                "X-HTTP-Method": "DELETE",
+                Authorization: "Bearer " + token
             }
         };
         
         var req = https.request(options, function (res) {
-            var endpointData = '';
-            res.on('data', function (chunk) {
+            var endpointData = "";
+            res.on("data", function (chunk) {
                 endpointData += chunk;
             });
-            res.on('end', function () {
+            res.on("end", function () {
                 callback(null);
             });
         });
         
         req.end();
         
-        req.on('error', function (error) {
+        req.on("error", function (error) {
             callback(error);
         });
     }

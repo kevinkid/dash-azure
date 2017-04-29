@@ -5,6 +5,7 @@ module.exports = {
     findClient : function (mongoose, data, client, callback) {
         
         //@todo: what would be the perfect unique identifier for a client ?
+        // TODO: So what do we query here we can't get the subscript again 
         client.find({ "subscriptionId": data.subscriptionId }, function (error, clientDet) {
             if (!error) {
                 callback(clientDet[0]); 
